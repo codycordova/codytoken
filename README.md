@@ -58,7 +58,7 @@
 - **Website:** [codycordova.com](https://www.codycordova.com)
 - **Email:** [mgmt@codycordova.com](mailto:mgmt@codycordova.com)
 - **Twitter:** [@realcodycordova](https://twitter.com/realcodycordova)
-- **GitHub:** [@realcodycordova](https://github.com/realcodycordova)
+- **GitHub:** [@codycordova](https://github.com/codycordova)
 
 ### Stellar TOML:
 - **Signing Key:** `GBQVKVFXHM3SLYLSIFUNDI2VALQPGOEHLDJ3Z3OLHXS4PK4GN2FSLKLY`
