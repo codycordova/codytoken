@@ -1,0 +1,33 @@
+.footer {
+    background-color: #1e1e2f;
+    padding: 2rem;
+    text-align: center;
+}
+
+.footer-content {
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+.footer-heading {
+    color: #a5b4fc;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.footer-icons a {
+    margin: 0 0.5rem;
+    color: #a5b4fc;
+    text-decoration: none;
+    font-size: 1.25rem;
+}
+
+.footer-icons a:hover {
+    color: white;
+}
+
+.footer-copy {
+    font-size: 0.875rem;
+    color: #888;
+    margin-top: 1rem;
+}

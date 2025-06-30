@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+    transition-property: none !important;
+    margin-right: 0 !important;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Montserrat:wght@600&display=swap');
+
+body {
+  font-family: 'Inter', 'Montserrat', Arial, sans-serif;
+  background: linear-gradient(135deg, #1e1e2f 0%, #312e81 50%, #6d28d9 100%);
+  color: #e0e7ff;
+  min-height: 100vh;
+  margin: 0;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Optional: animated stars background */
+.stars-bg {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  background: transparent;
+  animation: moveStars 60s linear infinite;
+}
+
+@keyframes moveStars {
+  0% { background-position: 0 0; }
+  100% { background-position: 100vw 100vh; }
+}
+

@@ -1,0 +1,111 @@
+"use client";
+
+import React, { useState, useEffect, useRef } from "react";
+import * as StellarSdk from "@stellar/stellar-sdk";
+import { useStellarWallets } from "@/context/StellarWalletsContext";
+
+const CODY_ASSET_CODE = "CODY";
+const CODY_ASSET_ISSUER =
+    "GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK";
+const CODY = new StellarSdk.Asset(CODY_ASSET_CODE, CODY_ASSET_ISSUER);
+
+interface BalanceLine {
+    asset_type: string;
+    asset_code?: string;
+    asset_issuer?: string;
+    balance: string;
+}
+
+interface TrustlineButtonProps {
+    walletAddress: string;
+    onTrustlineActive?: (active: boolean) => void;
+}
+
+export default function TrustlineButton({
+                                            walletAddress,
+                                            onTrustlineActive,
+                                        }: TrustlineButtonProps) {
+    const { kit } = useStellarWallets();
+    const [hasTrustline, setHasTrustline] = useState<boolean | null>(null);
+    const [loading, setLoading] = useState(false);
+    const serverRef = useRef<StellarSdk.Horizon.Server | null>(null);
+
+    // Create the server instance ONCE on client
+    useEffect(() => {
+        if (!serverRef.current && typeof window !== "undefined") {
+            serverRef.current = new StellarSdk.Horizon.Server("https://horizon.stellar.org");
+        }
+    }, []);
+
+    // Check trustline status when walletAddress changes
+    useEffect(() => {
+        if (!walletAddress || !serverRef.current) return;
+        let isMounted = true;
+        const check = async () => {
+            try {
+                const account = await serverRef.current!.loadAccount(walletAddress);
+                const found = account.balances.some((b: BalanceLine) =>
+                    b.asset_code === CODY_ASSET_CODE && b.asset_issuer === CODY_ASSET_ISSUER
+                );
+                if (isMounted) {
+                    setHasTrustline(found);
+                    onTrustlineActive?.(found);
+                }
+            } catch (e) {
+                console.error("Error checking trustline:", e);
+                if (isMounted) setHasTrustline(null);
+            }
+        };
+        check();
+        return () => {
+            isMounted = false;
+        };
+    }, [walletAddress, onTrustlineActive]);
+
+    // Add trustline button logic
+    async function addTrustline() {
+        if (!walletAddress || !kit || !serverRef.current) return;
+        setLoading(true);
+        try {
+            const account = await serverRef.current.loadAccount(walletAddress);
+            const tx = new StellarSdk.TransactionBuilder(account, {
+                fee: StellarSdk.BASE_FEE,
+                networkPassphrase: StellarSdk.Networks.PUBLIC,
+            })
+                .addOperation(StellarSdk.Operation.changeTrust({ asset: CODY }))
+                .setTimeout(60)
+                .build();
+
+            const { signedTxXdr } = await kit.signTransaction(tx.toXDR(), {
+                networkPassphrase: StellarSdk.Networks.PUBLIC,
+            });
+
+            await serverRef.current.submitTransaction(
+                StellarSdk.TransactionBuilder.fromXDR(signedTxXdr, StellarSdk.Networks.PUBLIC)
+            );
+
+            setHasTrustline(true);
+            onTrustlineActive?.(true);
+            alert("✅ Trustline successfully added!");
+        } catch (e) {
+            console.error("Failed to add trustline:", e);
+            alert("❌ Failed to add trustline.");
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    if (!walletAddress) return null;
+
+    return (
+        <div style={{ margin: "1rem 0", textAlign: "center" }}>
+            {hasTrustline ? (
+                <span style={{ color: "limegreen" }}>✔ Trustline active</span>
+            ) : (
+                <button onClick={addTrustline} disabled={loading}>
+                    {loading ? "Adding…" : "Add Trustline to $CODY"}
+                </button>
+            )}
+        </div>
+    );
+}
