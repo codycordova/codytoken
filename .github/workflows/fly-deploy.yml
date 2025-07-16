@@ -3,7 +3,7 @@ name: 🚀 Deploy to Fly
 on:
   push:
     branches:
-      - main        # or master, depending on your branch name
+      - master
 
 jobs:
   deploy:
