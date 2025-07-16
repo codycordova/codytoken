@@ -1,0 +1,29 @@
+name: 🚀 Deploy to Fly
+
+on:
+  push:
+    branches:
+      - main        # or master, depending on your branch name
+
+jobs:
+  deploy:
+    name: Fly Deploy
+    runs-on: ubuntu-latest
+    concurrency: deploy-group
+
+    steps:
+      - name: "🔄 Checkout code"
+        uses: actions/checkout@v4
+
+      - name: "📦 Setup Node.js"
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: "⚙️ Setup flyctl"
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: "🚢 Run Fly.io deploy"
+        run: flyctl deploy --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

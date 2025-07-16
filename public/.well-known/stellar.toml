@@ -1,5 +1,4 @@
 VERSION = "2.0.0"
-
 NETWORK_PASSPHRASE = "Public Global Stellar Network ; September 2015"
 SIGNING_KEY = "GBQVKVFXHM3SLYLSIFUNDI2VALQPGOEHLDJ3Z3OLHXS4PK4GN2FSLKLY"
 
@@ -13,9 +12,9 @@ ACCOUNTS = [
 [DOCUMENTATION]
 ORG_NAME = "Cody Cordova"
 ORG_DBA = "CODY Token"
-ORG_URL = "https://www.codycordova.com"
-ORG_LOGO = "https://www.codycordova.com/uploads/9/7/2/8/97282376/cody-token-logo_orig.png"
-ORG_DESCRIPTION = "Music Artist based in Los Angeles, CA."
+ORG_URL = "https://www.codytoken.com"
+ORG_LOGO = "https://codytoken.com/cclogo.png"
+ORG_DESCRIPTION = "CODY Token is a Stellar-based utility token created by music artist Cody Cordova. It supports merch, tickets, games, and digital community tools."
 ORG_PHYSICAL_ADDRESS = "Los Angeles, CA"
 ORG_PHONE_NUMBER = "+18186997275"
 ORG_KEYBASE = "realcodycordova"
@@ -35,8 +34,9 @@ code = "CODY"
 issuer = "GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK"
 display_decimals = 2
 name = "CODY Token"
-desc = "The official token for Tech House artist Cody Cordova."
-conditions = "There will only ever be 444 billion CODY tokens in existence."
-image = "https://www.codycordova.com/uploads/9/7/2/8/97282376/cody-token-logo_orig.png"
+desc = "The official utility token for multimedia artist Cody Cordova — used for merch, tickets, gaming rewards, and community interaction."
+conditions = "Total supply capped at 444,444,444,444 CODY. Only 1,016 tokens are currently in circulation to test market behavior and liquidity in a research-backed rollout."
+image = "https://codytoken.com/cclogo.png"
 fixed_number = 444444444444
+is_asset_anchored = false
 status = "live"
