@@ -1,2 +1,21 @@
-fly.toml
-.stellar
+# Ignore everything by default
+**
+
+# Whitelist only essential files/folders
+!public/**
+!.well-known/**
+!package.json
+!package-lock.json
+!next.config.js
+!tsconfig.json
+!Dockerfile
+!fly.toml
+
+# Exclude hidden/system files that may persist
+git/*
+**/node_modules/**
+**/.DS_Store
+
+# Optionally allow pages/app if you need server code
+!src/**
+
