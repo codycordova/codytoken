@@ -3,8 +3,7 @@
 @tailwind utilities;
 
 html {
-    transition-property: none !important;
-    margin-right: 0 !important;
+    /* Removed transition-property and margin-right to avoid hydration errors */
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Montserrat:wght@600&display=swap');

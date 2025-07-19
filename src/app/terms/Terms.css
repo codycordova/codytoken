@@ -57,3 +57,15 @@
 .terms-note {
     color: #a5b4fc;
 }
+
+@media (max-width: 600px) {
+    .terms-title {
+        font-size: 1.3rem;
+        padding: 0 0.5rem;
+    }
+    .terms-box {
+        max-width: 98vw;
+        padding: 1rem 0.5rem;
+        font-size: 0.98rem;
+    }
+}

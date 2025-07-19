@@ -63,4 +63,15 @@
 .whitepaper-container em {
   color: #c4b5fd; /* A soft lavender for emphasis */
   font-style: italic;
+}
+
+@media (max-width: 600px) {
+    .whitepaper-container {
+        padding: 1rem 0.5rem;
+        max-width: 98vw;
+        font-size: 0.98rem;
+    }
+    .whitepaper-container h1 {
+        font-size: 1.3rem;
+    }
 } 

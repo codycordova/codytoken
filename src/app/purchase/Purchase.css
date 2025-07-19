@@ -82,3 +82,20 @@
     word-break: break-word;
     overflow-wrap: anywhere;
 }
+
+@media (max-width: 600px) {
+    .purchase-container {
+        padding: 1.2rem 0.2rem;
+        max-width: 98vw;
+    }
+    .details-section {
+        gap: 1rem;
+        padding: 0 0.2rem;
+    }
+    .details-column {
+        width: 98vw;
+        max-width: 98vw;
+        padding: 1rem 0.5rem;
+        font-size: 0.98rem;
+    }
+}

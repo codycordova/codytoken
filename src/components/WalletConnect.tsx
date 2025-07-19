@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { StellarWalletsKit, WalletNetwork, FREIGHTER_ID, FreighterModule, xBullModule } from "@creit.tech/stellar-wallets-kit";
+import { StellarWalletsKit, WalletNetwork, FREIGHTER_ID, FreighterModule, xBullModule, LobstrModule, LOBSTR_ID } from "@creit.tech/stellar-wallets-kit";
 import { useWallet } from "@/context/WalletContext";
 import { FaKey } from "react-icons/fa";
 
@@ -12,7 +12,7 @@ if (typeof window !== "undefined" && !kit) {
   kit = new StellarWalletsKit({
     network: WalletNetwork.PUBLIC,
     selectedWalletId: FREIGHTER_ID,
-    modules: [new FreighterModule(), new xBullModule()],
+    modules: [new FreighterModule(), new xBullModule(), new LobstrModule()],
   });
 }
 

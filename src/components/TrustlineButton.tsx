@@ -68,6 +68,18 @@ export default function TrustlineButton({
         setLoading(true);
         try {
             const account = await serverRef.current.loadAccount(walletAddress);
+            // Calculate available XLM (native balance minus minimum reserve)
+            const nativeBalance = account.balances.find((b: any) => b.asset_type === "native");
+            const xlm = nativeBalance ? parseFloat(nativeBalance.balance) : 0;
+            // Minimum balance: 1 XLM base + 0.5 XLM per trustline + 0.5 XLM for new trustline
+            // See: https://developers.stellar.org/docs/fundamentals-and-concepts/fees-and-reserves
+            const subentryCount = account.subentry_count || 0;
+            const minBalance = 1 + 0.5 * (subentryCount + 1); // +1 for new trustline
+            if (xlm < minBalance) {
+                alert("❌ You need at least 0.5 XLM available to add a trustline. Please fund your wallet and try again.");
+                setLoading(false);
+                return;
+            }
             const tx = new StellarSdk.TransactionBuilder(account, {
                 fee: StellarSdk.BASE_FEE,
                 networkPassphrase: StellarSdk.Networks.PUBLIC,
@@ -87,9 +99,13 @@ export default function TrustlineButton({
             setHasTrustline(true);
             onTrustlineActive?.(true);
             alert("✅ Trustline successfully added!");
-        } catch (e) {
+        } catch (e: any) {
             console.error("Failed to add trustline:", e);
-            alert("❌ Failed to add trustline.");
+            if (e.response && e.response.data && e.response.data.extras && e.response.data.extras.result_codes) {
+                alert("❌ Failed to add trustline: " + JSON.stringify(e.response.data.extras.result_codes));
+            } else {
+                alert("❌ Failed to add trustline. " + (e.message || ""));
+            }
         } finally {
             setLoading(false);
         }
