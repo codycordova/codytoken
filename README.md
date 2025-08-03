@@ -23,7 +23,7 @@ The website is a modern, responsive single-page application built with **Next.js
 
 - **Total Supply:** 444,444,444,444 (fixed)
 - **Blockchain:** Stellar Network
-- **Anchor Asset:** XLM
+- **Anchor Asset:** none
 - **Issuer Address:** `GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK`
 - **Use Cases:** Buy merch, show tickets, join games, redeem rewards, and support Cody directly
 
@@ -57,7 +57,21 @@ npm run dev
 npm run test:api
 ```
 
+### 🎵 Educational Mission
+
+I am a music producer/DJ and I am utilizing the capabilities of Stellar's blockchain with tokenizing digital assets to help teach others in a fun and informative interactive way. If you are considering issuing a token you can use components from my code that work to help out with your project. We all build together!
+
 ### 🚀 Production Deployment
+
+⚠️ **IMPORTANT**: This is the official CODY Token website. If you want to deploy your own version for learning purposes:
+
+1. **Change the project name** in `package.json` to avoid confusion
+2. **Use a different domain/subdomain** (not codytoken-related)
+3. **Add clear disclaimers** that it's not the official CODY Token site
+4. **Consider using different API endpoints** to avoid rate limiting
+5. **Set up your own environment variables** for production
+
+#### For Learning/Development Only:
 
 ```bash
 # Build and start with PM2
@@ -65,9 +79,22 @@ npm run build
 pm2 start ecosystem.config.js
 
 # Or use Docker
-docker build -t codytoken .
-docker run -p 3000:3000 codytoken
+docker build -t your-project-name .
+docker run -p 3000:3000 your-project-name
 ```
+
+#### Required Environment Variables for Production:
+
+```bash
+# Required for production
+export CODY_ISSUER="GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK"
+export STELLAR_HORIZON_URL="https://horizon.stellar.org"
+
+# Optional: Use your own API keys to avoid rate limits
+export COINGECKO_API_KEY="your_api_key_here"
+```
+
+**Note**: If you're building your own token project, consider using your own API keys and endpoints to avoid conflicts with the official CODY Token infrastructure.
 
 ---
 
