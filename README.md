@@ -13,7 +13,7 @@ The website is a modern, responsive single-page application built with **Next.js
 - 🎨 **3D Token Visualization**
 - 🧠 **Dynamic Text & Animations**
 - 💸 **Stellar Wallet Connectivity**
-- 📈 **Live Token Price via Stellar.Expert**
+- 📈 **Live Token Price via Real-time API**
 - 🎮 **Gateway to Web3 Apps & Games**
 - 📱 **Responsive UI for all devices**
 
@@ -47,18 +47,13 @@ npm run dev
 
 Then open [http://localhost:3000](http://localhost:3000) to view it.
 
-### 🔧 Development with Real-time API
-
-For development with the real-time price API:
+### 🔧 Development
 
 ```bash
-# Terminal 1: Start Next.js app
+# Start Next.js development server
 npm run dev
 
-# Terminal 2: Start WebSocket server
-npm run ws:dev
-
-# Terminal 3: Test the API
+# Test the API
 npm run test:api
 ```
 
@@ -71,7 +66,7 @@ pm2 start ecosystem.config.js
 
 # Or use Docker
 docker build -t codytoken .
-docker run -p 3000:3000 -p 3030:3030 codytoken
+docker run -p 3000:3000 codytoken
 ```
 
 ---
@@ -99,11 +94,13 @@ docker run -p 3000:3000 -p 3030:3030 codytoken
 ### Short-Term:
 - ✅ Update [CODYTOKEN.com](https://codytoken.com)
 - ✅ Add Freighter Wallet support
+- ✅ **Real-time price API with accurate market data**
 - 🔧 **Build full swap functionality** between XLM ⇄ CODY using Stellar SDK + AMM liquidity pools
 
 ### Medium-Term:
 - 📱 Build a dedicated CODY Token Wallet
 - 🏦 Enable SEP-10 and fiat integrations
+- 🔄 **WebSocket real-time price streaming**
 
 ### Long-Term:
 - 🎮 Launch a Game where players earn CODY
@@ -119,19 +116,18 @@ docker run -p 3000:3000 -p 3030:3030 codytoken
 - **[Three.js / @react-three/fiber](https://docs.pmnd.rs/react-three-fiber/getting-started/introduction)** – 3D Visuals
 - **[Stellar SDK](https://www.stellar.org/developers/)** – Blockchain Integration
 - **[CSS Modules](https://github.com/css-modules/css-modules)** – Styling
-- **[WebSocket](https://github.com/websockets/ws)** – Real-time Communication
 - **[PM2](https://pm2.keymetrics.io/)** – Process Management
 
 ---
 
 ## 🔌 Real-time Price API
 
-The CODY Token now includes a robust real-time price API that fetches data from the Stellar DEX and provides both REST and WebSocket endpoints.
+The CODY Token includes a robust real-time price API that fetches live market data from the Stellar DEX and provides accurate pricing in multiple currencies.
 
 ### 📡 REST API Endpoints
 
 #### GET `/api/price`
-Returns comprehensive CODY price data including XLM, USD, and EUR prices.
+Returns comprehensive CODY price data including XLM, USD, and EUR prices with real-time market data.
 
 **Response:**
 ```json
@@ -139,64 +135,41 @@ Returns comprehensive CODY price data including XLM, USD, and EUR prices.
   "symbol": "CODY",
   "issuer": "GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK",
   "price": {
-    "XLM": 0.001234,
-    "USD": 0.000148,
-    "EUR": 0.000126
+    "XLM": 5.5,
+    "USD": 2.1465125,
+    "EUR": 2.4878073283145365
   },
   "sources": {
     "dex": {
-      "bid": 0.001230,
-      "ask": 0.001238,
-      "spread": 0.000008,
-      "volume24h": 12345.67
-    },
-    "pool": {
-      "price": 0.001235,
-      "reserves": {
-        "cody": 1000000,
-        "xlm": 1235
-      }
+      "bid": 5,
+      "ask": 6,
+      "spread": 1,
+      "volume24h": 1.5709933999999999
     }
   },
   "metadata": {
     "confidence": 0.98,
-    "lastUpdate": "2024-01-15T10:30:00.000Z",
+    "lastUpdate": "2025-08-03T13:01:27.538Z",
     "cacheAge": 0
   }
 }
 ```
 
-### 🔄 WebSocket Endpoints
-
-#### `wss://api.codytoken.com/price-stream`
-Real-time price and trade updates.
-
-**Message Types:**
-- `price_update`: Latest price data (every 5 seconds)
-- `trade`: Real-time trade notifications
-
-**Example WebSocket Usage:**
-```javascript
-const ws = new WebSocket('wss://api.codytoken.com/price-stream');
-
-ws.onmessage = (event) => {
-  const data = JSON.parse(event.data);
-  
-  if (data.type === 'price_update') {
-    console.log('New price:', data.data.price);
-  } else if (data.type === 'trade') {
-    console.log('New trade:', data.data);
-  }
-};
-```
-
 ### 🏗 API Architecture
 
-- **Data Sources**: Stellar DEX orderbook, recent trades, liquidity pools
+- **Data Sources**: Stellar DEX orderbook, recent trades, real-time XLM price from CoinGecko
 - **Caching**: 5-second TTL with fallback mechanisms
 - **Error Resilience**: Graceful degradation with cached data
-- **Real-time**: WebSocket streaming for live updates
-- **Multi-process**: PM2 manages both Next.js and WebSocket servers
+- **Multi-currency**: Real-time USD and EUR conversion rates
+- **Market Data**: Live bid/ask prices and 24h trading volume
+
+### 🔄 API Features
+
+- **Real-time XLM Price**: Fetched from CoinGecko API
+- **Accurate EUR Conversion**: Real EUR/USD exchange rates
+- **Market Confidence**: Based on data availability and freshness
+- **CORS Enabled**: Cross-origin requests supported
+- **Cache Headers**: Optimized for performance
 
 ---
 
@@ -213,7 +186,7 @@ fly deploy
 
 ## 👤 About Cody Cordova
 
-Cody Cordova is a Tech House artist, DJ, and creative technologist from Los Angeles. With over 14 years in the industry and a love for blockchain, he’s bridging tech, music, and community.
+Cody Cordova is a Tech House artist, DJ, and creative technologist from Los Angeles. With over 14 years in the industry and a love for blockchain, he's bridging tech, music, and community.
 
 - [Spotify](https://open.spotify.com/artist/677lOpgqlsN820JS4ER4ds)
 - [Apple Music](https://music.apple.com/us/artist/cody-cordova/1536505416)
