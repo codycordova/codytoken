@@ -1,6 +1,32 @@
 "use client";
-import React from "react";
+import React, { Suspense } from "react";
 import CodyLogoScene from "./CodyLogoScene";
+
+// Error boundary for WebGL issues
+class WebGLErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean }> {
+    constructor(props: { children: React.ReactNode }) {
+        super(props);
+        this.state = { hasError: false };
+    }
+
+    static getDerivedStateFromError() {
+        return { hasError: true };
+    }
+
+    componentDidCatch() {
+        console.warn('WebGL Error caught');
+        // Don't crash the app, just log the error
+    }
+
+    render() {
+        if (this.state.hasError) {
+            // Return a fallback or null instead of crashing
+            return null;
+        }
+
+        return this.props.children;
+    }
+}
 
 export default function BackgroundLayer() {
     return (
@@ -13,7 +39,11 @@ export default function BackgroundLayer() {
                 overflow: "hidden",
             }}
         >
-            <CodyLogoScene />
+            <WebGLErrorBoundary>
+                <Suspense fallback={null}>
+                    <CodyLogoScene />
+                </Suspense>
+            </WebGLErrorBoundary>
         </div>
     );
 }

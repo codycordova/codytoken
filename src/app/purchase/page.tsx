@@ -127,9 +127,6 @@ export default function PurchasePage() {
                             <li>
                                 <a href="https://scopuly.com/trade/CODY-XLM/GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK">Scopuly</a>
                             </li>
-                            <li>
-                                <a href="https://sdexexplorer.com/assets/CODY-GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK">SDEX Explorer</a>
-                            </li>
                         </ul>
                     </div>
                 </section>

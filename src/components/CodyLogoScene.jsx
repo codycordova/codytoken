@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useRef, Suspense } from "react";
+import React, { useMemo, useRef, Suspense, useEffect } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Float, OrbitControls, Stars, useGLTF } from "@react-three/drei";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
@@ -40,6 +40,32 @@ function ParallaxCamera() {
     return null;
 }
 
+// WebGL Context Recovery
+function WebGLRecovery() {
+    const { gl } = useThree();
+    
+    useEffect(() => {
+        const handleContextLost = (event) => {
+            console.warn('WebGL context lost, attempting recovery...');
+            event.preventDefault();
+        };
+
+        const handleContextRestored = () => {
+            console.log('WebGL context restored');
+        };
+
+        gl.domElement.addEventListener('webglcontextlost', handleContextLost);
+        gl.domElement.addEventListener('webglcontextrestored', handleContextRestored);
+
+        return () => {
+            gl.domElement.removeEventListener('webglcontextlost', handleContextLost);
+            gl.domElement.removeEventListener('webglcontextrestored', handleContextRestored);
+        };
+    }, [gl]);
+
+    return null;
+}
+
 export default function CodyLogoScene() {
     const modelInstances = useMemo(() => {
         return [...Array(8)].map((_, i) => ({
@@ -65,7 +91,21 @@ export default function CodyLogoScene() {
                 background: "transparent",
             }}
             camera={{ position: [0, 0, 8], fov: 75 }}
+            gl={{ 
+                powerPreference: "high-performance",
+                antialias: true,
+                alpha: true,
+                preserveDrawingBuffer: false,
+                failIfMajorPerformanceCaveat: false
+            }}
+            onCreated={({ gl }) => {
+                gl.setClearColor(0x000000, 0);
+                // Remove THREE references to avoid import issues
+            }}
         >
+            {/* WebGL Recovery */}
+            <WebGLRecovery />
+            
             {/* Scroll parallax */}
             <ParallaxCamera />
 

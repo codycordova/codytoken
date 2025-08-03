@@ -4,7 +4,19 @@ import type { NextConfig } from "next";
 
 /** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {
-    transpilePackages: ["@stellar/stellar-sdk"]
+    transpilePackages: ["@stellar/stellar-sdk"],
+    webpack: (config) => {
+        config.resolve = config.resolve || {};
+        config.resolve.fallback = {
+            ...(config.resolve.fallback || {}),
+            fs: false,
+            net: false,
+            tls: false,
+            child_process: false,
+        };
+        config.module.exprContextCritical = false;
+        return config;
+    },
 };
 
 export default withSentryConfig(nextConfig, {

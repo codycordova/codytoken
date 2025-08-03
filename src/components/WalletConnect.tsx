@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { StellarWalletsKit, WalletNetwork, FREIGHTER_ID, FreighterModule, xBullModule, LobstrModule, LOBSTR_ID } from "@creit.tech/stellar-wallets-kit";
+import { StellarWalletsKit, WalletNetwork, FREIGHTER_ID, FreighterModule, xBullModule, LobstrModule } from "@creit.tech/stellar-wallets-kit";
 import { useWallet } from "@/context/WalletContext";
 import { FaKey } from "react-icons/fa";
 

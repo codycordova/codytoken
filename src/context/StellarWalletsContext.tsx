@@ -16,7 +16,6 @@ import {
     xBullModule,
     FREIGHTER_ID,
     LobstrModule,
-    LOBSTR_ID,
 } from "@creit.tech/stellar-wallets-kit";
 
 interface StellarWalletsContextValue {

@@ -37,12 +37,14 @@ export default function WhitepaperPage() {
           </p>
           <p>
             This approach allowed us to:
-            <ul>
-              <li>Monitor behavioral economics surrounding a perceived scarce digital asset.</li>
-              <li>Collect longitudinal liquidity data on decentralized Stellar exchanges.</li>
-              <li>Observe wallet engagement trends across various demographic clusters.</li>
-              <li>Assess the impact of micro-supply theory in hyper-niche blockchain markets.</li>
-            </ul>
+          </p>
+          <ul>
+            <li>Monitor behavioral economics surrounding a perceived scarce digital asset.</li>
+            <li>Collect longitudinal liquidity data on decentralized Stellar exchanges.</li>
+            <li>Observe wallet engagement trends across various demographic clusters.</li>
+            <li>Assess the impact of micro-supply theory in hyper-niche blockchain markets.</li>
+          </ul>
+          <p>
             The insights gathered over this extended pilot window provide a <strong>scientific and statistical foundation</strong> for continued rollout strategies, including game integrations, airdrop pacing, and liquidity pair modeling.
           </p>
 

@@ -27,6 +27,86 @@ body {
     padding: 2rem 1.5rem;
 }
 
+/* ─── Mobile Hero Text ─── */
+.mobile-hero-text {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-weight: 700;
+    text-align: center;
+    line-height: 1.2;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    margin: 0 auto;
+    max-width: 90vw;
+    padding: 0 20px;
+    letter-spacing: -0.02em;
+    transition: all 0.3s ease;
+    opacity: 0;
+    animation: mobileTextFadeIn 0.8s ease-out forwards;
+}
+
+/* Hide mobile text on desktop by default */
+.mobile-hero-text {
+    display: none;
+}
+
+/* Show mobile text only on mobile devices */
+@media (max-width: 900px) {
+    .mobile-hero-text {
+        display: block;
+    }
+    
+    /* Hide graffiti SVG elements on mobile */
+    .hero-container > svg {
+        display: none !important;
+    }
+}
+
+.mobile-hero-text:hover {
+    transform: scale(1.02);
+    text-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);
+}
+
+@keyframes mobileTextFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Stagger the animation for multiple mobile text elements */
+.mobile-hero-text:nth-child(1) {
+    animation-delay: 0.2s;
+}
+
+.mobile-hero-text:nth-child(2) {
+    animation-delay: 0.4s;
+}
+
+.mobile-hero-text:nth-child(3) {
+    animation-delay: 0.6s;
+}
+
+/* Mobile-specific hero container adjustments */
+@media (max-width: 900px) {
+    .hero-container {
+        padding: 2rem 1rem;
+        text-align: center;
+    }
+    
+    .hero-sub-row {
+        flex-direction: column;
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+    
+    .mobile-hero-text {
+        margin-bottom: 1rem;
+    }
+}
+
 /* ─── Hero Title & Subtitle ─── */
 .hero-title {
     font-size: 3rem;
@@ -206,6 +286,8 @@ body {
   background: transparent;
   animation: moveStars 60s linear infinite;
 }
+
+/* Remove the animation for a cleaner look */
 @keyframes moveStars {
   0% { background-position: 0 0; }
   100% { background-position: 100vw 100vh; }
@@ -283,32 +365,67 @@ body {
 @media (max-width: 900px) {
     .hero-container {
         min-height: auto;
-        gap: 1.5rem;
+        gap: 2rem;
+        padding: 2rem 1rem;
+        text-align: center;
     }
 
     .hero-3d {
         order: 0;
-        margin: 0;
+        margin: 1rem 0;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .hero-sub-row {
+        flex-direction: column;
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+        align-items: center;
+    }
+    
+    .mobile-hero-text {
+        margin-bottom: 0.5rem;
+    }
+    
+    .main-content {
+        padding: 1rem 0.5rem;
     }
 }
 
 @media (max-width: 600px) {
     .hero-container {
-        padding: 1rem 0.25rem;
-        gap: 1rem;
+        padding: 1.5rem 0.5rem;
+        gap: 1.5rem;
+        min-height: 60vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
+    
     .hero-3d {
-        width: 100vw;
-        max-width: 100vw;
-        margin: 0 auto;
+        width: 100%;
+        max-width: 280px;
+        margin: 1rem auto;
+        height: 280px;
     }
-    .graffiti-text {
-        font-size: 1.2rem !important;
-        max-width: 98vw;
-        word-break: break-word;
+    
+    .mobile-hero-text {
+        font-size: 36px !important;
+        max-width: 95vw;
+        word-break: normal;
+        line-height: 1.1;
     }
+    
     .hero-sub-row {
-        gap: 0.5rem;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+    
+    .main-content {
+        padding: 0.5rem;
     }
 }
 

@@ -21,6 +21,32 @@ interface TrustlineButtonProps {
     onTrustlineActive?: (active: boolean) => void;
 }
 
+function isStellarError(e: unknown): e is {
+  response: {
+    data: {
+      extras: {
+        result_codes: unknown
+      }
+    }
+  },
+  message?: string
+} {
+  return (
+    typeof e === "object" &&
+    e !== null &&
+    "response" in e &&
+    typeof (e as { response?: unknown }).response === "object" &&
+    (e as { response?: unknown }).response !== null &&
+    "data" in (e as { response: { data?: unknown } }).response &&
+    typeof (e as { response: { data?: unknown } }).response.data === "object" &&
+    (e as { response: { data?: unknown } }).response.data !== null &&
+    "extras" in (e as { response: { data: { extras?: unknown } } }).response.data &&
+    typeof (e as { response: { data: { extras?: unknown } } }).response.data.extras === "object" &&
+    (e as { response: { data: { extras?: unknown } } }).response.data.extras !== null &&
+    "result_codes" in (e as { response: { data: { extras: { result_codes?: unknown } } } }).response.data.extras
+  );
+}
+
 export default function TrustlineButton({
                                             walletAddress,
                                             onTrustlineActive,
@@ -69,7 +95,7 @@ export default function TrustlineButton({
         try {
             const account = await serverRef.current.loadAccount(walletAddress);
             // Calculate available XLM (native balance minus minimum reserve)
-            const nativeBalance = account.balances.find((b: any) => b.asset_type === "native");
+            const nativeBalance = account.balances.find((b: BalanceLine) => b.asset_type === "native");
             const xlm = nativeBalance ? parseFloat(nativeBalance.balance) : 0;
             // Minimum balance: 1 XLM base + 0.5 XLM per trustline + 0.5 XLM for new trustline
             // See: https://developers.stellar.org/docs/fundamentals-and-concepts/fees-and-reserves
@@ -99,12 +125,14 @@ export default function TrustlineButton({
             setHasTrustline(true);
             onTrustlineActive?.(true);
             alert("✅ Trustline successfully added!");
-        } catch (e: any) {
+        } catch (e: unknown) {
             console.error("Failed to add trustline:", e);
-            if (e.response && e.response.data && e.response.data.extras && e.response.data.extras.result_codes) {
+            if (isStellarError(e)) {
                 alert("❌ Failed to add trustline: " + JSON.stringify(e.response.data.extras.result_codes));
+            } else if (typeof e === "object" && e && "message" in e && typeof (e as { message: unknown }).message === "string") {
+                alert("❌ Failed to add trustline. " + (e as { message: string }).message);
             } else {
-                alert("❌ Failed to add trustline. " + (e.message || ""));
+                alert("❌ Failed to add trustline. Unknown error.");
             }
         } finally {
             setLoading(false);

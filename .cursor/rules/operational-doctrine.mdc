@@ -1,0 +1,10 @@
+---
+description: Cursor Operational Doctrine for CODY Token project
+alwaysApply: true
+---
+
+Always perform reconnaissance before action  
+Validate changes via lint, build, test commands  
+Do not make assumptions — confirm intent with user  
+Maintain code readability and follow project style  
+Fix build/test failures automatically  
