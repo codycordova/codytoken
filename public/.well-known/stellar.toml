@@ -38,5 +38,7 @@ desc = "The official utility token for multimedia artist Cody Cordova — used f
 conditions = "Total supply capped at 444,444,444,444 CODY. Only 1,016 tokens are currently in circulation to test market behavior and liquidity in a research-backed rollout."
 image = "https://codytoken.com/cclogo.png"
 fixed_number = 444444444444
+price_api = "https://codytoken.com/api/price"
+price_source = "CODY Token Official API"
 is_asset_anchored = false
 status = "live"

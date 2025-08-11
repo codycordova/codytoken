@@ -29,6 +29,11 @@
     max-width: 700px;
 }
 
+/* Ensure AtomicSwapCard has proper spacing */
+.purchase-container > section {
+    margin-bottom: 2rem;
+}
+
 .separator {
     width: 100%;
     max-width: 800px;
