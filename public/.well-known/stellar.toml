@@ -12,7 +12,7 @@ ACCOUNTS = [
 [DOCUMENTATION]
 ORG_NAME = "Cody Cordova"
 ORG_DBA = "CODY Token"
-ORG_URL = "https://www.codytoken.com"
+ORG_URL = "https://codytoken.com"
 ORG_LOGO = "https://codytoken.com/cclogo.png"
 ORG_DESCRIPTION = "CODY Token is a Stellar-based utility token created by music artist Cody Cordova. It supports merch, tickets, games, and digital community tools."
 ORG_PHYSICAL_ADDRESS = "Los Angeles, CA"
@@ -38,7 +38,5 @@ desc = "The official utility token for multimedia artist Cody Cordova — used f
 conditions = "Total supply capped at 444,444,444,444 CODY. 2,000 tokens are currently in circulation to test market behavior and liquidity in a research-backed rollout."
 image = "https://codytoken.com/cclogo.png"
 fixed_number = 444444444444
-price_api = "https://codytoken.com/api/price"
-price_source = "CODY Token Official API"
 is_asset_anchored = false
 status = "live"
