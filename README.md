@@ -25,7 +25,7 @@ The website is a modern, responsive single-page application built with **Next.js
 - **Blockchain:** Stellar Network
 - **Anchor Asset:** none
 - **Issuer Address:** `GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK`
-- **Use Cases:** Buy merch, show tickets, join games, redeem rewards, and support Cody directly
+- **Use Cases:** Buy merch, show tickets, join games, redeem rewards, and get exclusive access to artist Cody Cordova.
 
 ---
 
