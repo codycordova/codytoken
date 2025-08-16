@@ -1,0 +1,68 @@
+.tokenomics-container {
+  font-family: 'Arial', sans-serif;
+  background-color: rgba(11, 15, 26, 0.7);
+  backdrop-filter: blur(5px);
+  color: #e0e0e0;
+  line-height: 1.6;
+  padding: 2rem;
+  max-width: 900px;
+  margin: 2rem auto;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tokenomics-container h1,
+.tokenomics-container h2,
+.tokenomics-container h3 {
+  color: #ff58c2;
+  border-bottom: 1px solid #ff58c2;
+  padding-bottom: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.tokenomics-container h1 {
+  font-size: 2.2rem;
+  text-align: center;
+}
+
+.tokenomics-container ul {
+  list-style-type: disc;
+  margin-left: 1.5rem;
+  padding-left: 1rem;
+}
+
+.tokenomics-container li {
+  margin-bottom: 0.5rem;
+}
+
+.tokenomics-container code {
+  background: #1f2633;
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: #87f0ff;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.tokenomics-container a {
+  color: #7dd3fc;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.tokenomics-container a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+  .tokenomics-container {
+    padding: 1rem 0.5rem;
+    max-width: 98vw;
+    font-size: 0.98rem;
+  }
+  .tokenomics-container h1 {
+    font-size: 1.3rem;
+  }
+}
+
+

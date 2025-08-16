@@ -1,4 +1,5 @@
 import { Horizon, Asset } from '@stellar/stellar-sdk';
+import { tryPoolReservesFromSoroban, getTokenDecimals } from './sorobanService';
 import { OrderbookData, LiquidityPoolData, TradeData } from '../types/price';
 
 const HORIZON_URL = process.env.STELLAR_HORIZON_URL || 'https://horizon.stellar.org';
@@ -120,13 +121,61 @@ export class StellarService {
    */
   static async getLiquidityPoolData(): Promise<LiquidityPoolData | null> {
     try {
-      // This is a placeholder - in a real implementation, you would:
-      // 1. Find the liquidity pool for CODY/XLM
-      // 2. Fetch the pool's reserves
-      // 3. Calculate the implied price from reserves
-      
-      // For now, return null to indicate no pool data available
-      return null;
+      // First, try Soroban pool if configured
+      const sorobanPoolId = process.env.AQUA_POOL_CONTRACT;
+      const codyContractId = process.env.CODY_TOKEN_CONTRACT;
+
+      if (sorobanPoolId) {
+        const reserves = await tryPoolReservesFromSoroban(sorobanPoolId, codyContractId);
+        if (reserves) {
+          // Fetch decimals to scale raw amounts
+          const codyDecimals = codyContractId ? await getTokenDecimals(codyContractId) : 2;
+          const counterDecimals = process.env.USDC_TOKEN_CONTRACT ? await getTokenDecimals(process.env.USDC_TOKEN_CONTRACT) : 6;
+          const codyScale = Math.pow(10, codyDecimals ?? 2);
+          const counterScale = Math.pow(10, counterDecimals ?? 6);
+
+          const codyAmount = reserves.codyRaw / codyScale;
+          const counterAmount = reserves.counterRaw / counterScale;
+          const price = codyAmount > 0 ? counterAmount / codyAmount : 0;
+
+          return {
+            reserves: {
+              cody: codyAmount,
+              xlm: 0
+            },
+            price,
+            timestamp: new Date().toISOString()
+          };
+        }
+      }
+
+      // Fallback to classic Horizon AMM (for CODY/XLM or CODY/USDC if exists as classic pool)
+      const usdcIssuer = process.env.USDC_ISSUER || 'GA5ZSEJYB37BR3AFTUPKLGJ3IYTL4TGFJYQLSJN2SBQXPTGJ5NRDGNK4';
+      const usdcAsset = new Asset('USDC', usdcIssuer);
+      let pool;
+      try {
+        pool = await server.liquidityPools().forAssets(codyAsset, usdcAsset).limit(1).call();
+      } catch {
+        pool = null;
+      }
+      if (!pool || !pool.records || pool.records.length === 0) {
+        pool = await server.liquidityPools().forAssets(codyAsset, xlmAsset).limit(1).call();
+      }
+      if (!pool || !pool.records || pool.records.length === 0) return null;
+
+      const record = pool.records[0];
+      const reserves = record.reserves;
+      const reserveCody = reserves.find(r => typeof r.asset === 'string' && r.asset.includes(`${CODY_ASSET_CODE}:${CODY_ISSUER}`));
+      const reserveOther = reserves.find(r => !reserveCody || r !== reserveCody);
+      if (!reserveCody || !reserveOther) return null;
+      const codyAmount = parseFloat(reserveCody.amount);
+      const otherAmount = parseFloat(reserveOther.amount);
+      const price = otherAmount > 0 && codyAmount > 0 ? otherAmount / codyAmount : 0;
+      return {
+        reserves: { cody: codyAmount, xlm: reserveOther.asset === 'native' ? otherAmount : 0 },
+        price,
+        timestamp: new Date().toISOString()
+      };
     } catch (error) {
       console.error('Error fetching liquidity pool data:', error);
       return null;

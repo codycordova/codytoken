@@ -52,6 +52,9 @@ export default function Navbar() {
                     <li className={pathname === "/whitepaper" ? "active" : ""}>
                         <Link href="/whitepaper">Whitepaper</Link>
                     </li>
+                    <li className={pathname === "/tokenomics" ? "active" : ""}>
+                        <Link href="/tokenomics">Tokenomics</Link>
+                    </li>
                     <li className={pathname === "/balances" ? "active" : ""}>
                         <Link href="/balances">Balances</Link>
                     </li>

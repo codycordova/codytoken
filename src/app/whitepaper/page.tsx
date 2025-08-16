@@ -1,13 +1,27 @@
+"use client";
 import React from 'react';
 import './Whitepaper.css';
 import Footer from '@/components/Footer';
 
 export default function WhitepaperPage() {
+  const [lastUpdated, setLastUpdated] = React.useState<string>('');
+  React.useEffect(() => {
+    // Use build time or current time to display freshness
+    const now = new Date();
+    setLastUpdated(now.toISOString());
+  }, []);
   return (
     <div className="page-wrapper">
       <main className="main-content">
         <div className="whitepaper-container">
           <h1>CODY Token Whitepaper</h1>
+          {lastUpdated ? (
+            <p>
+              <small>
+                Last updated: <time dateTime={lastUpdated}>{new Date(lastUpdated).toLocaleString()}</time>
+              </small>
+            </p>
+          ) : null}
 
           <h2>Abstract</h2>
           <p>
@@ -28,13 +42,38 @@ export default function WhitepaperPage() {
             <li><strong>Decimals:</strong> 2</li>
           </ul>
           <p>
-            To prevent dilution and ensure long-term scalability, the token release has been deliberately throttled. As of the time of publication, <strong>only 1,016 CODY tokens</strong> have been released into the public domain.
+            To prevent dilution and ensure long-term scalability, the token release has been deliberately throttled. As of
+            <span> </span>
+            {lastUpdated ? (
+              <time dateTime={lastUpdated}><strong>{new Date(lastUpdated).toLocaleDateString()}</strong></time>
+            ) : (
+              <strong>now</strong>
+            )}
+            , <strong>2,000 CODY tokens</strong> have been released into the public domain.
+          </p>
+          <p>
+            A second release of <strong>870.78 CODY</strong> was contributed to the AQUA Network&apos;s <strong>CODY/USDC</strong> liquidity pool to reach a circulating total of <strong>2,000 CODY</strong>.
+            <span> </span>
+            <em>
+              Reference snapshot:
+              <span> </span>
+              {lastUpdated ? (
+                <time dateTime={lastUpdated}>{new Date(lastUpdated).toLocaleString()}</time>
+              ) : 'current'}
+            </em>
+            . Reference: <a href="https://stellar.expert/explorer/public/contract/CBN2N5L4UM5PPQE5UQNC3HVGT56TDQMAXMT3LVFMNN6XLFXZMCJY6KOU" target="_blank" rel="noopener noreferrer">Stellar Expert contract</a>.
           </p>
 
           <h2>Research and Controlled Circulation</h2>
           <p>
-            Unlike many meme or community tokens which experience early over-saturation, CODY Token has undergone a <strong>data-driven launch phase</strong>. Since June 2023, we have implemented controlled micro-distribution of 1,016 tokens to test real-world behavior, holder psychology, liquidity efficiency, and market volatility under various conditions.
+            Unlike many meme or community tokens which experience early over-saturation, CODY Token has undergone a <strong>data-driven launch phase</strong>. Since June 2023, we have implemented controlled micro-distribution of 2,000 tokens to test real-world behavior, holder psychology, liquidity efficiency, and market volatility under various conditions.
           </p>
+          <h3>Distribution History</h3>
+          <ul>
+            <li><strong>1,129.22 CODY</strong> initial market float across DEX traders and test distributions.</li>
+            <li><strong>+870.78 CODY</strong> added to AQUA <strong>CODY/USDC</strong> liquidity pool (friend-assisted). Reference: <a href="https://stellar.expert/explorer/public/contract/CBN2N5L4UM5PPQE5UQNC3HVGT56TDQMAXMT3LVFMNN6XLFXZMCJY6KOU" target="_blank" rel="noopener noreferrer">Stellar Expert contract</a>.</li>
+            <li><strong>= 2,000 CODY</strong> total currently live in circulation.</li>
+          </ul>
           <p>
             This approach allowed us to:
           </p>
