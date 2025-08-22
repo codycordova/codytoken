@@ -46,6 +46,9 @@ export default function Navbar() {
                     <li className={pathname === "/purchase" ? "active" : ""}>
                         <Link href="/purchase">Purchase</Link>
                     </li>
+                    <li className={pathname?.startsWith("/blog") ? "active" : ""}>
+                        <Link href="/blog">Blog</Link>
+                    </li>
                     <li className={pathname === "/terms" ? "active" : ""}>
                         <Link href="/terms">Terms</Link>
                     </li>

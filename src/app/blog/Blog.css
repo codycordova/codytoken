@@ -1,0 +1,131 @@
+.page-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.main-content {
+    flex: 1;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+}
+
+.blog-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.25rem;
+    color: #ffffff;
+}
+
+.blog-title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    margin: 0 0 0.5rem 0;
+}
+
+.blog-subtitle {
+    color: #a5b4fc;
+    margin: 0 0 2rem 0;
+}
+
+.blog-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+.blog-card {
+    background: rgba(17, 24, 39, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+}
+
+.blog-card h2 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.25rem;
+}
+
+.blog-card a {
+    color: #a5b4fc;
+    text-decoration: none;
+}
+
+.blog-card a:hover {
+    color: #ffffff;
+}
+
+.blog-meta {
+    margin-top: 0.5rem;
+    color: #c4b5fd;
+    font-size: 0.9rem;
+}
+
+.post-meta {
+    color: #c4b5fd;
+    font-size: 0.9rem;
+    margin: 0.25rem 0 0.75rem 0;
+}
+
+.blog-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    margin: 0.75rem 0 1rem 0;
+}
+
+.blog-post h1 {
+    font-size: 2rem;
+    margin: 0 0 1rem 0;
+}
+
+.blog-post h2 {
+    font-size: 1.25rem;
+    margin: 1.5rem 0 0.5rem 0;
+}
+
+.blog-post p {
+    line-height: 1.7;
+}
+
+.blog-post ol, .blog-post ul {
+    padding-left: 1.25rem;
+}
+
+.blog-post code {
+    background: rgba(255, 255, 255, 0.08);
+    padding: 0.1rem 0.35rem;
+    border-radius: 4px;
+}
+
+.callout {
+    background: rgba(59, 130, 246, 0.15);
+    border-left: 3px solid #60a5fa;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+}
+
+.gallery {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    margin: 0.5rem 0 1.25rem 0;
+}
+@media (min-width: 768px) {
+    .gallery {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 768px) {
+    .blog-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+

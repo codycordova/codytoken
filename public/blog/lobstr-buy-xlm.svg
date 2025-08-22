@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" viewBox="0 0 1200 600" role="img" aria-label="Lobstr buy XLM screen">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1e1e2f"/>
+      <stop offset="100%" stop-color="#6b21a8"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="600" fill="url(#g)"/>
+  <g fill="#111827" opacity="0.9">
+    <rect x="180" y="120" width="840" height="360" rx="18"/>
+  </g>
+  <g>
+    <rect x="220" y="160" width="240" height="40" rx="8" fill="#a5b4fc"/>
+    <rect x="220" y="220" width="720" height="24" rx="8" fill="#ffffff" opacity="0.65"/>
+    <rect x="220" y="260" width="720" height="24" rx="8" fill="#ffffff" opacity="0.65"/>
+    <rect x="220" y="332" width="160" height="44" rx="10" fill="#10b981"/>
+    <rect x="400" y="332" width="160" height="44" rx="10" fill="#60a5fa"/>
+  </g>
+  <text x="600" y="520" text-anchor="middle" fill="#fff" font-family="Inter, Arial" font-size="34">Lobstr — Buy XLM</text>
+</svg>
+
+
