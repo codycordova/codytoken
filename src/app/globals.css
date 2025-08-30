@@ -1,11 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Montserrat:wght@600&display=swap');
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+* {
+    box-sizing: border-box;
+}
 
 html {
     /* Removed transition-property and margin-right to avoid hydration errors */
+    font-size: 16px; /* Base font size for mobile */
+    width: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 body {
@@ -14,8 +18,24 @@ body {
   color: #e0e7ff;
   min-height: 100vh;
   margin: 0;
+  padding: 0;
   position: relative;
   overflow-x: hidden;
+  width: 100%;
+  -webkit-text-size-adjust: 100%; /* Prevent font scaling in landscape */
+  -ms-text-size-adjust: 100%;
+}
+
+/* Mobile-friendly touch targets */
+a, button, input, select, textarea {
+  min-height: 44px; /* Minimum touch target size */
+  min-width: 44px;
+}
+
+/* Ensure images are responsive */
+img {
+  max-width: 100%;
+  height: auto;
 }
 
 /* Optional: animated stars background */
