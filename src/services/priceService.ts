@@ -1,4 +1,5 @@
 import { StellarService } from './stellarService';
+import { AquaService } from './aquaService';
 import { cache } from '../utils/cache';
 import { PriceData } from '../types/price';
 
@@ -24,7 +25,8 @@ export class PriceService {
 
     try {
       // Fetch data from multiple sources in parallel
-      const [orderbook, vwap, volume24h, poolData, xlmUsd, xlmEur] = await Promise.allSettled([
+      const [aquaData, orderbook, vwap, volume24h, poolData, xlmUsd, xlmEur] = await Promise.allSettled([
+        AquaService.getAllCodyPools(),
         StellarService.getOrderbook(),
         StellarService.getVWAP(),
         StellarService.get24hVolume(),
@@ -34,6 +36,7 @@ export class PriceService {
       ]);
 
       // Extract successful results
+      const aquaPools = aquaData.status === 'fulfilled' ? aquaData.value : null;
       const orderbookData = orderbook.status === 'fulfilled' ? orderbook.value : null;
       const vwapPrice = vwap.status === 'fulfilled' ? vwap.value : 0;
       const volume = volume24h.status === 'fulfilled' ? volume24h.value : 0;
@@ -41,35 +44,49 @@ export class PriceService {
       const xlmUsdPrice = xlmUsd.status === 'fulfilled' ? xlmUsd.value : 0.12;
       const xlmEurPrice = xlmEur.status === 'fulfilled' ? xlmEur.value : 0.10;
 
-      // Calculate primary price (prefer orderbook mid-price, fallback to VWAP)
+      // Use Aqua pools as primary price source
       let primaryPrice = 0;
-      if (orderbookData && orderbookData.bids.length > 0 && orderbookData.asks.length > 0) {
-        const bestBid = orderbookData.bids[0][0];
-        const bestAsk = orderbookData.asks[0][0];
-        primaryPrice = (bestBid + bestAsk) / 2;
-      } else if (vwapPrice > 0) {
-        primaryPrice = vwapPrice;
+      let confidence = 0.3; // Base confidence
+
+      if (aquaPools) {
+        // Prefer CODY/USDC for USD price, CODY/XLM for XLM price
+        if (aquaPools.pools.codyUsdc && aquaPools.pools.codyUsdc.price > 0) {
+          primaryPrice = aquaPools.pools.codyUsdc.price; // This is USD price
+          confidence += 0.4;
+        } else if (aquaPools.pools.codyXlm && aquaPools.pools.codyXlm.price > 0) {
+          primaryPrice = aquaPools.pools.codyXlm.price * xlmUsdPrice; // Convert XLM to USD
+          confidence += 0.3;
+        }
+
+        // Add confidence for each available pool
+        if (aquaPools.pools.codyXlm) confidence += 0.2;
+        if (aquaPools.pools.codyAqua) confidence += 0.1;
       }
 
-      // Calculate confidence based on data availability
-      let confidence = 0.5; // Base confidence
-      if (orderbookData && orderbookData.bids.length > 0 && orderbookData.asks.length > 0) {
-        confidence += 0.3; // Orderbook data available
+      // Fallback to traditional DEX data if Aqua data is not available
+      if (primaryPrice === 0) {
+        if (orderbookData && orderbookData.bids.length > 0 && orderbookData.asks.length > 0) {
+          const bestBid = orderbookData.bids[0][0];
+          const bestAsk = orderbookData.asks[0][0];
+          primaryPrice = (bestBid + bestAsk) / 2 * xlmUsdPrice; // Convert XLM to USD
+          confidence += 0.3;
+        } else if (vwapPrice > 0) {
+          primaryPrice = vwapPrice * xlmUsdPrice; // Convert XLM to USD
+          confidence += 0.2;
+        }
       }
-      if (vwapPrice > 0) {
-        confidence += 0.2; // VWAP available
-      }
-      if (pool) {
-        confidence += 0.1; // Pool data available
-      }
+
+      // Calculate XLM and EUR prices
+      const xlmPrice = xlmUsdPrice > 0 ? primaryPrice / xlmUsdPrice : 0;
+      const eurPrice = primaryPrice * (xlmEurPrice / xlmUsdPrice);
 
       const priceData: PriceData = {
         symbol: 'CODY',
         issuer: process.env.CODY_ISSUER || 'GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK',
         price: {
-          XLM: primaryPrice,
-          USD: primaryPrice * xlmUsdPrice,
-          EUR: primaryPrice * xlmEurPrice
+          XLM: xlmPrice,
+          USD: primaryPrice,
+          EUR: eurPrice
         },
         sources: {
           dex: {
@@ -81,6 +98,10 @@ export class PriceService {
           pool: pool ? {
             price: pool.price,
             reserves: pool.reserves
+          } : undefined,
+          aqua: aquaPools ? {
+            pools: aquaPools.pools,
+            aggregatedPrice: aquaPools.aggregatedPrice
           } : undefined,
           oracle: undefined // Placeholder for future oracle integration
         },
@@ -146,6 +167,18 @@ export class PriceService {
       return trades[0] || null;
     } catch (error) {
       console.error('Error fetching latest trade:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Get Aqua pool data specifically
+   */
+  static async getAquaPoolData() {
+    try {
+      return await AquaService.getAllCodyPools();
+    } catch (error) {
+      console.error('Error fetching Aqua pool data:', error);
       return null;
     }
   }

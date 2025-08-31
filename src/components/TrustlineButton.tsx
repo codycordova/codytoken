@@ -99,7 +99,7 @@ export default function TrustlineButton({
             const xlm = nativeBalance ? parseFloat(nativeBalance.balance) : 0;
             // Minimum balance: 1 XLM base + 0.5 XLM per trustline + 0.5 XLM for new trustline
             // See: https://developers.stellar.org/docs/fundamentals-and-concepts/fees-and-reserves
-            const subentryCount = account.subentry_count || 0;
+            const subentryCount = Number(account.subentry_count) || 0;
             const minBalance = 1 + 0.5 * (subentryCount + 1); // +1 for new trustline
             if (xlm < minBalance) {
                 alert("❌ You need at least 0.5 XLM available to add a trustline. Please fund your wallet and try again.");

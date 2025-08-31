@@ -150,7 +150,32 @@ export class StellarService {
       }
 
       // Fallback to classic Horizon AMM (for CODY/XLM or CODY/USDC if exists as classic pool)
-      const usdcIssuer = process.env.USDC_ISSUER || 'GA5ZSEJYB37BR3AFTUPKLGJ3IYTL4TGFJYQLSJN2SBQXPTGJ5NRDGNK4';
+      const usdcIssuer = process.env.USDC_ISSUER || 'GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN';
+      
+      // Validate USDC issuer format
+      if (!usdcIssuer || usdcIssuer.length !== 56 || !usdcIssuer.startsWith('G')) {
+        console.warn('Invalid USDC issuer format, skipping USDC pool lookup');
+        // Try XLM pool directly
+        const pool = await server.liquidityPools().forAssets(codyAsset, xlmAsset).limit(1).call();
+        if (!pool || !pool.records || pool.records.length === 0) return null;
+        
+        const record = pool.records[0];
+        const reserves = record.reserves;
+        const reserveCody = reserves.find(r => typeof r.asset === 'string' && r.asset.includes(`${CODY_ASSET_CODE}:${CODY_ISSUER}`));
+        const reserveXlm = reserves.find(r => r.asset === 'native');
+        if (!reserveCody || !reserveXlm) return null;
+        
+        const codyAmount = parseFloat(reserveCody.amount);
+        const xlmAmount = parseFloat(reserveXlm.amount);
+        const price = xlmAmount > 0 && codyAmount > 0 ? xlmAmount / codyAmount : 0;
+        
+        return {
+          reserves: { cody: codyAmount, xlm: xlmAmount },
+          price,
+          timestamp: new Date().toISOString()
+        };
+      }
+      
       const usdcAsset = new Asset('USDC', usdcIssuer);
       let pool;
       try {

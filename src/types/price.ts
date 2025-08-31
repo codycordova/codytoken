@@ -20,6 +20,18 @@ export interface PriceData {
         xlm: number;
       };
     };
+    aqua?: {
+      pools: {
+        codyUsdc: AquaPoolData | null;
+        codyXlm: AquaPoolData | null;
+        codyAqua: AquaPoolData | null;
+      };
+      aggregatedPrice: {
+        XLM: number;
+        USD: number;
+        EUR: number;
+      };
+    };
     oracle?: {
       price: number;
       confidence: number;
@@ -30,6 +42,22 @@ export interface PriceData {
     lastUpdate: string;
     cacheAge: number;
   };
+}
+
+export interface AquaPoolData {
+  poolId: string;
+  pair: string;
+  tvl: number;
+  volume24h: number;
+  baseAPY: number;
+  rewardsAPY: number;
+  fee: number;
+  price: number;
+  reserves: {
+    cody: number;
+    counter: number;
+  };
+  timestamp: string;
 }
 
 export interface TradeData {

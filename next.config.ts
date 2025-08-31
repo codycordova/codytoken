@@ -5,6 +5,7 @@ import type { NextConfig } from "next";
 /** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {
     transpilePackages: ["@stellar/stellar-sdk"],
+    outputFileTracingRoot: __dirname,
     webpack: (config) => {
         config.resolve = config.resolve || {};
         config.resolve.fallback = {
@@ -16,6 +17,21 @@ const nextConfig: NextConfig = {
         };
         config.module.exprContextCritical = false;
         return config;
+    },
+    async headers() {
+        return [
+            {
+                source: "/.well-known/stellar.toml",
+                headers: [
+                    { key: "Access-Control-Allow-Origin", value: "*" },
+                    // Content-Type for static would typically be set by Next,
+                    // but this ensures the correct type for SEP-1 consumers.
+                    { key: "Content-Type", value: "text/plain; charset=utf-8" },
+                    { key: "Cache-Control", value: "public, max-age=300, must-revalidate" },
+                ],
+            },
+            // ... existing code ...
+        ];
     },
 };
 

@@ -1,160 +1,24 @@
-# CODY Token Website
+# Cody Token Web3
 
-![CODY Token Logo](https://www.codycordova.com/uploads/9/7/2/8/97282376/cody-token-logo_orig.png)
+A modern web application for the CODY token on the Stellar network, featuring real-time price data from multiple sources including Aqua AMM pools.
 
-This is the official website and documentation for the $CODY Token — a digital currency on the Stellar Blockchain created by Tech House artist **Cody Cordova**.
+## Features
 
-The website is a modern, responsive single-page application built with **Next.js** and showcases information about the token, its utilities, price history, and developer tools.
+- **Real-time CODY Price Data**: Fetches price from multiple sources including:
+  - Traditional Stellar DEX (orderbook, VWAP)
+  - Aqua AMM pools (CODY/USDC, CODY/XLM, CODY/AQUA)
+  - Fallback mechanisms for reliability
 
----
+- **Multiple Price Sources**:
+  - CODY/USDC pool for USD pricing
+  - CODY/XLM pool for XLM pricing  
+  - CODY/AQUA pool for additional liquidity
+  - Traditional DEX orderbook data
 
-## ✨ Features
+## API Endpoints
 
-- 🎨 **3D Token Visualization**
-- 🧠 **Dynamic Text & Animations**
-- 💸 **Stellar Wallet Connectivity**
-- 📈 **Live Token Price via Real-time API**
-- 🎮 **Gateway to Web3 Apps & Games**
-- 📱 **Responsive UI for all devices**
-
----
-
-## 🌟 CODY Token Overview
-
-- **Total Supply:** 444,444,444,444 (fixed)
-- **Blockchain:** Stellar Network
-- **Anchor Asset:** none
-- **Issuer Address:** `GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK`
-- **Use Cases:** Buy merch, show tickets, join games, redeem rewards, and get exclusive access to artist Cody Cordova.
-
----
-
-## 🚀 Getting Started (For Developers)
-
-### 🧰 Prerequisites
-
-- [Node.js](https://nodejs.org/) v20+
-- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
-
-### 🛠 Installation
-
-```bash
-git clone https://github.com/codycordova/codytoken.git
-cd codytoken
-npm install
-npm run dev
-```
-
-Then open [http://localhost:3000](http://localhost:3000) to view it.
-
-### 🔧 Development
-
-```bash
-# Start Next.js development server
-npm run dev
-
-# Test the API
-npm run test:api
-```
-
-### 🎵 Educational Mission
-
-I am a music producer/DJ and I am utilizing the capabilities of Stellar's blockchain with tokenizing digital assets to help teach others in a fun and informative interactive way. If you are considering issuing a token you can use components from my code that work to help out with your project. We all build together!
-
-### 🚀 Production Deployment
-
-⚠️ **IMPORTANT**: This is the official CODY Token website. If you want to deploy your own version for learning purposes:
-
-1. **Change the project name** in `package.json` to avoid confusion
-2. **Use a different domain/subdomain** (not codytoken-related)
-3. **Add clear disclaimers** that it's not the official CODY Token site
-4. **Consider using different API endpoints** to avoid rate limiting
-5. **Set up your own environment variables** for production
-
-#### For Learning/Development Only:
-
-```bash
-# Build and start with PM2
-npm run build
-pm2 start ecosystem.config.js
-
-# Or use Docker
-docker build -t your-project-name .
-docker run -p 3000:3000 your-project-name
-```
-
-#### Required Environment Variables for Production:
-
-```bash
-# Required for production
-export CODY_ISSUER="GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK"
-export STELLAR_HORIZON_URL="https://horizon.stellar.org"
-
-# Optional: Use your own API keys to avoid rate limits
-export COINGECKO_API_KEY="your_api_key_here"
-```
-
-**Note**: If you're building your own token project, consider using your own API keys and endpoints to avoid conflicts with the official CODY Token infrastructure.
-
----
-
-## 🔗 Blockchain & Asset Links
-
-- [Stellar Expert](https://stellar.expert/explorer/public/asset/CODY-GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEDE5UKQDJAK-1)
-- [LumenScan](https://lumenscan.io/assets/CODY-GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEDE5UKQDJAK)
-- [StellarChain](https://stellarchain.io/assets/CODY-GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEDE5UKQDJAK)
-
----
-
-## 🛒 How to Buy CODY Token
-
-- [Lobstr](https://lobstr.co/trade/CODY:GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEDE5UKQDJAK)
-- [StellarX](https://www.stellarx.com/swap/native/CODY:GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEDE5UKQDJAK)
-- [StellarTerm](https://stellarterm.com/swap/XLM-native/CODY-GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEDE5UKQDJAK)
-- [Lumenswap](https://obm.lumenswap.io/swap/XLM/CODY-GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEDE5UKQDJAK)
-- [Scopuly](https://scopuly.com/trade/CODY-XLM/GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEDE5UKQDJAK/native)
-
----
-
-## 🎯 Project Goals
-
-### Short-Term:
-- ✅ Update [CODYTOKEN.com](https://codytoken.com)
-- ✅ Add Freighter Wallet support
-- ✅ **Real-time price API with accurate market data**
-- 🔧 **Build full swap functionality** between XLM ⇄ CODY using Stellar SDK + AMM liquidity pools
-
-### Medium-Term:
-- 📱 Build a dedicated CODY Token Wallet
-- 🏦 Enable SEP-10 and fiat integrations
-- 🔄 **WebSocket real-time price streaming**
-
-### Long-Term:
-- 🎮 Launch a Game where players earn CODY
-- 🛍 Enable token-based rewards and redemptions
-
----
-
-## 🧠 Tech Stack
-
-- **[Next.js](https://nextjs.org/)** – Frontend Framework
-- **[React](https://reactjs.org/)** – UI Library
-- **[TypeScript](https://www.typescriptlang.org/)** – Strong Typing
-- **[Three.js / @react-three/fiber](https://docs.pmnd.rs/react-three-fiber/getting-started/introduction)** – 3D Visuals
-- **[Stellar SDK](https://www.stellar.org/developers/)** – Blockchain Integration
-- **[CSS Modules](https://github.com/css-modules/css-modules)** – Styling
-- **[PM2](https://pm2.keymetrics.io/)** – Process Management
-
----
-
-## 🔌 Real-time Price API
-
-The CODY Token includes a robust real-time price API that fetches live market data from the Stellar DEX and provides accurate pricing in multiple currencies.
-
-### 📡 REST API Endpoints
-
-#### GET `/api/price`
-Returns comprehensive CODY price data including XLM, USD, and EUR prices with real-time market data.
+### `/api/price`
+Returns comprehensive CODY price data from all available sources.
 
 **Response:**
 ```json
@@ -162,67 +26,144 @@ Returns comprehensive CODY price data including XLM, USD, and EUR prices with re
   "symbol": "CODY",
   "issuer": "GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK",
   "price": {
-    "XLM": 5.5,
-    "USD": 2.1465125,
-    "EUR": 2.4878073283145365
+    "XLM": 4.0,
+    "USD": 1.45,
+    "EUR": 1.70
   },
   "sources": {
     "dex": {
-      "bid": 5,
-      "ask": 6,
-      "spread": 1,
-      "volume24h": 1.5709933999999999
+      "bid": 3,
+      "ask": 5,
+      "spread": 2,
+      "volume24h": 24.91
+    },
+    "pool": {
+      "price": 4.83,
+      "reserves": {
+        "cody": 52.39,
+        "xlm": 252.99
+      }
+    },
+    "aqua": {
+      "pools": {
+        "codyUsdc": {...},
+        "codyXlm": {...},
+        "codyAqua": {...}
+      },
+      "aggregatedPrice": {
+        "XLM": 0,
+        "USD": 0,
+        "EUR": 0
+      }
     }
   },
   "metadata": {
-    "confidence": 0.98,
-    "lastUpdate": "2025-08-03T13:01:27.538Z",
+    "confidence": 0.6,
+    "lastUpdate": "2025-08-31T04:21:06.479Z",
     "cacheAge": 0
   }
 }
 ```
 
-### 🏗 API Architecture
+### `/api/aqua-pools`
+Returns data specifically from Aqua AMM pools.
 
-- **Data Sources**: Stellar DEX orderbook, recent trades, real-time XLM price from CoinGecko
-- **Caching**: 5-second TTL with fallback mechanisms
-- **Error Resilience**: Graceful degradation with cached data
-- **Multi-currency**: Real-time USD and EUR conversion rates
-- **Market Data**: Live bid/ask prices and 24h trading volume
-
-### 🔄 API Features
-
-- **Real-time XLM Price**: Fetched from CoinGecko API
-- **Accurate EUR Conversion**: Real EUR/USD exchange rates
-- **Market Confidence**: Based on data availability and freshness
-- **CORS Enabled**: Cross-origin requests supported
-- **Cache Headers**: Optimized for performance
-
----
-
-## 📁 Deployment
-
-This project is deployed on [Fly.io](https://fly.io/).  
-To deploy your own version:
-
-```bash
-fly deploy
+**Response:**
+```json
+{
+  "pools": {
+    "codyUsdc": {
+      "poolId": "CBN2N5L4UM5PPQE5UQNC3HVGT56TDQMAXMT3LVFMNN6XLFXZMCJY6KOU",
+      "pair": "CODY/USDC",
+      "tvl": 3360,
+      "volume24h": 32.89,
+      "baseAPY": 0.21,
+      "rewardsAPY": 0,
+      "fee": 0.1,
+      "price": 0.001,
+      "reserves": {
+        "cody": 1000000,
+        "counter": 1000
+      },
+      "timestamp": "2025-08-31T04:20:59.356Z"
+    },
+    "codyXlm": {...},
+    "codyAqua": {...}
+  },
+  "aggregatedPrice": {
+    "XLM": 0.001,
+    "USD": 0.001,
+    "EUR": 0.00085
+  },
+  "confidence": 0.9,
+  "lastUpdate": "2025-08-31T04:20:59.356Z"
+}
 ```
 
----
+## Aqua AMM Integration
 
-## 👤 About Cody Cordova
+The application integrates with Aqua AMM pools to provide real-time pricing data:
 
-Cody Cordova is a Tech House artist, DJ, and creative technologist from Los Angeles. With over 14 years in the industry and a love for blockchain, he's bridging tech, music, and community.
+### Pool Contract IDs
+- **CODY/USDC**: `CBN2N5L4UM5PPQE5UQNC3HVGT56TDQMAXMT3LVFMNN6XLFXZMCJY6KOU`
+- **CODY/XLM**: `CAOBPWLHSERILJTLOH4APQU3AXUGQBOKLWDEM64A4AZG6XFSZHBEREDW`
+- **CODY/AQUA**: `CDCT6W2XW64ZCIUEMRG46CJVE734SZDL6WDEH2QQOABBNU2XUSCTQEMR`
 
-- [Spotify](https://open.spotify.com/artist/677lOpgqlsN820JS4ER4ds)
-- [Apple Music](https://music.apple.com/us/artist/cody-cordova/1536505416)
-- [Instagram](https://www.instagram.com/realcodycordova)
-- [YouTube](https://www.youtube.com/@realcodycordova)
-- [Twitter/X](https://twitter.com/realcodycordova)
+### Data Sources
+1. **Aquarius AMM API**: Primary source for pool data
+2. **Soroban RPC**: Fallback for reserve data
+3. **Traditional DEX**: Backup for price data
 
----
+## Environment Variables
 
-## 📜 License
+```env
+# Stellar Configuration
+STELLAR_HORIZON_URL=https://horizon.stellar.org
+STELLAR_NETWORK_PASSPHRASE=Public Global Stellar Network ; September 2015
 
-MIT License – I love learning, and I hope maybe you can learn from this as well. 🤝
+# CODY Token Configuration
+CODY_ISSUER=GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK
+CODY_ASSET_CODE=CODY
+
+# Soroban Configuration
+SOROBAN_RPC_URL=https://mainnet.sorobanrpc.com
+
+# Token Contract IDs (for Soroban integration)
+CODY_TOKEN_CONTRACT=<CODY_TOKEN_CONTRACT_ID>
+USDC_TOKEN_CONTRACT=<USDC_TOKEN_CONTRACT_ID>
+AQUA_TOKEN_CONTRACT=<AQUA_TOKEN_CONTRACT_ID>
+```
+
+## Development
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Start production server
+npm start
+```
+
+## Architecture
+
+The price service uses a multi-layered approach:
+
+1. **Primary**: Aqua AMM pools (most accurate for current market conditions)
+2. **Secondary**: Traditional DEX data (orderbook, VWAP)
+3. **Fallback**: Cached data with reduced confidence
+
+This ensures reliable price data even when some sources are unavailable.
+
+## Contributing
+
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

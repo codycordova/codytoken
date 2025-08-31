@@ -11,5 +11,4 @@ export async function register() {
     }
 }
 
-export const onRequestError = Sentry.captureRequestError;
-export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;
+export const onRequestError = Sentry.captureException;

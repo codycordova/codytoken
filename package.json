@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "test:api": "node scripts/test-api.js",
+    "test:aqua": "node scripts/test-aqua-api.js",
     "ws:dev": "ts-node src/ws/server.ts",
     "ws:start": "node dist/ws/server.js"
   },
