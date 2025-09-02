@@ -24,6 +24,8 @@ const nextConfig: NextConfig = {
                 source: "/.well-known/stellar.toml",
                 headers: [
                     { key: "Access-Control-Allow-Origin", value: "*" },
+                    { key: "Access-Control-Allow-Methods", value: "GET, OPTIONS" },
+                    { key: "Access-Control-Allow-Headers", value: "*" },
                     // Content-Type for static would typically be set by Next,
                     // but this ensures the correct type for SEP-1 consumers.
                     { key: "Content-Type", value: "text/plain; charset=utf-8" },
