@@ -10,15 +10,18 @@
     "test:api": "node scripts/test-api.js",
     "test:aqua": "node scripts/test-aqua-api.js",
     "ws:dev": "ts-node src/ws/server.ts",
-    "ws:start": "node dist/ws/server.js"
+    "ws:start": "node dist/ws/server.js",
+    "set:domain": "ts-node -P tsconfig.scripts.json scripts/setDomain.ts"
   },
   "dependencies": {
+    "@creit.tech/sorobandomains-sdk": "^0.1.6",
     "@creit.tech/stellar-wallets-kit": "^1.7.5",
     "@react-three/drei": "^10.1.2",
     "@react-three/fiber": "^9.1.2",
     "@react-three/postprocessing": "^3.0.4",
     "@sentry/nextjs": "^9.39.0",
     "@stellar/stellar-sdk": "^13.3.0",
+    "dotenv": "^17.2.1",
     "framer-motion": "^12.18.1",
     "next": "^15.3.3",
     "react": "^19.0.0",
@@ -30,14 +33,16 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@sentry/cli": "^2.47.1",
-    "@types/node": "^22.15.30",
+    "@types/node": "^22.18.0",
     "@types/react": "^19.1.6",
     "@types/react-dom": "^19.1.6",
     "autoprefixer": "^10.4.21",
     "eslint": "^9.28.0",
     "eslint-config-next": "^15.3.3",
     "postcss": "^8.5.6",
-    "typescript": "^5"
+    "ts-node": "^10.9.2",
+    "tsx": "^4.19.0",
+    "typescript": "^5.9.2"
   },
   "overrides": {
     "lit": "^3.2.0"

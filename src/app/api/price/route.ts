@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { PriceService } from '../../../services/priceService';
+import { PriceService } from '@/services/priceService';
 
 export async function GET() {
   try {
@@ -9,7 +9,7 @@ export async function GET() {
     response.headers.set('Access-Control-Allow-Origin', '*');
     response.headers.set('Access-Control-Allow-Methods', 'GET, OPTIONS');
     response.headers.set('Access-Control-Allow-Headers', 'Content-Type');
-    response.headers.set('Cache-Control', 'public, max-age=5'); // 5 second cache
+    response.headers.set('Cache-Control', 'public, max-age=5'); // 5-second cache
     response.headers.set('Content-Type', 'application/json');
     
     return response;

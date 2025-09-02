@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { AquaService } from '../../../services/aquaService';
+import { AquaService } from '@/services/aquaService';
 
 export async function GET() {
   try {
@@ -10,7 +10,7 @@ export async function GET() {
     response.headers.set('Access-Control-Allow-Origin', '*');
     response.headers.set('Access-Control-Allow-Methods', 'GET, OPTIONS');
     response.headers.set('Access-Control-Allow-Headers', 'Content-Type');
-    response.headers.set('Cache-Control', 'public, max-age=10'); // 10 second cache for pool data
+    response.headers.set('Cache-Control', 'public, max-age=10'); // 10-second cache for pool data
     response.headers.set('Content-Type', 'application/json');
     
     return response;

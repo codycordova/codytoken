@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { TokenomicsService } from '../../../services/tokenomicsService';
+import { TokenomicsService } from '@/services/tokenomicsService';
 
 export async function GET() {
   try {
