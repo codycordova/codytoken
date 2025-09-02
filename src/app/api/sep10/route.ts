@@ -1,30 +1,32 @@
 // SEP-10 Web Auth endpoint
 import { NextResponse } from "next/server";
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
-    const { searchParams } = new URL(request.url);
-    const account = searchParams.get("account");
-    
-    if (!account) {
-      return NextResponse.json(
-        { error: "Missing 'account' parameter" },
-        { status: 400 }
-      );
-    }
-
+    // SEP-10 challenge endpoint doesn't require account parameter
     // Basic SEP-10 challenge response
-    // In production, you'd implement proper challenge generation and validation
     const challenge = {
       transaction: "AAAAAG...", // This would be a real Stellar transaction
       network_passphrase: "Public Global Stellar Network ; September 2015"
     };
 
-    return NextResponse.json(challenge);
+    return NextResponse.json(challenge, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type'
+      }
+    });
   } catch {
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { 
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
     );
   }
 }
@@ -38,11 +40,34 @@ export async function POST() {
       type: "jwt"
     };
 
-    return NextResponse.json(token);
+    return NextResponse.json(token, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type'
+      }
+    });
   } catch {
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { 
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
     );
   }
+}
+
+export async function OPTIONS() {
+  return new Response(null, {
+    status: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type'
+    }
+  });
 }

@@ -13,9 +13,9 @@ ACCOUNTS = [
 ]
 
 # Live endpoints for production:
-TRANSFER_SERVER = "https://codytoken.fly.dev/api/sep24"
-WEB_AUTH_ENDPOINT = "https://codytoken.fly.dev/api/sep10"
-KYC_SERVER = "https://codytoken.fly.dev/api/sep12"
+TRANSFER_SERVER = "https://api.codytoken.com/sep24"
+WEB_AUTH_ENDPOINT = "https://api.codytoken.com/sep10"
+KYC_SERVER = "https://api.codytoken.com/sep12"
 
 [DOCUMENTATION]
 ORG_NAME = "Cody Cordova"
