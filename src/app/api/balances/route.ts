@@ -9,6 +9,14 @@ export interface BalanceLine {
   balance: string;
 }
 
+// Define proper types for Stellar SDK balance objects
+interface StellarBalance {
+  asset_type: string;
+  asset_code?: string;
+  asset_issuer?: string;
+  balance: string;
+}
+
 // You can override via env if needed
 const HORIZON_URL = process.env.HORIZON_URL || "https://horizon.stellar.org";
 // Optional default account (falls back if query param not provided)
@@ -39,7 +47,7 @@ export async function GET(request: Request) {
     const acc = await server.loadAccount(account);
 
     // Map Horizon balances to our BalanceLine interface
-    const balances: BalanceLine[] = acc.balances.map((b: { asset_type: any; asset_code: any; asset_issuer: any; balance: any; }) => ({
+    const balances: BalanceLine[] = acc.balances.map((b: StellarBalance) => ({
       asset_type: b.asset_type,
       // asset_code/asset_issuer exist only for non-native assets
       asset_code: "asset_code" in b ? b.asset_code : undefined,
@@ -56,9 +64,10 @@ export async function GET(request: Request) {
         },
       }
     );
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : String(err);
     return NextResponse.json(
-      { error: "Failed to fetch balances", details: err?.message ?? String(err) },
+      { error: "Failed to fetch balances", details: errorMessage },
       { status: 500 }
     );
   }

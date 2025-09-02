@@ -35,6 +35,33 @@ jest-*.json
 *.sublime-workspace
 *.sublime-project
 
+# IDE Inspection Files (JetBrains, etc.)
+*.xml
+.descriptions.xml
+SpellCheckingInspection.xml
+JSUnused*.xml
+CssUnused*.xml
+DuplicatedCode*.xml
+ExceptionCaught*.xml
+HttpUrlsUsage.xml
+MarkdownUnresolved*.xml
+PointlessBooleanExpression*.xml
+TypeScriptUMDGlobal.xml
+UnnecessaryLocalVariable*.xml
+XmlHighlighting.xml
+NpmUsedModulesInstalled.xml
+Annotator.xml
+JSValidateTypes.xml
+JSIgnoredPromiseFromCall.xml
+JSUnresolvedReference.xml
+GrazieInspection.xml
+JSAnnotator.xml
+
+# Legacy HTML/CSS/JS files (not needed in Next.js)
+script.js
+styles.css
+index.html
+
 # ----------------------------------------
 # 🔒 SENSITIVE FILES
 # ----------------------------------------

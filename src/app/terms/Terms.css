@@ -36,7 +36,7 @@
     background: rgba(34, 34, 64, 0.85);
     border-radius: 18px;
     box-shadow: 0 4px 32px 0 rgba(80, 0, 255, 0.15), 0 0 0 2px #7f9cf5;
-    border: 1.5px solid #7f9cf5;
+    border: 2px solid #7f9cf5;
     backdrop-filter: blur(6px);
     transition: box-shadow 0.2s;
     color: #fff;

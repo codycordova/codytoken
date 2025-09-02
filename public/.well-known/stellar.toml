@@ -5,17 +5,17 @@ NETWORK_PASSPHRASE = "Public Global Stellar Network ; September 2015"
 SIGNING_KEY = "GBSP6Z42G7KWTKK2SK7CCGTNZOUC4N5OI3JJAJ35ML7DMPAVG3BRM2ZK"
 
 ACCOUNTS = [
-    "GBSP6Z42G7KWTKK2SK7CCGTNZOUC4N5OI3JJAJ35ML7DMPAVG3BRM2ZK", # domain/signing (low-risk)
-    "GBQVKVFXHM3SLYLSIFUNDI2VALQPGOEHLDJ3Z3OLHXS4PK4GN2FSLKLY", # distribution/treasury
-    "GAQSBA75ZAJT4NY6JIL7XIBRT6VVVHXDFQ3NLHS5GKTLCKLOVAGLVYQ5", # ops
-    "GCNBBQLCRN7AHIQ72LRQU24UZNS5ZCIL7HUXPBA326UUMTRHT55OA5ET", # ops
-    "GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK"  # CODY issuer (locked/immutable)
+  "GBSP6Z42G7KWTKK2SK7CCGTNZOUC4N5OI3JJAJ35ML7DMPAVG3BRM2ZK", # domain/signing (low-risk)
+  "GBQVKVFXHM3SLYLSIFUNDI2VALQPGOEHLDJ3Z3OLHXS4PK4GN2FSLKLY", # distribution/treasury
+  "GAQSBA75ZAJT4NY6JIL7XIBRT6VVVHXDFQ3NLHS5GKTLCKLOVAGLVYQ5", # ops
+  "GCNBBQLCRN7AHIQ72LRQU24UZNS5ZCIL7HUXPBA326UUMTRHT55OA5ET", # ops
+  "GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK"  # CODY issuer (locked/immutable)
 ]
 
-# Uncomment when live:
-# TRANSFER_SERVER = "https://api.codytoken.com/sep24"
-# WEB_AUTH_ENDPOINT = "https://api.codytoken.com/sep10"
-# KYC_SERVER = "https://api.codytoken.com/sep12"
+# Live endpoints for production:
+TRANSFER_SERVER = "https://api.codytoken.com/sep24"
+WEB_AUTH_ENDPOINT = "https://api.codytoken.com/sep10"
+KYC_SERVER = "https://api.codytoken.com/sep12"
 
 [DOCUMENTATION]
 ORG_NAME = "Cody Cordova"
@@ -24,7 +24,7 @@ ORG_URL = "https://codytoken.com"
 ORG_LOGO = "https://codytoken.com/cclogo.png"
 ORG_DESCRIPTION = "CODY Token is a Stellar-based utility token by artist Cody Cordova used for merch, tickets, game rewards, and community tools."
 ORG_PHYSICAL_ADDRESS = "Los Angeles, CA, USA"
-ORG_PHONE_NUMBER = "+18186997275"
+ORG_PHONE_NUMBER = "+1-818-699-7275"
 ORG_KEYBASE = "realcodycordova"
 ORG_TWITTER = "realcodycordova"
 ORG_GITHUB = "codycordova"
