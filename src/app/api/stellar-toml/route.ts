@@ -1,4 +1,9 @@
-VERSION = "2.7.0"
+// Stellar TOML endpoint - serves the stellar.toml file with proper headers
+import { NextResponse } from "next/server";
+
+export async function GET() {
+  try {
+    const stellarToml = `VERSION = "2.7.0"
 NETWORK_PASSPHRASE = "Public Global Stellar Network ; September 2015"
 
 # Dedicated signing key for domain/SEP-10
@@ -8,7 +13,7 @@ ACCOUNTS = [
   "GBSP6Z42G7KWTKK2SK7CCGTNZOUC4N5OI3JJAJ35ML7DMPAVG3BRM2ZK", # domain/signing (low-risk)
   "GBQVKVFXHM3SLYLSIFUNDI2VALQPGOEHLDJ3Z3OLHXS4PK4GN2FSLKLY", # distribution/treasury
   "GAQSBA75ZAJT4NY6JIL7XIBRT6VVVHXDFQ3NLHS5GKTLCKLOVAGLVYQ5", # ops
-  "GCNBBQLCRN7AHIQ72LRQU24UZNS5ZCIL7HUXPBA326UUMTRHT55OA5ET", # ops
+  "GCNBBQLCRN7AHIQ72LRQU24UZNS5ZCIL7HUXPBA326UUMTRHT550A5ET", # ops
   "GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK"  # CODY issuer (locked/immutable)
 ]
 
@@ -36,7 +41,7 @@ name = "Cody Cordova"
 email = "mgmt@codycordova.com"
 keybase = "realcodycordova"
 twitter = "realcodycordova"
-github = "realcodycordova"
+github = "codycordova"
 
 [[CURRENCIES]]
 code = "CODY"
@@ -48,4 +53,38 @@ conditions = "Total supply capped at 444,444,444,444 CODY. Circulating supply is
 image = "https://codytoken.com/cclogo.png"
 fixed_number = 444444444444
 is_asset_anchored = false
-status = "live"
+status = "live"`;
+
+    return new NextResponse(stellarToml, {
+      status: 200,
+      headers: {
+        'Content-Type': 'text/plain; charset=utf-8',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, OPTIONS',
+        'Access-Control-Allow-Headers': '*',
+        'Cache-Control': 'public, max-age=300, must-revalidate'
+      }
+    });
+  } catch {
+    return NextResponse.json(
+      { error: "Failed to serve stellar.toml" },
+      { 
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+  }
+}
+
+export async function OPTIONS() {
+  return new Response(null, {
+    status: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, OPTIONS',
+      'Access-Control-Allow-Headers': '*'
+    }
+  });
+}

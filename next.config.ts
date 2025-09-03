@@ -32,7 +32,28 @@ const nextConfig: NextConfig = {
                     { key: "Cache-Control", value: "public, max-age=300, must-revalidate" },
                 ],
             },
-            // ... existing code ...
+            // Add CORS headers for API routes
+            {
+                source: "/api/:path*",
+                headers: [
+                    { key: "Access-Control-Allow-Origin", value: "*" },
+                    { key: "Access-Control-Allow-Methods", value: "GET, POST, PUT, DELETE, OPTIONS" },
+                    { key: "Access-Control-Allow-Headers", value: "*" },
+                    { key: "X-Content-Type-Options", value: "nosniff" },
+                    { key: "X-Frame-Options", value: "DENY" },
+                    { key: "X-XSS-Protection", value: "1; mode=block" },
+                ],
+            },
+            // Add security headers for root domain
+            {
+                source: "/(.*)",
+                headers: [
+                    { key: "X-Content-Type-Options", value: "nosniff" },
+                    { key: "X-Frame-Options", value: "DENY" },
+                    { key: "X-XSS-Protection", value: "1; mode=block" },
+                    { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+                ],
+            },
         ];
     },
 };
@@ -49,7 +70,6 @@ silent: !process.env.CI,
 
 // For all available options, see:
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
-
 // Upload a larger set of source maps for prettier stack traces (increases build time)
 widenClientFileUpload: true,
 

@@ -1,0 +1,90 @@
+// .well-known/stellar.toml endpoint
+import { NextResponse } from "next/server";
+
+export async function GET() {
+  try {
+    const stellarToml = `VERSION = "2.7.0"
+NETWORK_PASSPHRASE = "Public Global Stellar Network ; September 2015"
+
+# Dedicated signing key for domain/SEP-10
+SIGNING_KEY = "GBSP6Z42G7KWTKK2SK7CCGTNZOUC4N5OI3JJAJ35ML7DMPAVG3BRM2ZK"
+
+ACCOUNTS = [
+  "GBSP6Z42G7KWTKK2SK7CCGTNZOUC4N5OI3JJAJ35ML7DMPAVG3BRM2ZK", # domain/signing (low-risk)
+  "GBQVKVFXHM3SLYLSIFUNDI2VALQPGOEHLDJ3Z3OLHXS4PK4GN2FSLKLY", # distribution/treasury
+  "GAQSBA75ZAJT4NY6JIL7XIBRT6VVVHXDFQ3NLHS5GKTLCKLOVAGLVYQ5", # ops
+  "GCNBBQLCRN7AHIQ72LRQU24UZNS5ZCIL7HUXPBA326UUMTRHT550A5ET", # ops
+  "GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK"  # CODY issuer (locked/immutable)
+]
+
+# Live endpoints for production:
+TRANSFER_SERVER = "https://api.codytoken.com/sep24"
+WEB_AUTH_ENDPOINT = "https://api.codytoken.com/sep10"
+KYC_SERVER = "https://api.codytoken.com/sep12"
+
+[DOCUMENTATION]
+ORG_NAME = "Cody Cordova"
+ORG_DBA = "CODY Token"
+ORG_URL = "https://codytoken.com"
+ORG_LOGO = "https://codytoken.com/cclogo.png"
+ORG_DESCRIPTION = "CODY Token is a Stellar-based utility token by artist Cody Cordova used for merch, tickets, game rewards, and community tools."
+ORG_PHYSICAL_ADDRESS = "Los Angeles, CA, USA"
+ORG_PHONE_NUMBER = "+18186997275"
+ORG_KEYBASE = "realcodycordova"
+ORG_TWITTER = "realcodycordova"
+ORG_GITHUB = "codycordova"
+ORG_OFFICIAL_EMAIL = "mgmt@codycordova.com"
+ORG_SUPPORT_EMAIL = "support@codytoken.com"
+
+[[PRINCIPALS]]
+name = "Cody Cordova"
+email = "mgmt@codycordova.com"
+keybase = "realcodycordova"
+twitter = "realcodycordova"
+github = "realcodycordova"
+
+[[CURRENCIES]]
+code = "CODY"
+issuer = "GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK"
+name = "CODY Token"
+display_decimals = 2
+desc = "The official utility token for multimedia artist Cody Cordova — used for merch, tickets, gaming rewards, and community interaction."
+conditions = "Total supply capped at 444,444,444,444 CODY. Circulating supply is being released gradually to study market behavior and maintain fair liquidity."
+image = "https://codytoken.com/cclogo.png"
+fixed_number = 444444444444
+is_asset_anchored = false
+status = "live"`;
+
+    return new NextResponse(stellarToml, {
+      status: 200,
+      headers: {
+        'Content-Type': 'text/plain; charset=utf-8',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, OPTIONS',
+        'Access-Control-Allow-Headers': '*',
+        'Cache-Control': 'public, max-age=300, must-revalidate'
+      }
+    });
+  } catch {
+    return NextResponse.json(
+      { error: "Failed to serve stellar.toml" },
+      { 
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+  }
+}
+
+export async function OPTIONS() {
+  return new Response(null, {
+    status: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, OPTIONS',
+      'Access-Control-Allow-Headers': '*'
+    }
+  });
+}
