@@ -13,7 +13,7 @@ ACCOUNTS = [
   "GBSP6Z42G7KWTKK2SK7CCGTNZOUC4N5OI3JJAJ35ML7DMPAVG3BRM2ZK", # domain/signing (low-risk)
   "GBQVKVFXHM3SLYLSIFUNDI2VALQPGOEHLDJ3Z3OLHXS4PK4GN2FSLKLY", # distribution/treasury
   "GAQSBA75ZAJT4NY6JIL7XIBRT6VVVHXDFQ3NLHS5GKTLCKLOVAGLVYQ5", # ops
-  "GCNBBQLCRN7AHIQ72LRQU24UZNS5ZCIL7HUXPBA326UUMTRHT550A5ET", # ops
+  "GCNBBQLCRN7AHIQ72LRQU24UZNS5ZCIL7HUXPBA326UUMTRHT55OA5ET", # ops
   "GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK"  # CODY issuer (locked/immutable)
 ]
 
@@ -32,7 +32,7 @@ ORG_PHYSICAL_ADDRESS = "Los Angeles, CA, USA"
 ORG_PHONE_NUMBER = "+18186997275"
 ORG_KEYBASE = "realcodycordova"
 ORG_TWITTER = "realcodycordova"
-ORG_GITHUB = "codycordova"
+  ORG_GITHUB = "codycordova"
 ORG_OFFICIAL_EMAIL = "mgmt@codycordova.com"
 ORG_SUPPORT_EMAIL = "support@codytoken.com"
 
@@ -41,7 +41,7 @@ name = "Cody Cordova"
 email = "mgmt@codycordova.com"
 keybase = "realcodycordova"
 twitter = "realcodycordova"
-github = "codycordova"
+  github = "codycordova"
 
 [[CURRENCIES]]
 code = "CODY"
