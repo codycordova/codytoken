@@ -3,7 +3,8 @@ import {
   TransactionBuilder, 
   Operation, 
   Networks, 
-  Memo
+  Memo,
+  Account
 } from '@stellar/stellar-sdk';
 import Server from '@stellar/stellar-sdk';
 import crypto from 'crypto';
@@ -46,12 +47,12 @@ export class SEP10Service {
 
       // Create the challenge transaction using a simple approach
       // For SEP-10, we can use a basic transaction structure
+      const account = new Account(challengeKeypair.publicKey(), '1');
       const transaction = new TransactionBuilder(
-        challengeKeypair.publicKey(),
+        account,
         {
           fee: '100',
           networkPassphrase: this.NETWORK_PASSPHRASE,
-          sequence: '1',
         }
       )
         .setTimeout(this.CHALLENGE_DURATION / 1000) // Convert to seconds
