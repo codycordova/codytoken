@@ -94,6 +94,11 @@ scripts/find-pool-addresses.js
 scripts/test-*.js
 scripts/test-*.ts
 
+# Unnecessary GitHub workflows and configurations
+.github/workflows/ci.yml
+.github/workflows/snyk-infrastructure.yml
+.github/dependabot.yml
+
 # ----------------------------------------
 # 💻 OS & TEMP FILES
 # ----------------------------------------
