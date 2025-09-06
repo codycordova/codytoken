@@ -80,6 +80,20 @@ scripts/setDomain.ts
 *private*
 *admin*
 
+# Internal documentation and development files
+STELLAR_TOML_FIX.md
+qodana.yaml
+ecosystem.config.js
+next-env.d.ts
+tsconfig.scripts.json
+
+# Development and debugging scripts (keep only essential ones)
+scripts/check-contract-data.js
+scripts/debug-pool-contracts.js
+scripts/find-pool-addresses.js
+scripts/test-*.js
+scripts/test-*.ts
+
 # ----------------------------------------
 # 💻 OS & TEMP FILES
 # ----------------------------------------
