@@ -15,13 +15,15 @@ const NODE_ENV = process.env.NODE_ENV || 'development';
 const JWT_SECRET = process.env.JWT_SECRET;
 const DOMAIN = process.env.DOMAIN;
 
-// In production, require proper environment variables
-if (NODE_ENV === 'production') {
-  if (!JWT_SECRET || JWT_SECRET.length < 32) {
-    throw new Error('JWT_SECRET environment variable is required in production and must be at least 32 characters long');
-  }
-  if (!DOMAIN) {
-    throw new Error('DOMAIN environment variable is required in production');
+// Function to validate configuration at runtime
+function validateConfig() {
+  if (NODE_ENV === 'production') {
+    if (!JWT_SECRET || JWT_SECRET.length < 32) {
+      throw new Error('JWT_SECRET environment variable is required in production and must be at least 32 characters long');
+    }
+    if (!DOMAIN) {
+      throw new Error('DOMAIN environment variable is required in production');
+    }
   }
 }
 
@@ -30,5 +32,6 @@ export const SEP10_CONFIG = {
   DOMAIN: DOMAIN || (NODE_ENV === 'development' ? 'localhost:3000' : ''),
   STELLAR_NETWORK: process.env.STELLAR_NETWORK || 'public',
   HORIZON_URL: process.env.HORIZON_URL || 'https://horizon.stellar.org',
-  NODE_ENV: NODE_ENV
+  NODE_ENV: NODE_ENV,
+  validate: validateConfig
 };

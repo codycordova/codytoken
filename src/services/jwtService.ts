@@ -14,6 +14,11 @@ export class JWTService {
   private static readonly JWT_EXPIRY = '5m'; // 5 minutes as per SEP-10 spec
   private static readonly DOMAIN = SEP10_CONFIG.DOMAIN;
 
+  // Validate configuration when the service is first used
+  private static validateConfig() {
+    SEP10_CONFIG.validate();
+  }
+
   /**
    * Generate a JWT token for SEP-10 authentication
    * @param stellarAccount - The Stellar account address
@@ -21,6 +26,8 @@ export class JWTService {
    * @returns JWT token string
    */
   static generateSEP10Token(stellarAccount: string, jti: string): string {
+    this.validateConfig();
+    
     const payload: SEP10TokenPayload = {
       iss: this.DOMAIN,
       sub: stellarAccount,
@@ -40,6 +47,8 @@ export class JWTService {
    * @returns Decoded token payload
    */
   static verifySEP10Token(token: string): SEP10TokenPayload {
+    this.validateConfig();
+    
     try {
       const decoded = jwt.verify(token, this.JWT_SECRET, {
         algorithms: ['HS256']
