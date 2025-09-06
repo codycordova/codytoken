@@ -1,13 +1,9 @@
 import { 
   Keypair, 
   TransactionBuilder, 
-  Operation, 
-  Networks, 
-  Memo,
+  Networks,
   Account
 } from '@stellar/stellar-sdk';
-import Server from '@stellar/stellar-sdk';
-import crypto from 'crypto';
 import { JWTService } from './jwtService';
 import { SEP10_CONFIG } from '@/config/sep10Config';
 
@@ -43,13 +39,12 @@ export class SEP10Service {
 
       // Create a keypair for the challenge
       const challengeKeypair = Keypair.random();
-      const challengeAccount = challengeKeypair.publicKey();
 
       // Create the challenge transaction using a simple approach
       // For SEP-10, we can use a basic transaction structure
-      const account = new Account(challengeKeypair.publicKey(), '1');
+      const challengeAccount = new Account(challengeKeypair.publicKey(), '1');
       const transaction = new TransactionBuilder(
-        account,
+        challengeAccount,
         {
           fee: '100',
           networkPassphrase: this.NETWORK_PASSPHRASE,
