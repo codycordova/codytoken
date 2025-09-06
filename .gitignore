@@ -117,5 +117,5 @@ next-env.d.ts
 # Sentry Config File
 .env.sentry-build-plugin
 
-# Cursor Rules
-.cursor/rules/
+# Cursor IDE Configuration (should be private)
+.cursor/
