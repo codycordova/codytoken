@@ -1,14 +1,29 @@
 // SEP-10 Web Auth endpoint
 import { NextResponse } from "next/server";
+import { SEP10Service } from "@/services/sep10Service";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    // SEP-10 challenge endpoint doesn't require account parameter
-    // Basic SEP-10 challenge response
-    const challenge = {
-      transaction: "AAAAAG...", // This would be a real Stellar transaction
-      network_passphrase: "Public Global Stellar Network ; September 2015"
-    };
+    const { searchParams } = new URL(request.url);
+    const account = searchParams.get('account');
+
+    if (!account) {
+      return NextResponse.json(
+        { error: "Missing required parameter: account" },
+        { 
+          status: 400,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type'
+          }
+        }
+      );
+    }
+
+    // Generate SEP-10 challenge
+    const challenge = await SEP10Service.generateChallenge(account);
 
     return NextResponse.json(challenge, {
       headers: {
@@ -18,29 +33,47 @@ export async function GET() {
         'Access-Control-Allow-Headers': 'Content-Type'
       }
     });
-  } catch {
+  } catch (error) {
+    console.error('SEP-10 challenge generation error:', error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: error instanceof Error ? error.message : "Internal server error" },
       { 
         status: 500,
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type'
         }
       }
     );
   }
 }
 
-export async function POST() {
+export async function POST(request: Request) {
   try {
-    // Basic SEP-10 challenge validation
-    // In production, you'd implement proper transaction validation
-    const token = {
-      token: "eyJ...", // This would be a real JWT token
-      type: "jwt"
-    };
+    const body = await request.json();
+    const { transaction } = body;
 
-    return NextResponse.json(token, {
+    if (!transaction) {
+      return NextResponse.json(
+        { error: "Missing required parameter: transaction" },
+        { 
+          status: 400,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type'
+          }
+        }
+      );
+    }
+
+    // Validate challenge and generate JWT token
+    const tokenResponse = await SEP10Service.validateChallenge(transaction);
+
+    return NextResponse.json(tokenResponse, {
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
@@ -48,13 +81,17 @@ export async function POST() {
         'Access-Control-Allow-Headers': 'Content-Type'
       }
     });
-  } catch {
+  } catch (error) {
+    console.error('SEP-10 challenge validation error:', error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: error instanceof Error ? error.message : "Internal server error" },
       { 
         status: 500,
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type'
         }
       }
     );
