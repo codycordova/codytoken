@@ -70,6 +70,16 @@ index.html
 *.key
 *.crt
 
+# Scripts with sensitive configuration
+scripts/config.ts
+scripts/set_domain_record.ts
+scripts/setDomain.ts
+
+# Any files that might contain secrets
+*secret*
+*private*
+*admin*
+
 # ----------------------------------------
 # 💻 OS & TEMP FILES
 # ----------------------------------------
