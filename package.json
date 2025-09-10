@@ -2,17 +2,12 @@
   "name": "cody-token-web3",
   "version": "0.1.0",
   "private": true,
+  "license": "AGPL-3.0",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "test:api": "node scripts/test-api.js",
-    "test:aqua": "node scripts/test-aqua-api.js",
-    "test:sep10": "node scripts/test-sep10.js",
-    "ws:dev": "ts-node src/ws/server.ts",
-    "ws:start": "node dist/ws/server.js",
-    "set:domain": "ts-node -P tsconfig.scripts.json scripts/setDomain.ts"
+    "lint": "next lint"
   },
   "dependencies": {
     "@creit.tech/sorobandomains-sdk": "^0.1.6",

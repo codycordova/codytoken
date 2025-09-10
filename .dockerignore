@@ -16,6 +16,33 @@ git/*
 **/node_modules/**
 **/.DS_Store
 
+# Explicitly exclude secrets and developer configs
+.env
+.env.*
+.npmrc
+.sentryclirc
+.git
+.github/**
+.husky/**
+.vscode/**
+.idea/**
+
+# Exclude build artifacts and caches
+.next/**
+.turbo/**
+out/**
+dist/**
+build/**
+coverage/**
+tmp/**
+.cache/**
+**/*.log
+logs/**
+
 # Optionally allow pages/app if you need server code
 !src/**
+
+# Even inside src, never include secret-like files
+src/**/*.env*
+src/**/*.{pem,key,crt,csr,p12,pfx}
 
