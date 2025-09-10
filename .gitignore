@@ -70,29 +70,19 @@ index.html
 *.key
 *.crt
 
-# Scripts with sensitive configuration
-scripts/config.ts
-scripts/set_domain_record.ts
-scripts/setDomain.ts
-
 # Any files that might contain secrets
 *secret*
 *private*
 *admin*
 
-# Internal documentation and development files
-STELLAR_TOML_FIX.md
-qodana.yaml
-ecosystem.config.js
-next-env.d.ts
-tsconfig.scripts.json
-
-# Development and debugging scripts (keep only essential ones)
-scripts/check-contract-data.js
-scripts/debug-pool-contracts.js
-scripts/find-pool-addresses.js
+# Development and debugging scripts
 scripts/test-*.js
 scripts/test-*.ts
+scripts/debug-*.js
+scripts/check-*.js
+scripts/find-*.js
+scripts/setup-*.sh
+scripts/setup-*.ps1
 
 # Unnecessary GitHub workflows and configurations
 .github/workflows/ci.yml
@@ -124,3 +114,12 @@ next-env.d.ts
 
 # Cursor IDE Configuration (should be private)
 .cursor/
+
+# ----------------------------------------
+# 📝 DOCUMENTATION (Development Only)
+# ----------------------------------------
+# Development documentation
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
+STELLAR_TOML_FIX.md
+docs/SECRETS_MANAGEMENT.md

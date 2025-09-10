@@ -656,27 +656,16 @@ export default function AtomicSwapCard({ walletAddress }: Props) {
           }
         }
         
-        console.log('Transaction submitted successfully:', res.hash);
+        // Transaction submitted successfully
         handleSwapSuccess(res.hash, xlmAmount, estReceived);
       } catch (submitError: unknown) {
         console.error('Transaction submission error:', submitError);
         
-        // Comprehensive error logging
+        // Extract error information
         const errorObj = submitError as any;
-        console.error('=== ERROR ANALYSIS ===');
-        console.error('Error type:', typeof errorObj);
-        console.error('Error constructor:', errorObj?.constructor?.name);
-        console.error('Error keys:', Object.keys(errorObj || {}));
-        console.error('Full error object:', JSON.stringify(errorObj, null, 2));
-        
-        // Try different ways to access error information
         const errorMessage = errorObj?.message || errorObj?.toString() || 'Unknown error';
         const errorStatus = errorObj?.status || errorObj?.response?.status || errorObj?.code;
         const errorData = errorObj?.data || errorObj?.response?.data || errorObj?.extras;
-        
-        console.error('Extracted error message:', errorMessage);
-        console.error('Extracted error status:', errorStatus);
-        console.error('Extracted error data:', errorData);
         
         // Check for various error conditions
         const is400Error = errorStatus === 400 || errorMessage.includes('400') || errorMessage.includes('Request failed');

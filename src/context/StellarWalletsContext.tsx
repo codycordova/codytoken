@@ -44,10 +44,10 @@ export function StellarWalletsProvider({ children }: { children: ReactNode }) {
             container: containerRef.current!,
             buttonText: "Connect Stellar Wallet",
             onConnect: ({ address }) => {
-                console.log("Connected:", address);
+                // Wallet connected
             },
             onDisconnect: () => {
-                console.log("Disconnected");
+                // Wallet disconnected
             },
         });
 
