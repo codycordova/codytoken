@@ -33,7 +33,8 @@ export class TokenomicsService {
       if (condMatch) {
         const sentence = condMatch[1];
         const circPhrase = sentence.match(/([\d,]+)\s+tokens\s+are\s+currently\s+in\s+circulation/i)
-          || sentence.match(/only\s+([\d,]+)\s+tokens/i);
+          || sentence.match(/only\s+([\d,]+)\s+tokens/i)
+          || sentence.match(/([\d,]+)\s+CODY\s+tokens\s+have\s+been\s+released/i);
         if (circPhrase) {
           const parsed = parseNumberFromString(circPhrase[1]);
           if (parsed !== null) circulating = parsed;
@@ -68,7 +69,7 @@ export class TokenomicsService {
       this.getTokenomicsFromToml() ||
       this.getTokenomicsFromEnv() || {
         totalSupply: DEFAULT_TOTAL_SUPPLY,
-        circulatingSupply: 0,
+        circulatingSupply: 2000,
         source: 'static'
       }
     );

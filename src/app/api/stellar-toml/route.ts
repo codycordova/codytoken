@@ -23,10 +23,10 @@ WEB_AUTH_ENDPOINT = "https://api.codytoken.com/sep10"
 KYC_SERVER = "https://api.codytoken.com/sep12"
 
 [DOCUMENTATION]
-ORG_NAME = "Cody Cordova"
+ORG_NAME = "CODY CORDOVA LLC"
 ORG_DBA = "CODY Token"
 ORG_URL = "https://codytoken.com"
-ORG_LOGO = "https://codytoken.com/cclogo.png"
+ORG_LOGO = "https://bafybeih3g2v7m5gziwfp6hr3vwwdjczdy2ql3gloz3jlemdyjgyl7epxcy.ipfs.dweb.link?filename=CC%20LOGO.png.png"
 ORG_DESCRIPTION = "CODY Token is a Stellar-based utility token by artist Cody Cordova used for merch, tickets, game rewards, and community tools."
 ORG_PHYSICAL_ADDRESS = "Los Angeles, CA, USA"
 ORG_PHONE_NUMBER = "+18186997275"
@@ -41,7 +41,7 @@ name = "Cody Cordova"
 email = "mgmt@codycordova.com"
 keybase = "realcodycordova"
 twitter = "realcodycordova"
-  github = "codycordova"
+github = "codycordova"
 
 [[CURRENCIES]]
 code = "CODY"
@@ -49,8 +49,8 @@ issuer = "GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK"
 name = "CODY Token"
 display_decimals = 2
 desc = "The official utility token for multimedia artist Cody Cordova — used for merch, tickets, gaming rewards, and community interaction."
-conditions = "Total supply capped at 444,444,444,444 CODY. Circulating supply is being released gradually to study market behavior and maintain fair liquidity."
-image = "https://codytoken.com/cclogo.png"
+conditions = "Total supply capped at 444,444,444,444 CODY. Only 2,000 tokens are currently in circulation. Circulating supply is being released gradually to study market behavior and maintain fair liquidity."
+image = "https://bafybeih3g2v7m5gziwfp6hr3vwwdjczdy2ql3gloz3jlemdyjgyl7epxcy.ipfs.dweb.link?filename=CC%20LOGO.png.png"
 fixed_number = 444444444444
 is_asset_anchored = false
 status = "live"`;
