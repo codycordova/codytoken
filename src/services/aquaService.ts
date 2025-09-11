@@ -71,7 +71,12 @@ export class AquaService {
       // Fallback to Soroban RPC for reserves
       const reserves = await tryPoolReservesFromSoroban(poolContractId, this.TOKEN_CONTRACTS.CODY);
       if (reserves) {
-        return this.createPoolDataFromReserves(reserves, poolContractId);
+        return await this.createPoolDataFromReserves(reserves, poolContractId);
+      }
+
+      // Additional fallback: try to get data from Stellar Horizon for liquidity pools
+      if (poolContractId === this.POOL_CONTRACTS.CODY_USDC) {
+        return await this.getCodyUsdcPoolData();
       }
 
       return null;
@@ -241,22 +246,77 @@ export class AquaService {
     }
   }
 
-     /**
-    * Get specific pool by pair name
-    */
-   static async getPoolByPair(pair: string): Promise<AquaPoolData | null> {
-     const pairMap: Record<string, string> = {
-       'CODY/USDC': this.POOL_CONTRACTS.CODY_USDC,
-       'CODY/XLM': this.POOL_CONTRACTS.CODY_XLM,
-       'CODY/AQUA': this.POOL_CONTRACTS.CODY_AQUA
-     };
+  /**
+   * Get CODY/USDC pool data from Stellar Horizon as fallback
+   */
+  private static async getCodyUsdcPoolData(): Promise<AquaPoolData | null> {
+    try {
+      // Try to get liquidity pool data from Horizon
+      const response = await fetch(`${this.HORIZON_SERVER}/liquidity_pools`);
+      if (!response.ok) return null;
+      
+      const data = await response.json();
+      const pools = data._embedded?.records || [];
+      
+      // Look for CODY/USDC pool
+      for (const pool of pools) {
+        if (pool.reserves && pool.reserves.length === 2) {
+          const reserve1 = pool.reserves[0];
+          const reserve2 = pool.reserves[1];
+          
+          // Check if this is a CODY pool
+          if ((reserve1.asset?.includes('CODY') || reserve2.asset?.includes('CODY')) &&
+              (reserve1.asset?.includes('USDC') || reserve2.asset?.includes('USDC'))) {
+            
+            const codyReserve = reserve1.asset?.includes('CODY') ? reserve1 : reserve2;
+            const usdcReserve = reserve1.asset?.includes('USDC') ? reserve1 : reserve2;
+            
+            const codyAmount = parseFloat(codyReserve.amount);
+            const usdcAmount = parseFloat(usdcReserve.amount);
+            const price = codyAmount > 0 ? usdcAmount / codyAmount : 0;
+            
+            return {
+              poolId: pool.id,
+              pair: 'CODY/USDC',
+              tvl: codyAmount * price + usdcAmount,
+              volume24h: 0, // Would need additional API call
+              baseAPY: 0, // Would need additional API call
+              rewardsAPY: 0, // Would need additional API call
+              fee: 0.003, // Standard AMM fee
+              price,
+              reserves: {
+                cody: codyAmount,
+                counter: usdcAmount
+              },
+              timestamp: new Date().toISOString()
+            };
+          }
+        }
+      }
+      
+      return null;
+    } catch (error) {
+      console.error('Error fetching CODY/USDC pool data from Horizon:', error);
+      return null;
+    }
+  }
 
-     const poolContractId = pairMap[pair.toUpperCase()];
-     if (!poolContractId) {
-       console.warn(`Unknown pair: ${pair}`);
-       return null;
-     }
+  /**
+   * Get specific pool by pair name
+   */
+  static async getPoolByPair(pair: string): Promise<AquaPoolData | null> {
+    const pairMap: Record<string, string> = {
+      'CODY/USDC': this.POOL_CONTRACTS.CODY_USDC,
+      'CODY/XLM': this.POOL_CONTRACTS.CODY_XLM,
+      'CODY/AQUA': this.POOL_CONTRACTS.CODY_AQUA
+    };
 
-     return this.getPoolData(poolContractId);
-   }
+    const poolContractId = pairMap[pair.toUpperCase()];
+    if (!poolContractId) {
+      console.warn(`Unknown pair: ${pair}`);
+      return null;
+    }
+
+    return this.getPoolData(poolContractId);
+  }
 }
