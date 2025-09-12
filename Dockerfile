@@ -2,6 +2,9 @@
 # Stage 1: Build stage
 FROM node:20-alpine AS builder
 
+# Add build argument to bust cache when needed
+ARG CACHE_BUST=1
+
 # Install system dependencies and security updates
 RUN apk update && apk upgrade && \
     apk add --no-cache \
@@ -26,7 +29,8 @@ COPY package.json package-lock.json* ./
 # Update npm to latest version and install ALL dependencies (including dev) for build
 RUN npm install -g npm@latest && \
     npm ci --no-audit --no-fund && \
-    npm audit --audit-level=moderate
+    npm audit --audit-level=moderate && \
+    echo "Installed dependencies including autoprefixer: $(npm list autoprefixer --depth=0)"
 
 # Copy application code
 COPY . .
