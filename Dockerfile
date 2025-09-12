@@ -40,6 +40,11 @@ FROM node:20-alpine AS runner
 # Install system dependencies and security updates
 RUN apk update && apk upgrade && \
     apk add --no-cache \
+    python3 \
+    make \
+    g++ \
+    linux-headers \
+    eudev-dev \
     dumb-init && \
     rm -rf /var/cache/apk/*
 
