@@ -1,45 +1,5 @@
-# Multi-stage build for security and optimization
-# Stage 1: Build stage
-FROM node:20-alpine AS builder
-
-# Add build argument to bust cache when needed
-ARG CACHE_BUST=1
-
-# Install system dependencies and security updates
-RUN apk update && apk upgrade && \
-    apk add --no-cache \
-    python3 \
-    make \
-    g++ \
-    linux-headers \
-    eudev-dev && \
-    rm -rf /var/cache/apk/*
-
-# Set working directory
-WORKDIR /app
-
-# Set environment variables for build
-ENV NODE_ENV=production
-ENV NPM_CONFIG_UPDATE_NOTIFIER=false
-ENV NPM_CONFIG_FUND=false
-
-# Copy package files first for better Docker layer caching
-COPY package.json package-lock.json* ./
-
-# Update npm to latest version and install ALL dependencies (including dev) for build
-RUN npm install -g npm@latest && \
-    npm ci --no-audit --no-fund && \
-    npm audit --audit-level=moderate && \
-    echo "Installed dependencies including autoprefixer: $(npm list autoprefixer --depth=0)"
-
-# Copy application code
-COPY . .
-
-# Build the application
-RUN npm run build
-
-# Stage 2: Production stage
-FROM node:20-alpine AS runner
+# Use the latest LTS Node.js Alpine image for security
+FROM node:20-alpine
 
 # Install system dependencies and security updates
 RUN apk update && apk upgrade && \
@@ -68,18 +28,23 @@ ENV NPM_CONFIG_UPDATE_NOTIFIER=false
 ENV NPM_CONFIG_FUND=false
 ENV NPM_CONFIG_AUDIT=false
 
-# Copy package files and install ONLY production dependencies
+# Copy package files first for better Docker layer caching
 COPY package.json package-lock.json* ./
-RUN npm ci --only=production --no-audit --no-fund && \
+
+# Update npm to latest version and install dependencies with security checks
+RUN npm install -g npm@latest && \
+    npm ci --no-audit --no-fund && \
+    npm audit --audit-level=moderate && \
     npm install -g pm2@latest
 
-# Copy built application from builder stage
-COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
-COPY --from=builder --chown=nextjs:nodejs /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/next.config.ts ./
-COPY --from=builder --chown=nextjs:nodejs /app/src ./src
+# Copy application code
+COPY . .
 
-# Switch to non-root user
+# Build the application
+RUN npm run build
+
+# Change ownership to non-root user
+RUN chown -R nextjs:nodejs /app
 USER nextjs
 
 # Expose ports
