@@ -277,21 +277,7 @@ body {
   box-shadow: none !important;
 }
 
-/* Parallax Background */
-.parallax-bg, .stars-bg {
-  position: fixed;
-  top: 0; left: 0; width: 100vw; height: 100vh;
-  z-index: 0;
-  pointer-events: none;
-  background: transparent;
-  animation: moveStars 60s linear infinite;
-}
-
-/* Remove the animation for a cleaner look */
-@keyframes moveStars {
-  0% { background-position: 0 0; }
-  100% { background-position: 100vw 100vh; }
-}
+/* Parallax Background - Now handled globally in globals.css */
 
 /* Reveal Animations */
 .reveal {
@@ -446,4 +432,489 @@ body {
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
+}
+
+/* ─── New Homepage Sections ─── */
+
+/* Hero CTA Buttons */
+.hero-cta-buttons {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.cta-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    min-width: 140px;
+    text-align: center;
+}
+
+.cta-button.primary {
+    background: linear-gradient(45deg, #ffea00, #ffd700);
+    color: #000;
+    border-color: #ffea00;
+}
+
+.cta-button.primary:hover {
+    background: linear-gradient(45deg, #ffd700, #ffea00);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 234, 0, 0.4);
+}
+
+.cta-button.secondary {
+    background: transparent;
+    color: #ffea00;
+    border-color: #ffea00;
+}
+
+.cta-button.secondary:hover {
+    background: rgba(255, 234, 0, 0.1);
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 234, 0, 0.2);
+}
+
+.cta-button.large {
+    padding: 1.25rem 2.5rem;
+    font-size: 1.1rem;
+    min-width: 180px;
+}
+
+/* Section Titles */
+.section-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 1rem;
+    background: linear-gradient(45deg, #ffea00, #ffffff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Mission Section */
+.mission-section {
+    padding: 4rem 2rem;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    margin: 3rem 0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mission-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.mission-subtitle {
+    font-size: 1.5rem;
+    color: #ffea00;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+.mission-description {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #e0e0e0;
+    margin-bottom: 2rem;
+}
+
+/* Features Section */
+.features-section {
+    padding: 4rem 2rem;
+    margin: 3rem 0;
+}
+
+.features-subtitle {
+    font-size: 1.3rem;
+    color: #e0e0e0;
+    text-align: center;
+    margin-bottom: 3rem;
+    font-weight: 500;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.feature-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(255, 234, 0, 0.3);
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.feature-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.feature-card h4 {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #ffea00;
+    margin-bottom: 1rem;
+}
+
+.feature-card p {
+    color: #e0e0e0;
+    line-height: 1.6;
+    font-size: 1rem;
+}
+
+/* Stats Section */
+.stats-section {
+    padding: 4rem 2rem;
+    margin: 3rem 0;
+    text-align: center;
+    background: linear-gradient(135deg, rgba(255, 234, 0, 0.05), rgba(255, 255, 255, 0.02));
+    border-radius: 24px;
+    border: 1px solid rgba(255, 234, 0, 0.1);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+    margin-bottom: 2rem;
+}
+
+.stats-grid-compact {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2.5rem;
+    margin-top: 2rem;
+    margin-bottom: 1.5rem;
+    max-width: 100%;
+    padding: 0 2rem;
+}
+
+.stat-card {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 16px;
+    padding: 1.5rem 1rem;
+    border: 1px solid rgba(255, 234, 0, 0.2);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: visible;
+    backdrop-filter: blur(10px);
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #ffea00, #ffd700);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(255, 234, 0, 0.4);
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+}
+
+.stat-card:hover::before {
+    opacity: 1;
+}
+
+.stat-card.featured {
+    background: linear-gradient(135deg, rgba(255, 234, 0, 0.15), rgba(0, 0, 0, 0.4));
+    border: 2px solid rgba(255, 234, 0, 0.5);
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(255, 234, 0, 0.2);
+}
+
+.stat-card.featured::before {
+    opacity: 1;
+    height: 4px;
+}
+
+.stat-card.featured:hover {
+    transform: scale(1.05) translateY(-5px);
+    box-shadow: 0 20px 40px rgba(255, 234, 0, 0.2);
+}
+
+.stat-number {
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #ffea00;
+    margin-bottom: 0.5rem;
+    display: block;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    line-height: 1.1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: 1.8rem;
+}
+
+.stat-card.featured .stat-number {
+    font-size: 1.8rem;
+    background: linear-gradient(45deg, #ffea00, #ffd700);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+    min-height: 2rem;
+}
+
+.stat-label {
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.stat-note {
+    color: #e0e0e0;
+    font-size: 0.8rem;
+    font-style: italic;
+    margin-top: 0.3rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.stats-footer {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stats-footer-compact {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+    padding: 0 1rem;
+}
+
+.stats-disclaimer {
+    color: #b0b0b0;
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.verify-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    background: linear-gradient(45deg, rgba(255, 234, 0, 0.1), rgba(255, 255, 255, 0.05));
+    border: 1px solid rgba(255, 234, 0, 0.3);
+    border-radius: 12px;
+    color: #ffea00;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    margin: 0 auto;
+}
+
+.verify-link:hover {
+    background: linear-gradient(45deg, rgba(255, 234, 0, 0.2), rgba(255, 255, 255, 0.1));
+    border-color: #ffea00;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 234, 0, 0.3);
+    color: #ffffff;
+}
+
+/* Final CTA Section */
+.final-cta-section {
+    padding: 4rem 2rem;
+    margin: 3rem 0;
+    text-align: center;
+    background: linear-gradient(135deg, rgba(255, 234, 0, 0.1), rgba(255, 255, 255, 0.05));
+    border-radius: 20px;
+    border: 1px solid rgba(255, 234, 0, 0.2);
+}
+
+.cta-content {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.cta-description {
+    font-size: 1.2rem;
+    color: #e0e0e0;
+    margin-bottom: 2.5rem;
+    line-height: 1.6;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Mobile Responsiveness for New Sections */
+@media (max-width: 768px) {
+    .section-title {
+        font-size: 2rem;
+    }
+    
+    .mission-section,
+    .features-section,
+    .stats-section,
+    .final-cta-section {
+        padding: 3rem 1.5rem;
+        margin: 2rem 0;
+    }
+    
+    .features-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+    
+    .stats-grid-compact {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+        padding: 0 1rem;
+    }
+    
+    .stat-card.featured {
+        transform: none;
+        grid-column: 1 / -1;
+        margin-bottom: 1rem;
+    }
+    
+    .stat-card.featured:hover {
+        transform: translateY(-5px);
+    }
+    
+    .hero-cta-buttons,
+    .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .cta-button {
+        width: 100%;
+        max-width: 280px;
+    }
+    
+    .mission-subtitle {
+        font-size: 1.3rem;
+    }
+    
+    .mission-description {
+        font-size: 1rem;
+    }
+    
+    .features-subtitle {
+        font-size: 1.1rem;
+    }
+    
+    .feature-card {
+        padding: 1.5rem;
+    }
+    
+    .feature-icon {
+        font-size: 2.5rem;
+    }
+    
+    .stat-number {
+        font-size: 1.4rem;
+    }
+    
+    .stat-card.featured .stat-number {
+        font-size: 1.6rem;
+    }
+    
+    .stat-label {
+        font-size: 0.8rem;
+    }
+    
+    .stat-card {
+        padding: 1.25rem 0.75rem;
+        min-height: 90px;
+        margin: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .stats-grid-compact {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        padding: 0 1rem;
+    }
+    
+    .stat-number {
+        font-size: 1.4rem;
+    }
+    
+    .stat-card.featured .stat-number {
+        font-size: 1.6rem;
+    }
+    
+    .stat-label {
+        font-size: 0.8rem;
+    }
+    
+    .stat-card {
+        padding: 1.25rem 0.75rem;
+        min-height: 90px;
+    }
+    
+    .section-title {
+        font-size: 1.8rem;
+    }
+    
+    .mission-section,
+    .features-section,
+    .stats-section,
+    .final-cta-section {
+        padding: 2rem 1rem;
+    }
 }

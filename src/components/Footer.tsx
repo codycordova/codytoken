@@ -37,6 +37,7 @@ export default function Footer() {
               <ul className="footer-links">
                 <li><Link href="/blog">Blog</Link></li>
                 <li><Link href="/whitepaper">Whitepaper</Link></li>
+                <li><Link href="/docs">Developer Documentation</Link></li>
                 <li><a href="https://twitter.com/realcodycordova" target="_blank" rel="noopener noreferrer">Twitter</a></li>
                 <li><a href="https://t.me/codytokenxlm" target="_blank" rel="noopener noreferrer">Telegram</a></li>
                 <li><a href="https://discord.gg/WYHdtRMueC" target="_blank" rel="noopener noreferrer">Discord</a></li>
