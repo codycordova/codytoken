@@ -46,20 +46,20 @@ export default function Navbar() {
                     <li className={pathname === "/purchase" ? "active" : ""}>
                         <Link href="/purchase">Purchase</Link>
                     </li>
-                    <li className={pathname?.startsWith("/blog") ? "active" : ""}>
-                        <Link href="/blog">Blog</Link>
-                    </li>
-                    <li className={pathname === "/terms" ? "active" : ""}>
-                        <Link href="/terms">Terms</Link>
-                    </li>
-                    <li className={pathname === "/whitepaper" ? "active" : ""}>
-                        <Link href="/whitepaper">Whitepaper</Link>
+                    <li className={pathname === "/balances" ? "active" : ""}>
+                        <Link href="/balances">Balances</Link>
                     </li>
                     <li className={pathname === "/tokenomics" ? "active" : ""}>
                         <Link href="/tokenomics">Tokenomics</Link>
                     </li>
-                    <li className={pathname === "/balances" ? "active" : ""}>
-                        <Link href="/balances">Balances</Link>
+                    <li className={pathname?.startsWith("/blog") ? "active" : ""}>
+                        <Link href="/blog">Blog</Link>
+                    </li>
+                    <li className={pathname === "/faq" ? "active" : ""}>
+                        <Link href="/faq">FAQ</Link>
+                    </li>
+                    <li className={pathname === "/contact" ? "active" : ""}>
+                        <Link href="/contact">Contact</Link>
                     </li>
                 </ul>
                 <div className="navbar-wallet">
