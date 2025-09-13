@@ -2,8 +2,7 @@
 
 ## Supported Versions
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+Lol wassup beautiful souls. I love you. We here. <3 anything under version 0.1 is not supported ^~^
 
 | Version | Supported          |
 | ------- | ------------------ |
