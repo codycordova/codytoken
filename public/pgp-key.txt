@@ -1,0 +1,10 @@
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+Note: This is a placeholder PGP key. Replace with your actual PGP public key.
+
+To generate a real PGP key:
+1. Install GPG: https://gnupg.org/download/
+2. Generate key: gpg --full-generate-key
+3. Export public key: gpg --armor --export your-email@codytoken.com
+
+-----END PGP PUBLIC KEY BLOCK-----
