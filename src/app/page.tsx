@@ -59,15 +59,19 @@ export default function Home() {
                     <div id="launch-sequence">
                         <div className="hero-container" ref={heroRef}>
                             {/* Mobile version */}
-                            <MobileHeroText 
-                                text="$CODY Token" 
-                                fontSize={48} 
-                                className="spray-animate"
-                                color="#ffea00"
-                            />
+                            <div className="mobile-hero-title">
+                                <MobileHeroText 
+                                    text="$CODY Token" 
+                                    fontSize={48} 
+                                    className="spray-animate"
+                                    color="#ffea00"
+                                />
+                            </div>
                             
                             {/* Desktop version */}
-                            <GraffitiHeroText text="$CODY Token" fontSize={100} width={800} className="spray-animate" />
+                            <div className="desktop-hero-title">
+                                <GraffitiHeroText text="$CODY Token" fontSize={100} width={800} className="spray-animate" />
+                            </div>
                             
                             <div className="hero-3d" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                 <div style={{ width: '320px', maxWidth: '80vw', height: '320px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -77,22 +81,26 @@ export default function Home() {
 
                             <div className="hero-sub-row">
                                 {/* Mobile version */}
-                                <MobileHeroText 
-                                    text="Ur baby mama's favorite DJ has his own currency" 
-                                    fontSize={18} 
-                                    className="spray-animate"
-                                    color="#ffffff"
-                                />
-                                <MobileHeroText 
-                                    text="And its on the Stellar Blockchain" 
-                                    fontSize={20} 
-                                    className="spray-animate"
-                                    color="#ffea00"
-                                />
+                                <div className="mobile-hero-subtitle">
+                                    <MobileHeroText 
+                                        text="Ur baby mama's favorite DJ has his own currency" 
+                                        fontSize={18} 
+                                        className="spray-animate"
+                                        color="#ffffff"
+                                    />
+                                    <MobileHeroText 
+                                        text="And its on the Stellar Blockchain" 
+                                        fontSize={20} 
+                                        className="spray-animate"
+                                        color="#ffea00"
+                                    />
+                                </div>
                                 
                                 {/* Desktop version */}
-                                <GraffitiHeroText text="Ur baby mama's favorite DJ has his own currency" fontSize={28} width={600} className="spray-animate" />
-                                <GraffitiHeroText text="And its on the Stellar Blockchain" fontSize={32} width={500} className="spray-animate" />
+                                <div className="desktop-hero-subtitle">
+                                    <GraffitiHeroText text="Ur baby mama's favorite DJ has his own currency" fontSize={28} width={600} className="spray-animate" />
+                                    <GraffitiHeroText text="And its on the Stellar Blockchain" fontSize={32} width={500} className="spray-animate" />
+                                </div>
                             </div>
 
                             {/* Hero CTA Buttons */}
