@@ -10,10 +10,6 @@ export async function GET() {
       source: summary.source,
       timestamp: new Date().toISOString()
     });
-
-    response.headers.set('Access-Control-Allow-Origin', '*');
-    response.headers.set('Access-Control-Allow-Methods', 'GET, OPTIONS');
-    response.headers.set('Access-Control-Allow-Headers', 'Content-Type');
     response.headers.set('Cache-Control', 'public, max-age=30');
     return response;
   } catch {
@@ -21,16 +17,12 @@ export async function GET() {
       { error: 'Failed to load tokenomics' },
       { status: 500 }
     );
-    errorResponse.headers.set('Access-Control-Allow-Origin', '*');
     return errorResponse;
   }
 }
 
 export async function OPTIONS() {
-  const response = new NextResponse(null, { status: 200 });
-  response.headers.set('Access-Control-Allow-Origin', '*');
-  response.headers.set('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  response.headers.set('Access-Control-Allow-Headers', 'Content-Type');
+  const response = new NextResponse(null, { status: 204 });
   return response;
 }
 

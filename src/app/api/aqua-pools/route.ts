@@ -6,13 +6,8 @@ export async function GET() {
     const aquaData = await AquaService.getAllCodyPools();
     
     const response = NextResponse.json(aquaData);
-    
-    response.headers.set('Access-Control-Allow-Origin', '*');
-    response.headers.set('Access-Control-Allow-Methods', 'GET, OPTIONS');
-    response.headers.set('Access-Control-Allow-Headers', 'Content-Type');
     response.headers.set('Cache-Control', 'public, max-age=10'); // 10-second cache for pool data
     response.headers.set('Content-Type', 'application/json');
-    
     return response;
   } catch (error) {
     console.error('Error in Aqua pools API:', error);
@@ -25,21 +20,11 @@ export async function GET() {
       },
       { status: 500 }
     );
-    
-    errorResponse.headers.set('Access-Control-Allow-Origin', '*');
-    errorResponse.headers.set('Access-Control-Allow-Methods', 'GET, OPTIONS');
-    errorResponse.headers.set('Access-Control-Allow-Headers', 'Content-Type');
-    
     return errorResponse;
   }
 }
 
 export async function OPTIONS() {
-  const response = new NextResponse(null, { status: 200 });
-  
-  response.headers.set('Access-Control-Allow-Origin', '*');
-  response.headers.set('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  response.headers.set('Access-Control-Allow-Headers', 'Content-Type');
-  
+  const response = new NextResponse(null, { status: 204 });
   return response;
 }

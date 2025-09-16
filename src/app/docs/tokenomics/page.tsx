@@ -25,7 +25,7 @@ export default function TokenomicsPage() {
         <div className="docs-header">
           <h1>Tokenomics</h1>
           <p className="docs-subtitle">
-            Comprehensive breakdown of CODY Token's economic model, supply distribution, 
+            Comprehensive breakdown of CODY Token&apos;s economic model, supply distribution, 
             and utility mechanisms.
           </p>
         </div>

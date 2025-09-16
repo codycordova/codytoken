@@ -18,14 +18,24 @@ class WebSocketPriceServer {
   private maxReconnectAttempts = 5;
 
   constructor(port: number = 3030) {
-    this.wss = new WebSocketServer({ port });
+    this.wss = new WebSocketServer({
+      port,
+      maxPayload: parseInt(process.env.WS_MAX_PAYLOAD_BYTES || '1048576', 10),
+      perMessageDeflate: false
+    });
     this.setupWebSocketServer();
     this.startPriceStreaming();
     this.startTradeStreaming();
   }
 
   private setupWebSocketServer() {
-    this.wss.on('connection', (ws: WebSocket) => {
+    this.wss.on('connection', (ws: WebSocket, request) => {
+      const origin = request.headers.origin;
+      const allowedOrigins = (process.env.ALLOWED_ORIGINS || '').split(',').map(o => o.trim()).filter(Boolean);
+      if (origin && allowedOrigins.length > 0 && !allowedOrigins.includes(origin)) {
+        ws.close(1008, 'Origin not allowed');
+        return;
+      }
       const clientId = this.generateClientId();
       const client: Client = {
         ws,
@@ -41,6 +51,12 @@ class WebSocketPriceServer {
 
       // Handle client messages
       ws.on('message', (message: Buffer) => {
+        const maxMessageBytes = parseInt(process.env.WS_MAX_MESSAGE_BYTES || '262144', 10);
+        if (message.byteLength > maxMessageBytes) {
+          ws.close(1009, 'Message too large');
+          this.clients.delete(clientId);
+          return;
+        }
         try {
           const data = JSON.parse(message.toString());
           this.handleClientMessage(clientId, data);

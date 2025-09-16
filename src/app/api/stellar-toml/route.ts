@@ -59,9 +59,6 @@ status = "live"`;
       status: 200,
       headers: {
         'Content-Type': 'text/plain; charset=utf-8',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, OPTIONS',
-        'Access-Control-Allow-Headers': '*',
         'Cache-Control': 'public, max-age=300, must-revalidate'
       }
     });
@@ -80,11 +77,6 @@ status = "live"`;
 
 export async function OPTIONS() {
   return new Response(null, {
-    status: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, OPTIONS',
-      'Access-Control-Allow-Headers': '*'
-    }
+    status: 204
   });
 }

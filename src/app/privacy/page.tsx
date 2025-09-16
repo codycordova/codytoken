@@ -15,7 +15,7 @@ export default function PrivacyPage() {
                             When you interact with our platform or purchase CODY tokens, we collect the personal information you provide us such as your name, email address, and wallet address.
                         </p>
                         <p>
-                            When you browse our website, we also automatically receive your computer's internet protocol (IP) address in order to provide us with information that helps us learn about your browser and operating system.
+                            When you browse our website, we also automatically receive your computer&apos;s internet protocol (IP) address in order to provide us with information that helps us learn about your browser and operating system.
                         </p>
                         <p>
                             Email marketing (if applicable): With your permission, we may send you emails about CODY token updates, new features, and other relevant information.
@@ -51,7 +51,7 @@ export default function PrivacyPage() {
                             Our platform is hosted on secure servers. They provide us with the online platform that allows us to provide our services to you.
                         </p>
                         <p>
-                            Your data is stored through our providers' data storage, databases and the general application. They store your data on a secure server behind a firewall.
+                            Your data is stored through our providers&apos; data storage, databases and the general application. They store your data on a secure server behind a firewall.
                         </p>
                         <p>
                             <strong>Payment:</strong> If you choose a direct payment gateway to complete your purchase, then your payment data is stored. It is encrypted through the Payment Card Industry Data Security Standard (PCI-DSS). Your purchase transaction data is stored only as long as is necessary to complete your purchase transaction. After that is complete, your purchase transaction information is deleted.
@@ -76,7 +76,7 @@ export default function PrivacyPage() {
                             As an example, if you are located in Canada and your transaction is processed by a payment gateway located in the United States, then your personal information used in completing that transaction may be subject to disclosure under United States legislation, including the Patriot Act.
                         </p>
                         <p>
-                            Once you leave our website or are redirected to a third-party website or application, you are no longer governed by this Privacy Policy or our website's Terms of Service.
+                            Once you leave our website or are redirected to a third-party website or application, you are no longer governed by this Privacy Policy or our website&apos;s Terms of Service.
                         </p>
                         <p>
                             When you click on links on our website, they may direct you away from our site. We are not responsible for the privacy practices of other sites and encourage you to read their privacy statements.

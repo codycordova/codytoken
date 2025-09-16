@@ -45,7 +45,7 @@ console.log(priceData.price.USD); // Current USD price`}</code></pre>
           <h2>📊 What is CODY Token?</h2>
           <p>
             CODY Token is a Stellar-based utility token by multimedia artist Cody Cordova. 
-            It's designed for merchandise, tickets, gaming rewards, and community interaction 
+            It&apos;s designed for merchandise, tickets, gaming rewards, and community interaction 
             with a total supply of 444,444,444,444 tokens.
           </p>
           

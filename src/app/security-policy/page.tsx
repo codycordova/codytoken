@@ -47,7 +47,7 @@ export default function SecurityPolicy() {
                   <ul className="space-y-1">
                     <li>• Open public GitHub issues for security vulnerabilities</li>
                     <li>• Discuss vulnerabilities in public channels</li>
-                    <li>• Attempt to access other users' accounts or data</li>
+                    <li>• Attempt to access other users&apos; accounts or data</li>
                     <li>• Perform any destructive testing</li>
                   </ul>
                 </div>
@@ -114,7 +114,7 @@ export default function SecurityPolicy() {
                 
                 <div className="bg-yellow-500/20 border border-yellow-500/30 rounded-lg p-4 mt-4">
                   <p className="text-yellow-300">
-                    <strong>Note:</strong> We do not currently offer monetary rewards, but we're 
+                    <strong>Note:</strong> We do not currently offer monetary rewards, but we&apos;re 
                     considering implementing a bug bounty program in the future.
                   </p>
                 </div>

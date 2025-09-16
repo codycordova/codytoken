@@ -39,12 +39,4 @@
     <changefreq>yearly</changefreq>
     <priority>0.6</priority>
   </url>
-  
-  <!-- Sentry Example Page (if you want it indexed) -->
-  <url>
-    <loc>https://codytoken.com/sentry-example-page</loc>
-    <lastmod>2024-08-03</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-</urlset> 
+</urlset>  

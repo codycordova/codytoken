@@ -15,7 +15,7 @@ export default function SecurityAcknowledgments() {
             </h2>
             
             <p className="text-gray-300 mb-6">
-              We appreciate the security research community's efforts in helping keep CodyToken secure. 
+              We appreciate the security research community&apos;s efforts in helping keep CodyToken secure. 
               This page recognizes individuals who have responsibly disclosed security vulnerabilities.
             </p>
             

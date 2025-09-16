@@ -96,3 +96,9 @@ temp/
 
 # Sentry
 .sentryclirc
+
+# Local tooling/config
+.cursor/
+
+# Not needed in runtime image
+scripts/

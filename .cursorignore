@@ -1,0 +1,44 @@
+# ====== Secrets & credentials (never send to AI) ======
+.env
+.env.*
+*.pem
+*.key
+*.crt
+*.pfx
+.sentryclirc
+
+# ====== Build & cache noise ======
+node_modules
+.next
+dist
+out
+coverage
+.cache
+.parcel-cache
+.eslintcache
+
+# ====== Logs & temp ======
+*.log
+tmp/
+temp/
+
+# ====== Lockfiles (keep in git, not in AI context) ======
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# ====== Repo/meta not needed for code edits ======
+.git
+.github
+.husky
+
+# ====== Docs (optional to exclude to save tokens) ======
+README.md
+docs/
+*.md
+
+# ====== Big static assets (optional; uncomment if large) ======
+# public/**/*.png
+# public/**/*.jpg
+# public/**/*.svg
+# public/**/*.mp4

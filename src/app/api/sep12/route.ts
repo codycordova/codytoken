@@ -12,10 +12,7 @@ export async function GET() {
 
     return NextResponse.json(status, {
       headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type'
+        'Content-Type': 'application/json'
       }
     });
   } catch {
@@ -41,10 +38,7 @@ export async function POST() {
 
     return NextResponse.json(response, {
       headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type'
+        'Content-Type': 'application/json'
       }
     });
   } catch {
@@ -62,11 +56,6 @@ export async function POST() {
 
 export async function OPTIONS() {
   return new Response(null, {
-    status: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type'
-    }
+    status: 204
   });
 }

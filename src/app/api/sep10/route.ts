@@ -13,10 +13,7 @@ export async function GET(request: Request) {
         { 
           status: 400,
           headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type'
+            'Content-Type': 'application/json'
           }
         }
       );
@@ -27,10 +24,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json(challenge, {
       headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type'
+        'Content-Type': 'application/json'
       }
     });
   } catch (error) {
@@ -40,10 +34,7 @@ export async function GET(request: Request) {
       { 
         status: 500,
         headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type'
+          'Content-Type': 'application/json'
         }
       }
     );
@@ -61,10 +52,7 @@ export async function POST(request: Request) {
         { 
           status: 400,
           headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type'
+            'Content-Type': 'application/json'
           }
         }
       );
@@ -75,10 +63,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(tokenResponse, {
       headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type'
+        'Content-Type': 'application/json'
       }
     });
   } catch (error) {
@@ -88,10 +73,7 @@ export async function POST(request: Request) {
       { 
         status: 500,
         headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type'
+          'Content-Type': 'application/json'
         }
       }
     );
@@ -100,11 +82,6 @@ export async function POST(request: Request) {
 
 export async function OPTIONS() {
   return new Response(null, {
-    status: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type'
-    }
+    status: 204
   });
 }

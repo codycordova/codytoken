@@ -1409,6 +1409,7 @@ export default function AtomicSwapCard({ walletAddress }: Props) {
           color: #666;
           max-width: 200px;
           text-align: right;
+          word-break: break-all;
         }
 
         .status-message {
@@ -1441,6 +1442,8 @@ export default function AtomicSwapCard({ walletAddress }: Props) {
           .swap-card {
             padding: 20px;
             margin: 10px;
+            max-width: calc(100vw - 20px);
+            width: 100%;
           }
 
           .swap-header {
@@ -1461,6 +1464,22 @@ export default function AtomicSwapCard({ walletAddress }: Props) {
 
           .asset-selector {
             align-self: flex-end;
+          }
+          
+          .route {
+            max-width: 100%;
+            word-break: break-all;
+            font-size: 11px;
+            text-align: left;
+          }
+          
+          .amount-input {
+            width: 100%;
+            max-width: 100%;
+          }
+          
+          .swap-button {
+            width: 100%;
           }
         }
       `}</style>

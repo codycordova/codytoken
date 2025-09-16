@@ -43,7 +43,7 @@ export function StellarWalletsProvider({ children }: { children: ReactNode }) {
         newKit.createButton({
             container: containerRef.current!,
             buttonText: "Connect Stellar Wallet",
-            onConnect: ({ address }) => {
+            onConnect: () => {
                 // Wallet connected
             },
             onDisconnect: () => {

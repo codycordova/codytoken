@@ -5,13 +5,8 @@ export async function GET() {
   try {
     // Add CORS headers for cross-origin requests
     const response = NextResponse.json(await PriceService.getCodyPrice());
-    
-    response.headers.set('Access-Control-Allow-Origin', '*');
-    response.headers.set('Access-Control-Allow-Methods', 'GET, OPTIONS');
-    response.headers.set('Access-Control-Allow-Headers', 'Content-Type');
     response.headers.set('Cache-Control', 'public, max-age=5'); // 5-second cache
     response.headers.set('Content-Type', 'application/json');
-    
     return response;
   } catch (error) {
     console.error('Error in price API:', error);
@@ -24,21 +19,11 @@ export async function GET() {
       },
       { status: 500 }
     );
-    
-    errorResponse.headers.set('Access-Control-Allow-Origin', '*');
-    errorResponse.headers.set('Access-Control-Allow-Methods', 'GET, OPTIONS');
-    errorResponse.headers.set('Access-Control-Allow-Headers', 'Content-Type');
-    
     return errorResponse;
   }
 }
 
 export async function OPTIONS() {
-  const response = new NextResponse(null, { status: 200 });
-  
-  response.headers.set('Access-Control-Allow-Origin', '*');
-  response.headers.set('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  response.headers.set('Access-Control-Allow-Headers', 'Content-Type');
-  
+  const response = new NextResponse(null, { status: 204 });
   return response;
 } 

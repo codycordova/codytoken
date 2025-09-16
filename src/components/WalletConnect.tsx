@@ -4,7 +4,6 @@
 import React, { useState } from "react";
 import { StellarWalletsKit, WalletNetwork, FREIGHTER_ID, FreighterModule, xBullModule, LobstrModule } from "@creit.tech/stellar-wallets-kit";
 import { useWallet } from "@/context/WalletContext";
-import { FaKey } from "react-icons/fa";
 
 let kit: StellarWalletsKit | null = null;
 
@@ -60,7 +59,6 @@ export default function WalletConnect() {
           letterSpacing: "0.03em",
         }}
       >
-        <FaKey style={{ marginRight: "0.5em" }} />
         {walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}
       </span>
       <button className="wallet-connect-btn" onClick={handleDisconnect}>

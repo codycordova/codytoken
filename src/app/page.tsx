@@ -213,22 +213,50 @@ export default function Home() {
 
                     {/* Live Data Section */}
                     <section className="stellar-widgets-row reveal fade-in">
-                        <iframe
-                            title="StellarExpert Asset Summary"
-                            src="https://stellar.expert/widget/public/asset/summary/CODY-GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK"
-                            style={{ border: 'none', overflow: 'hidden', maxWidth: '100%', minWidth: '300px', maxHeight: '100%', minHeight: '200px', width: '100%' }}
-                            onLoad={e => { const iframe = e.currentTarget; window.addEventListener('message', function ({ data, source }) {
-                                if (iframe && source === iframe.contentWindow && data.widget === iframe.src) iframe.style.height = data.height + 'px';
-                            }, false); }}
-                        />
-                        <iframe
-                            title="StellarExpert Price History"
-                            src="https://stellar.expert/widget/public/asset/price/CODY-GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK"
-                            style={{ border: 'none', overflow: 'hidden', maxWidth: '100%', minWidth: '300px', maxHeight: '100%', minHeight: '200px', width: '100%' }}
-                            onLoad={e => { const iframe = e.currentTarget; window.addEventListener('message', function ({ data, source }) {
-                                if (iframe && source === iframe.contentWindow && data.widget === iframe.src) iframe.style.height = data.height + 'px';
-                            }, false); }}
-                        />
+                        <div className="widget-container">
+                            <iframe
+                                title="StellarExpert Asset Summary"
+                                src="https://stellar.expert/widget/public/asset/summary/CODY-GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK"
+                                style={{ 
+                                    border: 'none', 
+                                    overflow: 'hidden', 
+                                    maxWidth: '100%', 
+                                    minWidth: '280px', 
+                                    maxHeight: '100%', 
+                                    minHeight: '200px', 
+                                    width: '100%',
+                                }}
+                                onLoad={e => { const iframe = e.currentTarget; window.addEventListener('message', function ({ data, source }) {
+                                    if (iframe && source === iframe.contentWindow && data.widget === iframe.src) {
+                                        // Allow natural height but with reasonable limits
+                                        const maxHeight = window.innerWidth <= 768 ? '500px' : '700px';
+                                        iframe.style.height = Math.min(data.height, parseInt(maxHeight)) + 'px';
+                                    }
+                                }, false); }}
+                            />
+                        </div>
+                        <div className="widget-container">
+                            <iframe
+                                title="StellarExpert Price History"
+                                src="https://stellar.expert/widget/public/asset/price/CODY-GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK"
+                                style={{ 
+                                    border: 'none', 
+                                    overflow: 'hidden', 
+                                    maxWidth: '100%', 
+                                    minWidth: '280px', 
+                                    maxHeight: '100%', 
+                                    minHeight: '200px', 
+                                    width: '100%',
+                                }}
+                                onLoad={e => { const iframe = e.currentTarget; window.addEventListener('message', function ({ data, source }) {
+                                    if (iframe && source === iframe.contentWindow && data.widget === iframe.src) {
+                                        // Allow natural height but with reasonable limits
+                                        const maxHeight = window.innerWidth <= 768 ? '500px' : '700px';
+                                        iframe.style.height = Math.min(data.height, parseInt(maxHeight)) + 'px';
+                                    }
+                                }, false); }}
+                            />
+                        </div>
                     </section>
 
                     {/* Final CTA Section */}
