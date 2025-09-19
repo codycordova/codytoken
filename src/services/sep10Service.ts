@@ -1,8 +1,7 @@
-import { 
-  Keypair, 
-  TransactionBuilder, 
+import {
+  Keypair,
   Networks,
-  Account
+  Utils,
 } from '@stellar/stellar-sdk';
 import { JWTService } from './jwtService';
 import { SEP10_CONFIG } from '@/config/sep10Config';
@@ -18,9 +17,12 @@ export interface SEP10TokenResponse {
 }
 
 export class SEP10Service {
-  private static readonly NETWORK_PASSPHRASE = Networks.PUBLIC;
+  private static readonly NETWORK_PASSPHRASE = (SEP10_CONFIG.STELLAR_NETWORK || 'public').toLowerCase() === 'testnet'
+    ? Networks.TESTNET
+    : Networks.PUBLIC;
   private static readonly CHALLENGE_DURATION = 5 * 60 * 1000; // 5 minutes
   private static readonly DOMAIN = SEP10_CONFIG.DOMAIN;
+  private static readonly HOME_DOMAIN = SEP10_CONFIG.HOME_DOMAIN;
   
   // Store challenges temporarily (in production, use Redis or database)
   private static challenges: Map<string, { account: string; expires: number }> = new Map();
@@ -37,24 +39,18 @@ export class SEP10Service {
         throw new Error('Invalid Stellar account format');
       }
 
-      // Create a keypair for the challenge
-      const challengeKeypair = Keypair.random();
-
-      // Create the challenge transaction using a simple approach
-      // For SEP-10, we can use a basic transaction structure
-      const challengeAccount = new Account(challengeKeypair.publicKey(), '1');
-      const transaction = new TransactionBuilder(
-        challengeAccount,
-        {
-          fee: '100',
-          networkPassphrase: this.NETWORK_PASSPHRASE,
-        }
-      )
-        .setTimeout(this.CHALLENGE_DURATION / 1000) // Convert to seconds
-        .build();
-
-      // Sign the transaction with the challenge keypair
-      transaction.sign(challengeKeypair);
+      // Build SEP-10 challenge transaction per spec using server signing key
+      SEP10_CONFIG.validate();
+      const serverKeypair = Keypair.fromSecret(SEP10_CONFIG.WEB_AUTH_SIGNING_SECRET);
+      // @ts-expect-error: SEP-10 Utils helpers are available at runtime in stellar-sdk
+      const challengeXdr = Utils.buildChallengeTx(
+        serverKeypair,
+        account,
+        this.HOME_DOMAIN,
+        this.DOMAIN,
+        this.NETWORK_PASSPHRASE,
+        Math.floor(this.CHALLENGE_DURATION / 1000)
+      );
 
       // Store the challenge for validation
       const jti = JWTService.generateJTI();
@@ -67,7 +63,7 @@ export class SEP10Service {
       this.cleanupExpiredChallenges();
 
       return {
-        transaction: transaction.toXDR(),
+        transaction: challengeXdr,
         network_passphrase: this.NETWORK_PASSPHRASE
       };
     } catch (error) {
@@ -82,23 +78,33 @@ export class SEP10Service {
    */
   static async validateChallenge(transactionXdr: string): Promise<SEP10TokenResponse> {
     try {
-      // Parse the transaction
-      const transaction = TransactionBuilder.fromXDR(transactionXdr, this.NETWORK_PASSPHRASE);
-      
-      // Validate transaction
-      if (!this.isValidChallengeTransaction(transaction)) {
-        throw new Error('Invalid challenge transaction');
-      }
+      SEP10_CONFIG.validate();
+      const serverPublicKey = Keypair.fromSecret(SEP10_CONFIG.WEB_AUTH_SIGNING_SECRET).publicKey();
 
-      // Extract the account from the manage data operation
-      const account = this.extractAccountFromTransaction(transaction);
-      if (!account || !JWTService.isValidStellarAccount(account)) {
+      // Read and validate challenge transaction according to SEP-10
+      // @ts-expect-error: SEP-10 Utils helpers are available at runtime in stellar-sdk
+      const read = Utils.readChallengeTx(
+        transactionXdr,
+        serverPublicKey,
+        this.NETWORK_PASSPHRASE,
+        this.HOME_DOMAIN,
+        this.DOMAIN
+      );
+      const account = read.clientAccountID;
+      if (!JWTService.isValidStellarAccount(account)) {
         throw new Error('Invalid account in challenge transaction');
       }
 
-      // Verify the transaction signature
-      if (!this.verifyTransactionSignature(transaction)) {
-        throw new Error('Invalid transaction signature');
+      // Verify the client has signed the transaction
+      // @ts-expect-error: SEP-10 Utils helpers are available at runtime in stellar-sdk
+      const signersFound = Utils.verifyChallengeTxSigners(
+        transactionXdr,
+        serverPublicKey,
+        this.NETWORK_PASSPHRASE,
+        [account]
+      );
+      if (!signersFound || signersFound.length === 0) {
+        throw new Error('Missing required client signature');
       }
 
       // Generate JWT token
@@ -111,87 +117,6 @@ export class SEP10Service {
       };
     } catch (error) {
       throw new Error(`Challenge validation failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
-    }
-  }
-
-  /**
-   * Validate that the transaction is a proper SEP-10 challenge
-   */
-  private static isValidChallengeTransaction(transaction: unknown): boolean {
-    try {
-      // Type guard to check if transaction has the expected structure
-      if (!transaction || typeof transaction !== 'object' || !('operations' in transaction)) {
-        return false;
-      }
-
-      const tx = transaction as { operations: unknown[] };
-      
-      // Check if transaction has exactly one operation
-      if (tx.operations.length !== 1) {
-        return false;
-      }
-
-      const operation = tx.operations[0] as { type?: string; name?: string; value?: string };
-      
-      // Check if it's a manage data operation
-      if (operation.type !== 'manageData') {
-        return false;
-      }
-
-      // Check if the data name contains our domain
-      const dataName = operation.name;
-      if (!dataName || !dataName.includes(this.DOMAIN)) {
-        return false;
-      }
-
-      // Check if the data value is a valid Stellar account
-      const dataValue = operation.value;
-      if (!dataValue || !JWTService.isValidStellarAccount(dataValue)) {
-        return false;
-      }
-
-      return true;
-    } catch {
-      return false;
-    }
-  }
-
-  /**
-   * Extract the account address from the challenge transaction
-   */
-  private static extractAccountFromTransaction(transaction: unknown): string | null {
-    try {
-      if (!transaction || typeof transaction !== 'object' || !('operations' in transaction)) {
-        return null;
-      }
-
-      const tx = transaction as { operations: unknown[] };
-      if (tx.operations.length === 0) {
-        return null;
-      }
-
-      const operation = tx.operations[0] as { value?: string };
-      return operation.value || null;
-    } catch {
-      return null;
-    }
-  }
-
-  /**
-   * Verify the transaction signature
-   */
-  private static verifyTransactionSignature(transaction: unknown): boolean {
-    try {
-      // In a real implementation, you would verify the signature
-      // For now, we'll do basic validation
-      if (!transaction || typeof transaction !== 'object' || !('signatures' in transaction)) {
-        return false;
-      }
-
-      const tx = transaction as { signatures: unknown[] };
-      return tx.signatures && tx.signatures.length > 0;
-    } catch {
-      return false;
     }
   }
 

@@ -2,32 +2,50 @@ app = "codytoken"
 primary_region = "lax"
 
 [build]
+dockerfile = "Dockerfile"
+
+[processes]
+app = "node_modules/.bin/next start -p 3000"
+ws = "node dist/ws/server.js"
 
 [http_service]
-internal_port = 3000           # Next.js defaults to 3000
+internal_port = 3000
 force_https = true
-auto_stop_machines = true      # Enable autostop to save costs
-auto_start_machines = true     # Auto-start when traffic comes
-min_machines_running = 2       # Keep at least 2 machines running for resiliency
+auto_stop_machines = true
+auto_start_machines = true
+min_machines_running = 1
+processes = ["app"]
+concurrency = { type = "requests", soft_limit = 25, hard_limit = 50 }
 
-# Enable health checks for better reliability
 [[http_service.checks]]
 grace_period = "10s"
 interval = "30s"
 method = "GET"
-path = "/"
+path = "/api/healthz"
 protocol = "http"
 restart_limit = 3
 timeout = "5s"
 
-# Optimize VM configuration for production
+[[services]]
+internal_port = 3030
+protocol = "tcp"
+processes = ["ws"]
+
+[services.concurrency]
+type = "connections"
+soft_limit = 50
+hard_limit = 100
+
+[[services.ports]]
+port = 3030
+handlers = ["tls", "http"]
+
+[[services.tcp_checks]]
+interval = "15s"
+timeout = "2s"
+
 [[vm]]
 cpu_kind = "shared"
 cpus = 1
 memory_mb = 1024
-
-# Enable swapping to disk for memory spikes
-
-# Environment variables are now managed via Fly.io secrets
-# Run: fly secrets set JWT_SECRET="your-secret-here" DOMAIN="api.codytoken.com"
-# See: https://fly.io/docs/reference/secrets/
+processes = ["app"]

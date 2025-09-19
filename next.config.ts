@@ -35,6 +35,12 @@ const nextConfig: NextConfig = {
     if (config.module && typeof config.module === 'object') {
       (config.module as any).exprContextCritical = false;
     }
+    // Silence known safe warnings from optional native deps used by stellar-sdk
+    // and large string cache serialization noise
+    config.ignoreWarnings = [
+      /require-addon|sodium-native/,
+      /PackFileCacheStrategy.*Serializing big strings/
+    ];
     return config;
   },
   async headers() {

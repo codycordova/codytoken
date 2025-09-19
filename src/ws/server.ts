@@ -16,6 +16,9 @@ class WebSocketPriceServer {
   private tradeStream: (() => void) | null = null;
   private reconnectAttempts = 0;
   private maxReconnectAttempts = 5;
+  private brandName = process.env.WS_BRAND_NAME || 'CODY Token';
+  private brandUrl = process.env.WS_BRAND_URL || 'https://codytoken.com';
+  private assetCode = process.env.CODY_ASSET_CODE || 'CODY';
 
   constructor(port: number = 3030) {
     this.wss = new WebSocketServer({
@@ -44,7 +47,19 @@ class WebSocketPriceServer {
       };
 
       this.clients.set(clientId, client);
-      console.log(`Client connected: ${clientId}`);
+      console.log(`[${this.brandName} WS] Client connected: ${clientId}`);
+      // Send hello/branding message
+      try {
+        ws.send(JSON.stringify({
+          type: 'hello',
+          project: this.brandName,
+          homepage: this.brandUrl,
+          asset: this.assetCode,
+          pair: `${this.assetCode}/XLM`,
+          version: '1.0',
+          timestamp: new Date().toISOString()
+        }));
+      } catch {}
 
       // Send initial price data
       this.sendPriceUpdate(clientId);
@@ -68,12 +83,12 @@ class WebSocketPriceServer {
       // Handle client disconnect
       ws.on('close', () => {
         this.clients.delete(clientId);
-        console.log(`Client disconnected: ${clientId}`);
+        console.log(`[${this.brandName} WS] Client disconnected: ${clientId}`);
       });
 
       // Handle client errors
       ws.on('error', (error) => {
-        console.error(`Client error for ${clientId}:`, error);
+        console.error(`[${this.brandName} WS] Client error for ${clientId}:`, error);
         this.clients.delete(clientId);
       });
 
@@ -90,7 +105,7 @@ class WebSocketPriceServer {
     });
 
     this.wss.on('error', (error) => {
-      console.error('WebSocket server error:', error);
+      console.error(`[${this.brandName} WS] WebSocket server error:`, error);
     });
   }
 
@@ -102,10 +117,12 @@ class WebSocketPriceServer {
         this.broadcastToAll({
           type: 'price_update',
           data: priceData,
+          pair: `${this.assetCode}/XLM`,
+          asset: this.assetCode,
           timestamp: new Date().toISOString()
         });
       } catch (error) {
-        console.error('Error streaming price updates:', error);
+        console.error(`[${this.brandName} WS] Error streaming price updates:`, error);
       }
     }, 5000);
   }
@@ -144,6 +161,8 @@ class WebSocketPriceServer {
             this.broadcastToAll({
               type: 'trade',
               data: tradeData,
+              pair: `${this.assetCode}/XLM`,
+              asset: this.assetCode,
               timestamp: new Date().toISOString()
             });
 
@@ -156,9 +175,9 @@ class WebSocketPriceServer {
           }
         });
 
-      console.log('Connected to Stellar trade stream');
+      console.log(`[${this.brandName} WS] Connected to Stellar trade stream`);
     } catch (error) {
-      console.error('Error connecting to trade stream:', error);
+      console.error(`[${this.brandName} WS] Error connecting to trade stream:`, error);
       this.handleTradeStreamError();
     }
   }
@@ -173,13 +192,13 @@ class WebSocketPriceServer {
       this.reconnectAttempts++;
       const delay = Math.min(1000 * Math.pow(2, this.reconnectAttempts), 30000); // Exponential backoff
       
-      console.log(`Reconnecting to trade stream in ${delay}ms (attempt ${this.reconnectAttempts}/${this.maxReconnectAttempts})`);
+      console.log(`[${this.brandName} WS] Reconnecting to trade stream in ${delay}ms (attempt ${this.reconnectAttempts}/${this.maxReconnectAttempts})`);
       
       setTimeout(() => {
         this.connectToTradeStream();
       }, delay);
     } else {
-      console.error('Max reconnection attempts reached for trade stream');
+      console.error(`[${this.brandName} WS] Max reconnection attempts reached for trade stream`);
     }
   }
 
@@ -192,11 +211,13 @@ class WebSocketPriceServer {
         client.ws.send(JSON.stringify({
           type: 'price_update',
           data: priceData,
+          pair: `${this.assetCode}/XLM`,
+          asset: this.assetCode,
           timestamp: new Date().toISOString()
         }));
       }
     } catch (error) {
-      console.error(`Error sending price update to ${clientId}:`, error);
+      console.error(`[${this.brandName} WS] Error sending price update to ${clientId}:`, error);
     }
   }
 

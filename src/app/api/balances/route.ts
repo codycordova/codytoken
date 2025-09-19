@@ -1,6 +1,6 @@
 // /src/app/api/balances/route.ts
 import { NextResponse } from "next/server";
-import  Server  from "@stellar/stellar-sdk";
+import { Horizon } from "@stellar/stellar-sdk";
 
 export interface BalanceLine {
   asset_type: string;
@@ -18,7 +18,7 @@ interface StellarBalance {
 }
 
 // You can override via env if needed
-const HORIZON_URL = process.env.HORIZON_URL || "https://horizon.stellar.org";
+const HORIZON_URL = process.env.HORIZON_URL || process.env.STELLAR_HORIZON_URL || "https://horizon.stellar.org";
 // Optional default account (falls back if query param not provided)
 const DEFAULT_ACCOUNT = process.env.NEXT_PUBLIC_BALANCES_ACCOUNT || process.env.BALANCES_ACCOUNT;
 
@@ -43,7 +43,7 @@ export async function GET(request: Request) {
       );
     }
 
-    const server = new Server(HORIZON_URL);
+    const server = new Horizon.Server(HORIZON_URL);
     const acc = await server.loadAccount(account);
 
     // Map Horizon balances to our BalanceLine interface
@@ -60,7 +60,7 @@ export async function GET(request: Request) {
       { account, balances },
       {
         headers: {
-          "Cache-Control": "public, s-manage=30, stale-while-revalidate=30",
+          "Cache-Control": "public, s-maxage=30, stale-while-revalidate=30",
         },
       }
     );
