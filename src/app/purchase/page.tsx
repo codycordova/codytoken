@@ -2,8 +2,8 @@
 
 import React from "react";
 import Footer from "../../components/Footer";
-import "./Purchase.css";
 import TrustlineButton from "../../components/TrustlineButton";
+import AddressDisplay from "../../components/AddressDisplay";
 import { useWallet } from "@/context/WalletContext";
 
 // ✅ client-only import so nothing tries to touch `window` on the server
@@ -14,8 +14,28 @@ export default function PurchasePage() {
   const { walletAddress } = useWallet();
 
   return (
-    <div className="purchase-page">
-      <main className="purchase-container">
+    <div className="text-page">
+      <main className="main-content">
+        {/* Security Notice */}
+        <section style={{ marginBottom: '2rem', textAlign: 'center' }}>
+          <div style={{
+            background: 'rgba(255, 234, 0, 0.1)',
+            border: '1px solid rgba(255, 234, 0, 0.3)',
+            borderRadius: '16px',
+            padding: '1.5rem',
+            marginBottom: '2rem'
+          }}>
+            <h3 style={{ color: '#ffea00', marginBottom: '1rem' }}>🔒 Security Notice</h3>
+            <p style={{ color: '#e0e0e0', marginBottom: '0.5rem' }}>
+              <strong>Always verify the issuer address:</strong>{' '}
+              <AddressDisplay address="GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK" />
+            </p>
+            <p style={{ color: '#a5b4fc', fontSize: '0.9rem' }}>
+              This is the official CODY Token issuer. Never trust addresses from unofficial sources.
+            </p>
+          </div>
+        </section>
+
         {/* Trustline Section */}
         <section style={{ marginBottom: '2rem', textAlign: 'center' }}>
           <div style={{
@@ -41,6 +61,52 @@ export default function PurchasePage() {
           )}
         </section>
 
+        {/* Balance Summary Section */}
+        {walletAddress && (
+          <section style={{ marginBottom: '2rem', textAlign: 'center' }}>
+            <div style={{
+              background: 'rgba(34,34,64,0.85)',
+              borderRadius: '16px',
+              padding: '1.5rem 2rem',
+              margin: '0 auto 1rem',
+              maxWidth: 500,
+              color: '#e0e7ff',
+              boxShadow: '0 2px 16px rgba(127, 156, 245, 0.2)',
+              fontSize: '1.05rem',
+            }}>
+              <h3 style={{ color: '#ffea00', marginBottom: '1rem' }}>💰 Your Wallet</h3>
+              <p style={{ color: '#a5b4fc', marginBottom: '1rem' }}>
+                View all your asset balances and transaction history
+              </p>
+              <a 
+                href="/balances" 
+                style={{
+                  display: 'inline-block',
+                  background: 'linear-gradient(135deg, #ff4dc4, #7f9cf5)',
+                  color: '#fff',
+                  padding: '0.75rem 1.5rem',
+                  borderRadius: '12px',
+                  textDecoration: 'none',
+                  fontWeight: '600',
+                  transition: 'transform 0.2s, box-shadow 0.2s',
+                }}
+                onMouseEnter={(e) => {
+                  const target = e.target as HTMLAnchorElement;
+                  target.style.transform = 'translateY(-2px)';
+                  target.style.boxShadow = '0 4px 20px rgba(255, 77, 196, 0.3)';
+                }}
+                onMouseLeave={(e) => {
+                  const target = e.target as HTMLAnchorElement;
+                  target.style.transform = 'translateY(0)';
+                  target.style.boxShadow = 'none';
+                }}
+              >
+                View Balances →
+              </a>
+            </div>
+          </section>
+        )}
+
         {/* Page Title */}
         <h1 className="purchase-title">Buy &amp; Swap $CODY Token</h1>
         <p className="purchase-subtitle">
@@ -64,7 +130,7 @@ export default function PurchasePage() {
             <p>
               Issuing address:{" "}
               <strong>
-                GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK
+                <AddressDisplay address="GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK" />
               </strong>
             </p>
             <p>Total Supply: 444,444,444,444 $CODY</p>

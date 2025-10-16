@@ -1,12 +1,11 @@
 import React from 'react';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
-import '../Blog.css';
 import PostMeta from '@/components/PostMeta';
 
 export default function StellarDexWalkthroughPost() {
     return (
-        <div className="page-wrapper">
+        <div className="text-page">
             <main className="main-content">
                 <article className="blog-container blog-post">
                     <p><Link href="/blog">← Back to Blog</Link></p>

@@ -23,7 +23,7 @@ export default function BalancesPage() {
     }, [walletAddress]);
 
     return (
-        <div className="page-wrapper">
+        <div className="text-page">
             <main className="main-content">
                 <h1 className="hero-title">Balances</h1>
                 {walletAddress ? (

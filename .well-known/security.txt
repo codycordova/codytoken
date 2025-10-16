@@ -1,0 +1,8 @@
+Contact: mailto:security@codytoken.com
+Contact: mailto:mgmt@codycordova.com
+Expires: 2026-12-31T23:59:59.000Z
+Encryption: https://codytoken.com/pgp-key.txt
+Preferred-Languages: en
+Canonical: https://codytoken.com/.well-known/security.txt
+Policy: https://codytoken.com/security-policy
+Acknowledgments: https://codytoken.com/security-acknowledgments

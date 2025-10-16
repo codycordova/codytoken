@@ -67,7 +67,8 @@
   flex: 1;
   margin-left: 280px;
   padding: 3rem;
-  max-width: calc(100vw - 280px);
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .docs-header {
@@ -1168,7 +1169,7 @@
   
   .docs-content {
     margin-left: 250px;
-    max-width: calc(100vw - 250px);
+    max-width: 100%;
     padding: 2rem;
   }
   

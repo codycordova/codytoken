@@ -1,5 +1,5 @@
 import { Horizon, Asset } from '@stellar/stellar-sdk';
-import { tryPoolReservesFromSoroban, getTokenDecimals } from './sorobanService';
+import { tryPoolReservesFromSoroban } from './sorobanService';
 import { OrderbookData, LiquidityPoolData, TradeData } from '@/types/price';
 import { config } from '@/config/stellarConfig';
 import { fetchWithTimeout } from '@/utils/net';
@@ -176,20 +176,31 @@ export class StellarService {
       if (sorobanPoolId) {
         const reserves = await tryPoolReservesFromSoroban(sorobanPoolId, codyContractId);
         if (reserves) {
-          // Fetch decimals to scale raw amounts
-          const codyDecimals = codyContractId ? await getTokenDecimals(codyContractId) : 2;
-          const counterDecimals = config.USDC_TOKEN_CONTRACT ? await getTokenDecimals(config.USDC_TOKEN_CONTRACT) : 6;
-          const codyScale = Math.pow(10, codyDecimals ?? 2);
-          const counterScale = Math.pow(10, counterDecimals ?? 6);
-
-          const codyAmount = reserves.codyRaw / codyScale;
-          const counterAmount = reserves.counterRaw / counterScale;
+          // PoolReserves already returns scaled amounts (cody, xlm, usdc, eurc)
+          const codyAmount = reserves.cody;
+          
+          // Determine which counter asset to use based on pool configuration
+          // Priority: USDC > XLM > EURC
+          let counterAmount = 0;
+          let xlmAmount = reserves.xlm;
+          
+          if (reserves.usdc > 0) {
+            counterAmount = reserves.usdc;
+            xlmAmount = 0; // This is a CODY/USDC pool, not CODY/XLM
+          } else if (reserves.xlm > 0) {
+            counterAmount = reserves.xlm;
+            xlmAmount = reserves.xlm;
+          } else if (reserves.eurc > 0) {
+            counterAmount = reserves.eurc;
+            xlmAmount = 0; // This is a CODY/EURC pool, not CODY/XLM
+          }
+          
           const price = codyAmount > 0 ? counterAmount / codyAmount : 0;
 
           return {
             reserves: {
               cody: codyAmount,
-              xlm: 0,
+              xlm: xlmAmount,
             },
             price,
             timestamp: new Date().toISOString(),

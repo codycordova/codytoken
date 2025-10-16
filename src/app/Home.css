@@ -2,14 +2,7 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap');
 
-/* ─── Body & Page Wrapper ─── */
-body {
-    margin: 0;
-    padding: 0;
-    font-family: "Roboto", sans-serif;
-    background: linear-gradient(to bottom right, #312e81, #6b21a8, #111827);
-    color: white;
-}
+/* ─── Page Wrapper ─── */
 
 .page-wrapper {
     display: flex;
@@ -148,13 +141,8 @@ body {
     margin-bottom: 2rem;
 }
 
-/* ─── StatsCard Section ─── */
-/* (Assuming StatsCard itself has its own CSS, but we can center it here) */
-.stats-section {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 2rem;
-}
+/* ─── Legacy StatsCard Section (DEPRECATED) ─── */
+/* This is now handled by the main stats section below */
 
 /* ─── 3D Scene Section ─── */
 .scene-section {
@@ -226,11 +214,11 @@ body {
     flex-wrap: nowrap;
 }
 .stellar-widgets-row iframe {
-    width: 360px;
-    min-width: 320px;
+    width: 100%;
+    min-width: 0;
     max-width: 400px;
     height: 540px;
-    min-height: 500px;
+    min-height: 400px;
     max-height: 700px;
     border: none;
     background: transparent;
@@ -247,9 +235,9 @@ body {
         flex-wrap: wrap;
     }
     .stellar-widgets-row iframe {
-        width: 95vw;
-        min-width: 280px;
-        max-width: 98vw;
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
         height: 400px;
         min-height: 300px;
         max-height: 500px;
@@ -539,6 +527,9 @@ body {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    max-width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 /* Mission Section */
@@ -777,13 +768,14 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 1rem 2rem;
+    padding: 0.75rem 1.5rem;
     background: linear-gradient(45deg, rgba(255, 234, 0, 0.1), rgba(255, 255, 255, 0.05));
     border: 1px solid rgba(255, 234, 0, 0.3);
     border-radius: 12px;
     color: #ffea00;
     text-decoration: none;
     font-weight: 600;
+    font-size: 0.95rem;
     transition: all 0.3s ease;
     white-space: nowrap;
     margin: 0 auto;
@@ -799,31 +791,35 @@ body {
 
 /* Final CTA Section */
 .final-cta-section {
-    padding: 4rem 2rem;
-    margin: 3rem 0;
+    padding: 3rem 1.5rem;
+    margin: 2rem 0;
     text-align: center;
     background: linear-gradient(135deg, rgba(255, 234, 0, 0.1), rgba(255, 255, 255, 0.05));
     border-radius: 20px;
     border: 1px solid rgba(255, 234, 0, 0.2);
+    max-width: 100%;
+    overflow: hidden;
 }
 
 .cta-content {
     max-width: 600px;
     margin: 0 auto;
+    width: 100%;
 }
 
 .cta-description {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     color: #e0e0e0;
-    margin-bottom: 2.5rem;
+    margin-bottom: 2rem;
     line-height: 1.6;
 }
 
 .cta-buttons {
     display: flex;
-    gap: 1.5rem;
+    gap: 1rem;
     justify-content: center;
     flex-wrap: wrap;
+    max-width: 100%;
 }
 
 /* Widget Container Styles */
@@ -849,6 +845,8 @@ body {
     
     .section-title {
         font-size: 2rem;
+        line-height: 1.2;
+        margin-bottom: 1.5rem;
     }
     
     .mission-section,
@@ -871,8 +869,20 @@ body {
     
     .stats-grid-compact {
         grid-template-columns: repeat(2, 1fr);
-        gap: 2rem;
+        gap: 1.25rem;
         padding: 0 1rem;
+    }
+
+    .stats-footer-compact {
+        margin-top: 1rem;
+        padding-top: 1rem;
+    }
+
+    .verify-link {
+        width: 100%;
+        max-width: 260px;
+        font-size: 0.9rem;
+        padding: 0.65rem 1rem;
     }
     
     .stat-card.featured {
@@ -983,8 +993,13 @@ body {
     
     .stats-grid-compact {
         grid-template-columns: 1fr;
-        gap: 2rem;
+        gap: 1.25rem;
         padding: 0 1rem;
+    }
+
+    .verify-link {
+        max-width: 240px;
+        font-size: 0.9rem;
     }
     
     .stat-number {
@@ -1006,6 +1021,8 @@ body {
     
     .section-title {
         font-size: 1.8rem;
+        line-height: 1.1;
+        margin-bottom: 1rem;
     }
     
     .mission-section,

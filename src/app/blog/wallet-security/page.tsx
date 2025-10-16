@@ -1,12 +1,12 @@
 import React from 'react';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
-import '../Blog.css';
 import PostMeta from '@/components/PostMeta';
+import AddressDisplay from '@/components/AddressDisplay';
 
 export default function WalletSecurityPost() {
     return (
-        <div className="page-wrapper">
+        <div className="text-page">
             <main className="main-content">
                 <article className="blog-container blog-post">
                     <p><Link href="/blog">← Back to Blog</Link></p>
@@ -42,7 +42,7 @@ export default function WalletSecurityPost() {
                         On Stellar, always confirm the issuer when adding a trustline. For CODY:
                     </p>
                     <div className="callout">
-                        Issuer: <code>GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK</code>
+                        Issuer: <AddressDisplay address="GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK" />
                     </div>
                     <p>
                         You can double-check on Stellar Expert:

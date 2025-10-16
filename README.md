@@ -1,19 +1,26 @@
 # Cody Token Web3
 
-A modern web application for the CODY token on the Stellar network, featuring real-time price data from multiple sources including Aqua AMM pools.
+A modern web application for the CODY token on the Stellar network, featuring real-time price data from multiple sources including Aqua AMM pools, Soroban contracts, and traditional DEX data.
 
 ## Features
 
 - **Real-time CODY Price Data**: Fetches price from multiple sources including:
-  - Traditional Stellar DEX (orderbook, VWAP)
   - Aqua AMM pools (CODY/USDC, CODY/XLM, CODY/AQUA)
-  - Fallback mechanisms for reliability
+  - Soroban smart contracts for reserve data
+  - Traditional Stellar DEX (orderbook, VWAP)
+  - Comprehensive fallback mechanisms for reliability
 
 - **Multiple Price Sources**:
   - CODY/USDC pool for USD pricing
   - CODY/XLM pool for XLM pricing  
   - CODY/AQUA pool for additional liquidity
+  - Soroban contract reserves for accurate pricing
   - Traditional DEX orderbook data
+
+- **Security & Monitoring**:
+  - Sentry error monitoring and performance tracking
+  - Security vulnerability disclosure via `.well-known/security.txt`
+  - Comprehensive security policy and acknowledgments
 
 ## API Endpoints
 
@@ -55,6 +62,27 @@ Returns comprehensive CODY price data from all available sources.
         "USD": 0,
         "EUR": 0
       }
+    },
+    "soroban": {
+      "reserves": {
+        "xlm": 0,
+        "cody": 0,
+        "usdc": 0,
+        "eurc": 0
+      },
+      "prices": {
+        "codyPerXlm": 0,
+        "xlmPerCody": 0,
+        "codyPerUsdc": 0,
+        "usdcPerCody": 0,
+        "codyPerEurc": 0,
+        "eurcPerCody": 0
+      },
+      "contractId": "CAFD2IS6FEBUXWHAOH3G5LM4LMXIHVH6LAYRHUPYUU62NXH3I4TUCI2C"
+    },
+    "oracle": {
+      "price": 0,
+      "confidence": 0
     }
   },
   "metadata": {
@@ -110,9 +138,10 @@ The application integrates with Aqua AMM pools to provide real-time pricing data
 - **CODY/AQUA**: `CDCT6W2XW64ZCIUEMRG46CJVE734SZDL6WDEH2QQOABBNU2XUSCTQEMR`
 
 ### Data Sources
-1. **Aquarius AMM API**: Primary source for pool data
-2. **Soroban RPC**: Fallback for reserve data
-3. **Traditional DEX**: Backup for price data
+1. **Aquarius AMM API**: Primary source for pool data (`https://amm-api.aqua.network/api/external/v1`)
+2. **Soroban RPC**: Direct contract interaction for reserve data (`https://soroban-rpc.mainnet.stellar.org`)
+3. **Stellar Horizon**: Traditional DEX data and liquidity pools (`https://horizon.stellar.org`)
+4. **Multi-layered fallback**: Ensures data availability even when sources are down
 
 ## Environment Variables
 
@@ -129,9 +158,12 @@ CODY_ASSET_CODE=CODY
 SOROBAN_RPC_URL=https://mainnet.sorobanrpc.com
 
 # Token Contract IDs (for Soroban integration)
-CODY_TOKEN_CONTRACT=<CODY_TOKEN_CONTRACT_ID>
-USDC_TOKEN_CONTRACT=<USDC_TOKEN_CONTRACT_ID>
-AQUA_TOKEN_CONTRACT=<AQUA_TOKEN_CONTRACT_ID>
+CODY_TOKEN_CONTRACT=CAFD2IS6FEBUXWHAOH3G5LM4LMXIHVH6LAYRHUPYUU62NXH3I4TUCI2C
+USDC_TOKEN_CONTRACT=CCW67TSZV3SSS2HXMBQ5JFGCKJNXKZM7UQUWUZPUTHXSTZLEO7SJMI75
+AQUA_TOKEN_CONTRACT=CAUIKL3IYGMERDRUN6YSCLWVAKIFG5Q4YJHUKM4S4NJZQIA3BAS6OJPK
+
+# Aqua Pool Contract IDs
+AQUA_POOL_CONTRACT=CBN2N5L4UM5PPQE5UQNC3HVGT56TDQMAXMT3LVFMNN6XLFXZMCJY6KOU
 ```
 
 ## Development
@@ -152,13 +184,22 @@ npm start
 
 ## Architecture
 
-The price service uses a multi-layered approach:
+The price service uses a multi-layered approach with comprehensive fallback mechanisms:
 
 1. **Primary**: Aqua AMM pools (most accurate for current market conditions)
-2. **Secondary**: Traditional DEX data (orderbook, VWAP)
-3. **Fallback**: Cached data with reduced confidence
+2. **Secondary**: Soroban smart contract reserves (direct blockchain data)
+3. **Tertiary**: Traditional DEX data (orderbook, VWAP)
+4. **Fallback**: Cached data with reduced confidence
 
-This ensures reliable price data even when some sources are unavailable.
+### Key Components
+
+- **PriceService**: Orchestrates data from all sources and provides aggregated pricing
+- **AquaService**: Interfaces with Aqua AMM pools and API
+- **SorobanService**: Direct interaction with Soroban smart contracts
+- **StellarService**: Traditional Stellar DEX integration
+- **Security**: Sentry monitoring, vulnerability disclosure, and comprehensive error handling
+
+This ensures reliable price data even when some sources are unavailable, with proper error monitoring and security practices.
 
 ## Contributing
 

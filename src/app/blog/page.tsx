@@ -2,11 +2,10 @@ import React from 'react';
 import Link from 'next/link';
 import PostMeta from '@/components/PostMeta';
 import Footer from '@/components/Footer';
-import './Blog.css';
 
 export default function BlogIndexPage() {
     return (
-        <div className="page-wrapper">
+        <div className="text-page">
             <main className="main-content">
                 <div className="blog-container">
                     <h1 className="blog-title">Blog</h1>

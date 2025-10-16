@@ -1,7 +1,7 @@
 "use client";
 import React from 'react';
-import './Tokenomics.css';
 import Footer from '@/components/Footer';
+import AddressDisplay from '@/components/AddressDisplay';
 
 export default function TokenomicsPage() {
   const [circulating, setCirculating] = React.useState<string>('Loading…');
@@ -29,7 +29,7 @@ export default function TokenomicsPage() {
 
   // LP section removed
   return (
-    <div className="page-wrapper">
+    <div className="text-page">
       <main className="main-content">
         <div className="tokenomics-container">
           <h1>Tokenomics</h1>
@@ -60,7 +60,7 @@ export default function TokenomicsPage() {
             <h2>Asset Details</h2>
             <ul>
               <li><strong>Asset Code:</strong> <code>CODY</code></li>
-              <li><strong>Issuer:</strong> <code>GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK</code></li>
+              <li><strong>Issuer:</strong> <AddressDisplay address="GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK" /></li>
               <li><strong>Network:</strong> Stellar Public Network</li>
               <li><strong>Stellar TOML:</strong> <a href="https://codytoken.com/.well-known/stellar.toml" target="_blank" rel="noopener noreferrer">codytoken.com/.well-known/stellar.toml</a></li>
             </ul>

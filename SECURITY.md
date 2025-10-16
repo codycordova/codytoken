@@ -2,10 +2,10 @@
 
 ## Supported Versions
 
-Lol wassup beautiful souls. I love you. We here. <3 anything under version 0.1 is not supported ^~^
+Lol wassup beautiful souls. I love you. We are here. <3 anything under version 0.1 is not supported ^~^
 
 | Version | Supported          |
-| ------- | ------------------ |
+|---------|--------------------|
 | 0.1.x   | :white_check_mark: |
 | 0.0.x   | :x:                |
 

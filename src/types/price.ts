@@ -13,18 +13,18 @@ export interface PriceData {
       spread: number;
       volume24h: number;
     };
-    pool?: {
+    pool: {
       price: number;
       reserves: {
         cody: number;
         xlm: number;
       };
     };
-    aqua?: {
+    aqua: {
       pools: {
-        codyUsdc: AquaPoolData | null;
-        codyXlm: AquaPoolData | null;
-        codyAqua: AquaPoolData | null;
+        codyUsdc: AquaPoolData;
+        codyXlm: AquaPoolData;
+        codyAqua: AquaPoolData;
       };
       aggregatedPrice: {
         XLM: number;
@@ -32,7 +32,24 @@ export interface PriceData {
         EUR: number;
       };
     };
-    oracle?: {
+    soroban: {
+      reserves: {
+        xlm: number;
+        cody: number;
+        usdc: number;
+        eurc: number;
+      };
+      prices: {
+        codyPerXlm: number;
+        xlmPerCody: number;
+        codyPerUsdc: number;
+        usdcPerCody: number;
+        codyPerEurc: number;
+        eurcPerCody: number;
+      };
+      contractId: string;
+    };
+    oracle: {
       price: number;
       confidence: number;
     };

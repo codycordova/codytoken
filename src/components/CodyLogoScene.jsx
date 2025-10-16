@@ -83,9 +83,10 @@ export default function CodyLogoScene() {
         <Canvas
             style={{
                 position: "fixed",
-                top: 0, left: 0,
-                width: "100vw",
-                height: "100vh",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
                 zIndex: 0, // Behind your app content!
                 pointerEvents: "none",
                 background: "transparent",

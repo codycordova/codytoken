@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import '../Docs.css';
+import '@/styles/Docs.css';
+import AddressDisplay from '../../../components/AddressDisplay';
 
 export default function TokenomicsPage() {
   return (
@@ -120,7 +121,7 @@ export default function TokenomicsPage() {
               <ul>
                 <li><strong>Network:</strong> Stellar Mainnet</li>
                 <li><strong>Asset Code:</strong> CODY</li>
-                <li><strong>Issuer:</strong> GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK</li>
+                <li><strong>Issuer:</strong> <AddressDisplay address="GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK" /></li>
                 <li><strong>Decimals:</strong> 7 (Stellar standard)</li>
                 <li><strong>Display Decimals:</strong> 2</li>
               </ul>

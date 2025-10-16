@@ -345,127 +345,47 @@ export default function AtomicSwapCard({ walletAddress }: Props) {
     }
   }
 
-  // LOBSTR Vault API integration
-  async function submitToLobstrVault(signedXdr: string): Promise<any> {
-    try {
-      console.log('Submitting to LOBSTR Vault API...');
-      const response = await fetch('https://vault.lobstr.co/api/transactions/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          xdr: signedXdr
-        })
-      });
-      
-      if (!response.ok) {
-        throw new Error(`Vault API error: ${response.status} ${response.statusText}`);
-      }
-      
-      const result = await response.json();
-      console.log('Vault API response:', result);
-      return result;
-    } catch (error) {
-      console.error('Error submitting to LOBSTR Vault:', error);
-      throw error;
-    }
-  }
 
-  // Poll for vault transaction status
-  async function pollVaultTransactionStatus(transactionId: string): Promise<any> {
-    try {
-      const response = await fetch(`https://vault.lobstr.co/api/transactions/${transactionId}`);
-      if (!response.ok) {
-        throw new Error(`Vault status check failed: ${response.status}`);
-      }
-      return await response.json();
-    } catch (error) {
-      console.error('Error polling vault status:', error);
-      throw error;
-    }
-  }
-
-  // Enhanced signing function for multi-sig
-  async function signWithMultiSigSupport(xdr: string, address: string): Promise<string> {
+  // Simplified signing function with better error handling
+  async function signTransaction(xdr: string, address: string): Promise<string> {
     await ensureWalletModuleSelected();
     
     try {
-      // First step: Sign with the connected wallet (LOBSTR)
-      console.log('Step 1: Signing with connected wallet...');
+      console.log('Signing transaction with wallet...');
+      setStatus('Signing transaction...');
+      
+      // Try standard signing first
       const { signedTxXdr } = await kit.signTransaction(xdr, {
         address,
-        // Remove networkPassphrase for Lobstr compatibility
+        networkPassphrase: Networks.PUBLIC,
       });
       
-             // If this is a multi-sig account, submit to Vault
-       if (isMultiSig) {
-         console.log('Step 2: Multi-sig detected, submitting to LOBSTR Vault...');
-         setStatus('🔐 Multi-sig detected: Submitting to Vault for approval...');
-         
-         try {
-           const vaultResponse = await submitToLobstrVault(signedTxXdr);
-           
-           if (vaultResponse.status === 'pending' || vaultResponse.status === 'submitted') {
-             // Store the vault transaction ID for reference
-             setStatus('🔐 Transaction submitted to Vault. Please approve in your LOBSTR Vault app.');
-             
-             // Poll for completion
-             let attempts = 0;
-             const maxAttempts = 60; // 5 minutes with 5-second intervals
-             
-             const pollInterval = setInterval(async () => {
-               attempts++;
-               try {
-                 const status = await pollVaultTransactionStatus(vaultResponse.id || vaultResponse.transaction_id);
-                 
-                 if (status.status === 'approved' || status.status === 'completed') {
-                   clearInterval(pollInterval);
-                   setStatus('✅ Vault approval received! Finalizing transaction...');
-                   return status.signed_xdr || signedTxXdr; // Return the fully signed XDR
-                 } else if (status.status === 'rejected' || status.status === 'failed') {
-                   clearInterval(pollInterval);
-                   throw new Error('Transaction rejected by Vault');
-                 } else if (attempts >= maxAttempts) {
-                   clearInterval(pollInterval);
-                   throw new Error('Vault approval timeout. Please check your Vault app.');
-                 }
-               } catch (error) {
-                 console.error('Error polling vault status:', error);
-                 if (attempts >= maxAttempts) {
-                   clearInterval(pollInterval);
-                   throw error;
-                 }
-               }
-             }, 5000); // Poll every 5 seconds
-             
-             // For now, return the partially signed XDR
-             // The polling will handle the completion
-             return signedTxXdr;
-           } else if (vaultResponse.status === 'approved' || vaultResponse.status === 'completed') {
-             setStatus('✅ Vault approval received! Finalizing transaction...');
-             return vaultResponse.signed_xdr || signedTxXdr;
-           } else {
-             throw new Error(`Unexpected vault response status: ${vaultResponse.status}`);
-           }
-         } catch (vaultError) {
-           console.error('Vault submission error:', vaultError);
-           setStatus('❌ Vault submission failed. Please try again or check your Vault app.');
-           throw vaultError;
-         }
-       }
-      
-      // Single-sig flow
+      console.log('Transaction signed successfully');
       return signedTxXdr;
+      
     } catch (signError: any) {
       console.error('Wallet signing error:', signError);
       
-      // Check if it's a multi-signing scenario
-      if (signError.message?.includes('multi') || signError.message?.includes('signature')) {
-        throw new Error('Multi-signing detected: Please complete the signing process in your wallet interface (Lobstr + Vault).');
+      // Provide more descriptive error messages
+      let errorMessage = 'Transaction signing failed';
+      
+      if (signError.message) {
+        if (signError.message.includes('User declined')) {
+          errorMessage = 'Transaction was cancelled by user';
+        } else if (signError.message.includes('User rejected')) {
+          errorMessage = 'Transaction was rejected by user';
+        } else if (signError.message.includes('timeout')) {
+          errorMessage = 'Signing timeout - please try again';
+        } else if (signError.message.includes('network')) {
+          errorMessage = 'Network error during signing - check your connection';
+        } else {
+          errorMessage = `Signing error: ${signError.message}`;
+        }
+      } else if (signError.code) {
+        errorMessage = `Signing error (${signError.code}): Please check your wallet connection`;
       }
       
-      throw signError;
+      throw new Error(errorMessage);
     }
   }
 
@@ -609,93 +529,43 @@ export default function AtomicSwapCard({ walletAddress }: Props) {
       const tx = tb.setTimeout(180).build();
 
       setStatus('Signing transaction...');
-      const signedXdr = await signWithMultiSigSupport(tx.toXDR(), walletAddress);
+      const signedXdr = await signTransaction(tx.toXDR(), walletAddress);
       const signedTx = TransactionBuilder.fromXDR(signedXdr, Networks.PUBLIC);
 
       setStatus('Submitting to network...');
       
       try {
         console.log('Submitting transaction to Horizon...');
-        console.log('Transaction XDR:', signedTx.toXDR());
         console.log('Transaction hash:', signedTx.hash());
         
-        // Try submitting with different approaches
-        let res;
-        try {
-          res = await server.submitTransaction(signedTx);
-        } catch (firstError: any) {
-          console.error('First submission attempt failed:', firstError);
-          
-          // Check for specific pathfinding errors
-          if (firstError?.response?.data?.extras?.result_codes?.operations?.some((op: string) => 
-            op.includes('path_payment_strict_send_no_issuer') || 
-            op.includes('path_payment_strict_send_underfunded') ||
-            op.includes('path_payment_strict_send_line_full') ||
-            op.includes('path_payment_strict_send_cross_self')
-          )) {
-            setStatus('❌ Swap failed: Insufficient liquidity or invalid path. Try a smaller amount.');
-            return;
-          }
-          
-          // If it's a 400 error, it might be multi-signing
-          if (firstError?.response?.status === 400 || firstError?.status === 400) {
-            console.log('400 error detected - likely multi-signing scenario');
-            setStatus(`🔐 Multi-signing detected: Please complete the signing process in your wallet interface (Lobstr + Vault).`);
-            return;
-          }
-          
-          // Try alternative submission method
-          try {
-            console.log('Trying alternative submission method...');
-            // Try with a fresh transaction object
-            const freshTx = TransactionBuilder.fromXDR(signedTx.toXDR(), Networks.PUBLIC);
-            res = await server.submitTransaction(freshTx);
-          } catch (secondError: any) {
-            console.error('Second submission attempt also failed:', secondError);
-            throw firstError; // Throw the original error for better debugging
-          }
-        }
+        const result = await server.submitTransaction(signedTx);
+        console.log('Transaction submitted successfully:', result.hash);
         
         // Transaction submitted successfully
-        handleSwapSuccess(res.hash, xlmAmount, estReceived);
-      } catch (submitError: unknown) {
+        handleSwapSuccess(result.hash, xlmAmount, estReceived);
+        
+      } catch (submitError: any) {
         console.error('Transaction submission error:', submitError);
         
-        // Extract error information
-        const errorObj = submitError as any;
-        const errorMessage = errorObj?.message || errorObj?.toString() || 'Unknown error';
-        const errorStatus = errorObj?.status || errorObj?.response?.status || errorObj?.code;
-        const errorData = errorObj?.data || errorObj?.response?.data || errorObj?.extras;
+        // Extract and format error message
+        let errorMessage = 'Transaction failed';
         
-        // Check for various error conditions
-        const is400Error = errorStatus === 400 || errorMessage.includes('400') || errorMessage.includes('Request failed');
-        const isMultiSigning = errorMessage.includes('Multi-signing detected') || 
-                              errorMessage.includes('multi') ||
-                              errorMessage.includes('auth') ||
-                              errorMessage.includes('signature') ||
-                              (errorData?.result_codes?.transaction === 'tx_bad_auth') ||
-                              (errorData?.result_codes?.operations?.some((op: string) => op.includes('auth')));
-        
-        if (isMultiSigning) {
-          setStatus(`🔐 Multi-signing detected: Please complete the signing process in your wallet interface (Lobstr + Vault).`);
-        } else if (is400Error) {
-          // Try to extract more specific error information
-          let specificError = 'Transaction failed (400)';
+        if (submitError?.response?.data?.extras?.result_codes) {
+          const resultCodes = submitError.response.data.extras.result_codes;
           
-          if (errorData?.result_codes?.transaction) {
-            specificError = `Transaction error: ${errorData.result_codes.transaction}`;
-          } else if (errorData?.result_codes?.operations && errorData.result_codes.operations.length > 0) {
-            specificError = `Operation errors: ${errorData.result_codes.operations.join(', ')}`;
-          } else if (errorData?.detail) {
-            specificError = errorData.detail;
-          } else if (errorMessage !== 'Unknown error') {
-            specificError = errorMessage;
+          if (resultCodes.transaction) {
+            errorMessage = `Transaction error: ${resultCodes.transaction}`;
+          } else if (resultCodes.operations && resultCodes.operations.length > 0) {
+            const opErrors = resultCodes.operations.filter((op: string) => op !== 'op_success');
+            if (opErrors.length > 0) {
+              errorMessage = `Operation errors: ${opErrors.join(', ')}`;
+            }
           }
-          
-          setStatus(`❌ ${specificError}`);
-        } else {
-          setStatus(`❌ ${errorMessage}`);
+        } else if (submitError?.message) {
+          errorMessage = submitError.message;
         }
+        
+        setStatus(`❌ ${errorMessage}`);
         return;
       }
     } catch (err: unknown) {
@@ -771,8 +641,8 @@ export default function AtomicSwapCard({ walletAddress }: Props) {
 
     <div className="swap-container">
       <div className="swap-card">
-                 {/* Header */}
-         <div className="swap-header">
+                 {/* Swap Title */}
+         <div className="swap-title-section">
            <h2>Swap XLM for CODY</h2>
            <div className="wallet-info">
              {walletAddress ? (
@@ -901,7 +771,7 @@ export default function AtomicSwapCard({ walletAddress }: Props) {
         disabled={swapDisabled}
         className={`swap-button ${swapDisabled ? 'disabled' : ''} ${showSuccessAnimation ? 'swap-success' : ''}`}
          >
-           {busy ? (isMultiSig ? 'Multi-Sig Signing...' : 'Swapping...') : (isMultiSig ? 'Swap (Multi-Sig)' : 'Swap')}
+           {busy ? 'Swapping...' : 'Swap'}
       </button>
 
 
@@ -971,7 +841,7 @@ export default function AtomicSwapCard({ walletAddress }: Props) {
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
-        .swap-card {
+          .swap-card {
           background: rgba(255, 255, 255, 0.95);
           backdrop-filter: blur(20px);
           border-radius: 24px;
@@ -982,14 +852,14 @@ export default function AtomicSwapCard({ walletAddress }: Props) {
           border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        .swap-header {
+        .swap-title-section {
           display: flex;
           justify-content: space-between;
           align-items: center;
           margin-bottom: 24px;
         }
 
-        .swap-header h2 {
+        .swap-title-section h2 {
           margin: 0;
           font-size: 24px;
           font-weight: 700;
@@ -1442,11 +1312,11 @@ export default function AtomicSwapCard({ walletAddress }: Props) {
           .swap-card {
             padding: 20px;
             margin: 10px;
-            max-width: calc(100vw - 20px);
+            max-width: 100%;
             width: 100%;
           }
 
-          .swap-header {
+          .swap-title-section {
             flex-direction: column;
             gap: 12px;
             align-items: flex-start;

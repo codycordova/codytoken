@@ -1,7 +1,7 @@
 "use client";
 import React from 'react';
-import './Whitepaper.css';
 import Footer from '@/components/Footer';
+import AddressDisplay from '@/components/AddressDisplay';
 
 export default function WhitepaperPage() {
   const [lastUpdated, setLastUpdated] = React.useState<string>('');
@@ -11,7 +11,7 @@ export default function WhitepaperPage() {
     setLastUpdated(now.toISOString());
   }, []);
   return (
-    <div className="page-wrapper">
+    <div className="text-page">
       <main className="main-content">
         <div className="whitepaper-container">
           <h1>CODY Token Whitepaper</h1>
@@ -36,7 +36,7 @@ export default function WhitepaperPage() {
           <h2>Tokenomics</h2>
           <ul>
             <li><strong>Asset Code:</strong> <code>CODY</code></li>
-            <li><strong>Issuer Address:</strong> <code>GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK</code></li>
+            <li><strong>Issuer Address:</strong> <AddressDisplay address="GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK" /></li>
             <li><strong>Network:</strong> Stellar Public Network</li>
             <li><strong>Total Supply:</strong> 444,444,444,444 CODY</li>
             <li><strong>Decimals:</strong> 2</li>

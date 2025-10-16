@@ -19,9 +19,9 @@ export interface AquaPoolData {
 
 export interface AquaPriceData {
   pools: {
-    codyUsdc: AquaPoolData | null;
-    codyXlm: AquaPoolData | null;
-    codyAqua: AquaPoolData | null;
+    codyUsdc: AquaPoolData;
+    codyXlm: AquaPoolData;
+    codyAqua: AquaPoolData;
   };
   aggregatedPrice: {
     XLM: number;
@@ -167,9 +167,15 @@ export class AquaService {
        ]);
 
       const pools = {
-        codyUsdc: codyUsdc.status === 'fulfilled' ? codyUsdc.value : null,
-        codyXlm: codyXlm.status === 'fulfilled' ? codyXlm.value : null,
-        codyAqua: codyAqua.status === 'fulfilled' ? codyAqua.value : null
+        codyUsdc: codyUsdc.status === 'fulfilled' && codyUsdc.value 
+          ? codyUsdc.value 
+          : this.createDefaultPoolData(this.POOL_CONTRACTS.CODY_USDC, 'CODY/USDC'),
+        codyXlm: codyXlm.status === 'fulfilled' && codyXlm.value 
+          ? codyXlm.value 
+          : this.createDefaultPoolData(this.POOL_CONTRACTS.CODY_XLM, 'CODY/XLM'),
+        codyAqua: codyAqua.status === 'fulfilled' && codyAqua.value 
+          ? codyAqua.value 
+          : this.createDefaultPoolData(this.POOL_CONTRACTS.CODY_AQUA, 'CODY/AQUA')
       };
 
              // Calculate aggregated price
@@ -212,9 +218,9 @@ export class AquaService {
       
       return {
         pools: {
-          codyUsdc: null,
-          codyXlm: null,
-          codyAqua: null
+          codyUsdc: this.createDefaultPoolData(this.POOL_CONTRACTS.CODY_USDC, 'CODY/USDC'),
+          codyXlm: this.createDefaultPoolData(this.POOL_CONTRACTS.CODY_XLM, 'CODY/XLM'),
+          codyAqua: this.createDefaultPoolData(this.POOL_CONTRACTS.CODY_AQUA, 'CODY/AQUA')
         },
         aggregatedPrice: {
           XLM: 0,
@@ -225,6 +231,27 @@ export class AquaService {
         lastUpdate: new Date().toISOString()
       };
     }
+  }
+
+  /**
+   * Create default pool data when real data is unavailable
+   */
+  private static createDefaultPoolData(poolId: string, pair: string): AquaPoolData {
+    return {
+      poolId,
+      pair,
+      tvl: 0,
+      volume24h: 0,
+      baseAPY: 0,
+      rewardsAPY: 0,
+      fee: 0.1,
+      price: 0,
+      reserves: {
+        cody: 0,
+        counter: 0
+      },
+      timestamp: new Date().toISOString()
+    };
   }
 
   /**

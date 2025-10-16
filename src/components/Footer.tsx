@@ -1,7 +1,6 @@
 // 📁 src/components/Footer.tsx
 import React from 'react';
 import Link from 'next/link';
-import './Footer.css';
 
 export default function Footer() {
   return (
@@ -14,9 +13,9 @@ export default function Footer() {
               <h4 className="footer-heading">Explore</h4>
               <ul className="footer-links">
                 <li><Link href="/">Home</Link></li>
-                <li><Link href="/purchase">Purchase</Link></li>
-                <li><Link href="/balances">Balances</Link></li>
-                <li><Link href="/tokenomics">Tokenomics</Link></li>
+                <li><Link href="/#stats">Stats</Link></li>
+                <li><Link href="/#faq">FAQ</Link></li>
+                <li><Link href="/#contact">Contact</Link></li>
               </ul>
             </div>
 
@@ -24,10 +23,10 @@ export default function Footer() {
             <div className="footer-section">
               <h4 className="footer-heading">Support</h4>
               <ul className="footer-links">
-                <li><Link href="/faq">FAQ</Link></li>
-                <li><Link href="/contact">Contact</Link></li>
-                <li><Link href="/terms">Terms</Link></li>
-                <li><Link href="/privacy">Privacy</Link></li>
+                <li><Link href="/purchase">Buy CODY</Link></li>
+                <li><Link href="/tokenomics">Tokenomics</Link></li>
+                <li><Link href="/whitepaper">Whitepaper</Link></li>
+                <li><Link href="/docs">Developer Docs</Link></li>
               </ul>
             </div>
 
@@ -35,12 +34,11 @@ export default function Footer() {
             <div className="footer-section">
               <h4 className="footer-heading">Connect</h4>
               <ul className="footer-links">
-                <li><Link href="/blog">Blog</Link></li>
-                <li><Link href="/whitepaper">Whitepaper</Link></li>
-                <li><Link href="/docs">Developer Documentation</Link></li>
                 <li><a href="https://twitter.com/realcodycordova" target="_blank" rel="noopener noreferrer">Twitter</a></li>
                 <li><a href="https://t.me/codytokenxlm" target="_blank" rel="noopener noreferrer">Telegram</a></li>
                 <li><a href="https://discord.gg/WYHdtRMueC" target="_blank" rel="noopener noreferrer">Discord</a></li>
+                <li><Link href="/terms">Terms</Link></li>
+                <li><Link href="/privacy">Privacy</Link></li>
               </ul>
             </div>
 

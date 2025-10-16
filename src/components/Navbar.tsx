@@ -5,7 +5,6 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import WalletConnect from "./WalletConnect";
-import "./Navbar.css";
 import Image from 'next/image';
 
 export default function Navbar() {
@@ -41,25 +40,10 @@ export default function Navbar() {
             <div className={`navbar-menu${menuOpen ? ' open' : ''}`} id="main-navbar-menu">
                 <ul className="navbar-links">
                     <li className={pathname === "/" ? "active" : ""}>
-                        <Link href="/">Home</Link>
+                        <Link href="/" onClick={() => setMenuOpen(false)}>Home</Link>
                     </li>
                     <li className={pathname === "/purchase" ? "active" : ""}>
-                        <Link href="/purchase">Purchase</Link>
-                    </li>
-                    <li className={pathname === "/balances" ? "active" : ""}>
-                        <Link href="/balances">Balances</Link>
-                    </li>
-                    <li className={pathname === "/tokenomics" ? "active" : ""}>
-                        <Link href="/tokenomics">Tokenomics</Link>
-                    </li>
-                    <li className={pathname?.startsWith("/blog") ? "active" : ""}>
-                        <Link href="/blog">Blog</Link>
-                    </li>
-                    <li className={pathname === "/faq" ? "active" : ""}>
-                        <Link href="/faq">FAQ</Link>
-                    </li>
-                    <li className={pathname === "/contact" ? "active" : ""}>
-                        <Link href="/contact">Contact</Link>
+                        <Link href="/purchase" onClick={() => setMenuOpen(false)}>Buy CODY</Link>
                     </li>
                 </ul>
                 <div className="navbar-wallet">

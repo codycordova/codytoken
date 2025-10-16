@@ -1,11 +1,10 @@
 import React from 'react';
 import Footer from '../../components/Footer';
-import './Privacy.css';
 
 export default function PrivacyPage() {
     return (
-        <div className="privacy-page">
-            <main className="privacy-container">
+        <div className="text-page">
+            <main className="main-content">
                 <h1 className="privacy-title">Privacy Policy</h1>
                 <div className="privacy-content">
                     

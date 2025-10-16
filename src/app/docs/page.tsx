@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import './Docs.css';
+import '../../styles/Docs.css';
+import AddressDisplay from '../../components/AddressDisplay';
 
 export default function DocsPage() {
   return (
@@ -76,7 +77,7 @@ console.log(priceData.price.USD); // Current USD price`}</code></pre>
               <h3>Token Details</h3>
               <ul>
                 <li><strong>Code:</strong> CODY</li>
-                <li><strong>Issuer:</strong> GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK</li>
+                <li><strong>Issuer:</strong> <AddressDisplay address="GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK" /></li>
                 <li><strong>Total Supply:</strong> 444,444,444,444 CODY</li>
                 <li><strong>Circulating:</strong> 2,000 CODY</li>
                 <li><strong>Network:</strong> Stellar Mainnet</li>

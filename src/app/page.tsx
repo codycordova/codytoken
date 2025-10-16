@@ -8,6 +8,8 @@ import React, { useEffect, useRef } from 'react';
 import CodyToken3D from '@/components/CodyToken3D';
 import GraffitiHeroText from '../components/GraffitiHeroText';
 import MobileHeroText from '../components/MobileHeroText';
+import FAQ from '../components/FAQ';
+import Contact from '../components/Contact';
 import Link from 'next/link';
 
 export default function Home() {
@@ -56,7 +58,7 @@ export default function Home() {
             <div className="page-wrapper">
                 <main className="main-content">
                     {/* Hero Section */}
-                    <div id="launch-sequence">
+                    <div id="home" className="launch-sequence">
                         <div className="hero-container" ref={heroRef}>
                             {/* Mobile version */}
                             <div className="mobile-hero-title">
@@ -83,7 +85,7 @@ export default function Home() {
                                 {/* Mobile version */}
                                 <div className="mobile-hero-subtitle">
                                     <MobileHeroText 
-                                        text="Ur baby mama's favorite DJ has his own currency" 
+                                        text="Ur baby mama&apos;s favorite DJ has his own currency" 
                                         fontSize={18} 
                                         className="spray-animate"
                                         color="#ffffff"
@@ -98,7 +100,7 @@ export default function Home() {
                                 
                                 {/* Desktop version */}
                                 <div className="desktop-hero-subtitle">
-                                    <GraffitiHeroText text="Ur baby mama's favorite DJ has his own currency" fontSize={28} width={600} className="spray-animate" />
+                                    <GraffitiHeroText text="Ur baby mama&apos;s favorite DJ has his own currency" fontSize={28} width={600} className="spray-animate" />
                                     <GraffitiHeroText text="And its on the Stellar Blockchain" fontSize={32} width={500} className="spray-animate" />
                                 </div>
                             </div>
@@ -108,9 +110,9 @@ export default function Home() {
                                 <Link href="/purchase" className="cta-button primary">
                                     Get Started
                                 </Link>
-                                <Link href="/faq" className="cta-button secondary">
+                                <a href="#faq" className="cta-button secondary">
                                     Learn More
-                                </Link>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -173,8 +175,37 @@ export default function Home() {
                         </div>
                     </section>
 
+                    {/* Trust & Security Section */}
+                    <section className="trust-section reveal">
+                        <div className="trust-container">
+                            <h2 className="section-title">🔒 Trusted & Secure</h2>
+                            <div className="trust-badges">
+                                <div className="trust-badge">
+                                    <div className="trust-icon">🛡️</div>
+                                    <h3>Stellar Blockchain</h3>
+                                    <p>Built on the secure, fast, and eco-friendly Stellar network</p>
+                                </div>
+                                <div className="trust-badge">
+                                    <div className="trust-icon">🔍</div>
+                                    <h3>Fully Transparent</h3>
+                                    <p>All transactions are publicly verifiable on the blockchain</p>
+                                </div>
+                                <div className="trust-badge">
+                                    <div className="trust-icon">⚡</div>
+                                    <h3>Low Fees</h3>
+                                    <p>Stellar&apos;s network fees are fractions of a penny</p>
+                                </div>
+                                <div className="trust-badge">
+                                    <div className="trust-icon">🌱</div>
+                                    <h3>Eco-Friendly</h3>
+                                    <p>Stellar uses minimal energy compared to other blockchains</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
                     {/* Stats Section */}
-                    <section className="stats-section reveal">
+                    <section id="stats" className="stats-section reveal">
                         <h2 className="section-title">CODY Token by the Numbers</h2>
                         <div className="stats-grid-compact">
                             <div className="stat-card">
@@ -267,15 +298,83 @@ export default function Home() {
                                 Be part of the future of music and blockchain technology. Start your journey with CODY Token today.
                             </p>
                             <div className="cta-buttons">
-                                <Link href="/purchase" className="cta-button primary large">
+                                <a href="#purchase" className="cta-button primary large">
                                     Buy CODY Token
-                                </Link>
-                                <Link href="/contact" className="cta-button secondary large">
+                                </a>
+                                <a href="#contact" className="cta-button secondary large">
                                     Get Support
-                                </Link>
+                                </a>
+                            </div>
+                            
+                            {/* Quick Access Links */}
+                            <div className="quick-access">
+                                <Link href="/tokenomics" className="quick-link">Tokenomics</Link>
+                                <Link href="/whitepaper" className="quick-link">Whitepaper</Link>
+                                <Link href="/docs" className="quick-link">Developer Docs</Link>
                             </div>
                         </div>
                     </section>
+
+                    {/* Educational Section */}
+                    <section className="education-section reveal">
+                        <div className="education-container">
+                            <h2 className="section-title">🎓 New to Cryptocurrency?</h2>
+                            <p className="education-subtitle">Don&apos;t worry! We&apos;ll guide you through everything step by step.</p>
+                            
+                            <div className="education-steps">
+                                <div className="education-step">
+                                    <div className="step-number">1</div>
+                                    <div className="step-content">
+                                        <h3>Get a Stellar Wallet</h3>
+                                        <p>Download Lobstr (mobile) or Freighter (browser) - both are free and easy to use!</p>
+                                        <div className="step-links">
+                                            <a href="https://lobstr.co" target="_blank" rel="noopener noreferrer" className="step-link">Download Lobstr</a>
+                                            <a href="https://freighter.app" target="_blank" rel="noopener noreferrer" className="step-link">Download Freighter</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div className="education-step">
+                                    <div className="step-number">2</div>
+                                    <div className="step-content">
+                                        <h3>Buy Some XLM</h3>
+                                        <p>XLM (Stellar Lumens) is the native currency. You can buy it directly in your wallet or on exchanges like Coinbase.</p>
+                                        <div className="step-links">
+                                            <a href="https://coinbase.com" target="_blank" rel="noopener noreferrer" className="step-link">Buy on Coinbase</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div className="education-step">
+                                    <div className="step-number">3</div>
+                                    <div className="step-content">
+                                        <h3>Establish Trustline</h3>
+                                        <p>This tells your wallet you want to hold CODY tokens. It&apos;s like adding a new currency to your wallet.</p>
+                                        <div className="step-links">
+                                            <a href="/purchase" className="step-link">Set Up Trustline</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div className="education-step">
+                                    <div className="step-number">4</div>
+                                    <div className="step-content">
+                                        <h3>Swap XLM for CODY</h3>
+                                        <p>Use our swap tool to exchange your XLM for CODY tokens. It&apos;s fast, secure, and transparent!</p>
+                                        <div className="step-links">
+                                            <a href="/purchase" className="step-link">Start Swapping</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* FAQ Section */}
+                    <FAQ />
+
+                    {/* Contact Section */}
+                    <Contact />
                 </main>
                 <Footer />
             </div>

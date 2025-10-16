@@ -88,24 +88,49 @@ export default function TrustlineButton({
         };
     }, [walletAddress, onTrustlineActive]);
 
-    // Add trustline button logic
+    // Enhanced trustline logic with better balance validation
     async function addTrustline() {
         if (!walletAddress || !kit || !serverRef.current) return;
         setLoading(true);
         try {
             const account = await serverRef.current.loadAccount(walletAddress);
-            // Calculate available XLM (native balance minus minimum reserve)
+            
+            // Calculate detailed balance requirements
             const nativeBalance = account.balances.find((b: BalanceLine) => b.asset_type === "native");
-            const xlm = nativeBalance ? parseFloat(nativeBalance.balance) : 0;
-            // Minimum balance: 1 XLM base + 0.5 XLM per trustline + 0.5 XLM for new trustline
-            // See: https://developers.stellar.org/docs/fundamentals-and-concepts/fees-and-reserves
+            const currentXlm = nativeBalance ? parseFloat(nativeBalance.balance) : 0;
             const subentryCount = Number(account.subentry_count) || 0;
-            const minBalance = 1 + 0.5 * (subentryCount + 1); // +1 for new trustline
-            if (xlm < minBalance) {
-                alert("❌ You need at least 0.5 XLM available to add a trustline. Please fund your wallet and try again.");
+            
+            // Calculate required reserves
+            const baseReserve = 1.0; // Base reserve for account
+            const trustlineReserve = 0.5; // Reserve for new trustline
+            const existingReserves = subentryCount * 0.5; // Existing subentry reserves
+            const feeBuffer = 0.001; // Small buffer for transaction fees
+            
+            const totalRequired = baseReserve + existingReserves + trustlineReserve + feeBuffer;
+            const shortfall = Math.max(0, totalRequired - currentXlm);
+            
+            // Check if user has enough XLM
+            if (currentXlm < totalRequired) {
+                const message = `❌ Insufficient XLM for trustline setup.
+
+Current XLM: ${currentXlm.toFixed(6)}
+Required: ${totalRequired.toFixed(6)}
+Shortfall: ${shortfall.toFixed(6)} XLM
+
+💡 Need more XLM? Buy from:
+• Coinbase: https://coinbase.com
+• CoinDisco: https://coindisco.com
+• Stellar DEX: Use any Stellar wallet
+
+After purchasing, send XLM to your wallet address:
+${walletAddress}`;
+                
+                alert(message);
                 setLoading(false);
                 return;
             }
+            
+            // Proceed with trustline creation
             const tx = new StellarSdk.TransactionBuilder(account, {
                 fee: StellarSdk.BASE_FEE,
                 networkPassphrase: StellarSdk.Networks.PUBLIC,
@@ -124,16 +149,28 @@ export default function TrustlineButton({
 
             setHasTrustline(true);
             onTrustlineActive?.(true);
-            alert("✅ Trustline successfully added!");
+            alert("✅ Trustline successfully added! You can now receive CODY tokens.");
+            
         } catch (e: unknown) {
             console.error("Failed to add trustline:", e);
+            
+            let errorMessage = "Failed to add trustline. Unknown error.";
+            
             if (isStellarError(e)) {
-                alert("❌ Failed to add trustline: " + JSON.stringify(e.response.data.extras.result_codes));
+                const resultCodes = e.response.data.extras.result_codes as { transaction?: string; operations?: string[] };
+                if (resultCodes.transaction) {
+                    errorMessage = `Transaction failed: ${resultCodes.transaction}`;
+                } else if (resultCodes.operations && resultCodes.operations.length > 0) {
+                    const opErrors = resultCodes.operations.filter((op: string) => op !== 'op_success');
+                    if (opErrors.length > 0) {
+                        errorMessage = `Operation errors: ${opErrors.join(', ')}`;
+                    }
+                }
             } else if (typeof e === "object" && e && "message" in e && typeof (e as { message: unknown }).message === "string") {
-                alert("❌ Failed to add trustline. " + (e as { message: string }).message);
-            } else {
-                alert("❌ Failed to add trustline. Unknown error.");
+                errorMessage = (e as { message: string }).message;
             }
+            
+            alert(`❌ ${errorMessage}`);
         } finally {
             setLoading(false);
         }

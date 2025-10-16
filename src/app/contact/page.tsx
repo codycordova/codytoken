@@ -1,11 +1,11 @@
 import React from 'react';
+import Link from 'next/link';
 import Footer from '../../components/Footer';
-import './Contact.css';
 
 export default function ContactPage() {
     return (
-        <div className="contact-page">
-            <main className="contact-container">
+        <div className="text-page">
+            <main className="main-content">
                 <h1 className="contact-title">Contact & Support</h1>
                 <p className="contact-subtitle">Get in touch with the CODY Token team</p>
                 
@@ -105,7 +105,7 @@ export default function ContactPage() {
                 <div className="helpful-links">
                     <h3>Helpful Resources</h3>
                     <div className="resource-links">
-                        <a href="/faq" className="resource-link">Frequently Asked Questions</a>
+                        <Link href="/#faq" className="resource-link">Frequently Asked Questions</Link>
                         <a href="/blog" className="resource-link">Blog & Tutorials</a>
                         <a href="/terms" className="resource-link">Terms of Service</a>
                         <a href="/privacy" className="resource-link">Privacy Policy</a>

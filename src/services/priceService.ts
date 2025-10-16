@@ -1,5 +1,6 @@
 import { StellarService } from './stellarService';
 import { AquaService } from './aquaService';
+import { SorobanService } from './sorobanService';
 import { cache } from '../utils/cache';
 import { PriceData } from '../types/price';
 import { config } from '../config/stellarConfig';
@@ -26,7 +27,8 @@ export class PriceService {
 
     try {
       // Fetch data from multiple sources in parallel
-      const [aquaData, orderbook, vwap, volume24h, poolData, xlmUsd, xlmEur] = await Promise.allSettled([
+      const [sorobanData, aquaData, orderbook, vwap, volume24h, poolData, xlmUsd, xlmEur] = await Promise.allSettled([
+        SorobanService.getCodyPoolReserves(),
         AquaService.getAllCodyPools(),
         StellarService.getOrderbook(),
         StellarService.getVWAP(),
@@ -37,6 +39,7 @@ export class PriceService {
       ]);
 
       // Extract successful results
+      const sorobanPools = sorobanData.status === 'fulfilled' ? sorobanData.value : null;
       const aquaPools = aquaData.status === 'fulfilled' ? aquaData.value : null;
       const orderbookData = orderbook.status === 'fulfilled' ? orderbook.value : null;
       const vwapPrice = vwap.status === 'fulfilled' ? vwap.value : 0;
@@ -45,11 +48,30 @@ export class PriceService {
       const xlmUsdPrice = xlmUsd.status === 'fulfilled' ? xlmUsd.value : 0.12;
       const xlmEurPrice = xlmEur.status === 'fulfilled' ? xlmEur.value : 0.1;
 
-      // Use Aqua pools as a primary price source
+      // Prioritize Soroban contract data as the most accurate source
       let primaryPrice = 0;
       let confidence = 0.3; // Base confidence
+      let xlmPrice = 0;
+      let eurPrice = 0;
 
-      if (aquaPools) {
+      if (sorobanPools && sorobanPools.prices) {
+        // Use Soroban contract prices as primary source
+        primaryPrice = sorobanPools.prices.codyPerUsdc; // Direct USD price from USDC pool
+        xlmPrice = sorobanPools.prices.codyPerXlm; // Direct XLM price
+        eurPrice = sorobanPools.prices.codyPerEurc; // Direct EUR price
+        
+        // High confidence for Soroban contract data
+        confidence += 0.5;
+        
+        // Add confidence based on pool reserves
+        if (sorobanPools.reserves.xlm > 0) confidence += 0.1;
+        if (sorobanPools.reserves.usdc > 0) confidence += 0.1;
+        if (sorobanPools.reserves.eurc > 0) confidence += 0.1;
+        if (sorobanPools.reserves.cody > 0) confidence += 0.1;
+      }
+
+      // Fallback to Aqua pools if Soroban data is not available
+      if (primaryPrice === 0 && aquaPools) {
         // Prefer CODY/USDC for USD price, CODY/XLM for XLM price
         if (aquaPools.pools.codyUsdc && aquaPools.pools.codyUsdc.price > 0) {
           primaryPrice = aquaPools.pools.codyUsdc.price; // This is USD price
@@ -77,9 +99,13 @@ export class PriceService {
         }
       }
 
-      // Calculate XLM and EUR prices
-      const xlmPrice = xlmUsdPrice > 0 ? primaryPrice / xlmUsdPrice : 0;
-      const eurPrice = xlmUsdPrice > 0 ? primaryPrice * (xlmEurPrice / xlmUsdPrice) : 0;
+      // Use Soroban prices if available, otherwise calculate from USD price
+      if (xlmPrice === 0) {
+        xlmPrice = xlmUsdPrice > 0 ? primaryPrice / xlmUsdPrice : 0;
+      }
+      if (eurPrice === 0) {
+        eurPrice = xlmUsdPrice > 0 ? primaryPrice * (xlmEurPrice / xlmUsdPrice) : 0;
+      }
 
       const priceData: PriceData = {
         symbol: 'CODY',
@@ -96,19 +122,67 @@ export class PriceService {
             spread: orderbookData?.spread || 0,
             volume24h: volume,
           },
-          pool: pool
-            ? {
-                price: pool.price,
-                reserves: pool.reserves,
+          pool: {
+            price: pool?.price || 0,
+            reserves: pool?.reserves || { cody: 0, xlm: 0 },
+          },
+          aqua: {
+            pools: aquaPools?.pools || {
+              codyUsdc: {
+                poolId: '',
+                pair: 'CODY/USDC',
+                tvl: 0,
+                volume24h: 0,
+                baseAPY: 0,
+                rewardsAPY: 0,
+                fee: 0.1,
+                price: 0,
+                reserves: { cody: 0, counter: 0 },
+                timestamp: new Date().toISOString()
+              },
+              codyXlm: {
+                poolId: '',
+                pair: 'CODY/XLM',
+                tvl: 0,
+                volume24h: 0,
+                baseAPY: 0,
+                rewardsAPY: 0,
+                fee: 0.1,
+                price: 0,
+                reserves: { cody: 0, counter: 0 },
+                timestamp: new Date().toISOString()
+              },
+              codyAqua: {
+                poolId: '',
+                pair: 'CODY/AQUA',
+                tvl: 0,
+                volume24h: 0,
+                baseAPY: 0,
+                rewardsAPY: 0,
+                fee: 0.1,
+                price: 0,
+                reserves: { cody: 0, counter: 0 },
+                timestamp: new Date().toISOString()
               }
-            : undefined,
-          aqua: aquaPools
-            ? {
-                pools: aquaPools.pools,
-                aggregatedPrice: aquaPools.aggregatedPrice,
-              }
-            : undefined,
-          oracle: undefined, // Placeholder for future oracle integration
+            },
+            aggregatedPrice: aquaPools?.aggregatedPrice || { XLM: 0, USD: 0, EUR: 0 },
+          },
+          soroban: {
+            reserves: sorobanPools?.reserves || { xlm: 0, cody: 0, usdc: 0, eurc: 0 },
+            prices: sorobanPools?.prices || {
+              codyPerXlm: 0,
+              xlmPerCody: 0,
+              codyPerUsdc: 0,
+              usdcPerCody: 0,
+              codyPerEurc: 0,
+              eurcPerCody: 0
+            },
+            contractId: sorobanPools?.contractId || '',
+          },
+          oracle: {
+            price: 0,
+            confidence: 0
+          }
         },
         metadata: {
           confidence: Math.min(confidence, 0.98),

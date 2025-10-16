@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import '../Docs.css';
+import '@/styles/Docs.css';
+import AddressDisplay from '../../../components/AddressDisplay';
 
 export default function StellarPage() {
   return (
@@ -232,7 +233,7 @@ const transaction = new TransactionBuilder(sourceAccount, {
           <div className="account-grid">
             <div className="account-card">
               <h3>CODY Token Issuer</h3>
-              <p className="address">GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK</p>
+              <p className="address"><AddressDisplay address="GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK" /></p>
               <p>Official issuer account for CODY Token (locked/immutable)</p>
             </div>
             

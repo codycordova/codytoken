@@ -1,12 +1,11 @@
 // ========== /src/app/terms/page.tsx ==========
 import React from 'react';
 import Footer from '../../components/Footer';
-import './Terms.css';
 
 export default function TermsPage() {
     return (
-        <div className="terms-page">
-            <main className="terms-container">
+        <div className="text-page">
+            <main className="main-content">
                 <h1 className="terms-title">Terms of Service</h1>
                 <div className="terms-box">
                     <p><strong>1. Introduction</strong><br />

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import '../Docs.css';
+import '@/styles/Docs.css';
 
 export default function DeploymentPage() {
   return (
