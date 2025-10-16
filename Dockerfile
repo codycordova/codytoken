@@ -1,7 +1,7 @@
 # Build stage
 FROM node:22-alpine AS builder
 
-RUN apk add --no-cache python3 make g++ linux-headers libc6-compat
+RUN apk add --no-cache python3 make g++ linux-headers libc6-compat eudev-dev
 WORKDIR /app
 
 # Install with cache reuse
@@ -9,8 +9,9 @@ COPY package.json package-lock.json ./
 ENV NPM_CONFIG_UPDATE_NOTIFIER=false \
     NPM_CONFIG_FUND=false \
     NPM_CONFIG_AUDIT=false \
-    NEXT_TELEMETRY_DISABLED=1
-RUN npm ci --no-fund --no-audit --omit=optional
+    NEXT_TELEMETRY_DISABLED=1 \
+    TREZOR_CONNECT_SRC=https://connect.trezor.io/9/
+RUN npm ci --no-fund --no-audit --omit=optional --ignore-scripts
 
 # Build
 COPY . .
@@ -35,7 +36,7 @@ ENV NODE_ENV=production \
     NEXT_TELEMETRY_DISABLED=1
 
 COPY --from=builder /app/package.json /app/package-lock.json ./
-RUN npm ci --no-fund --no-audit --omit=dev --omit=optional
+RUN npm ci --no-fund --no-audit --omit=dev --omit=optional --ignore-scripts
 
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
