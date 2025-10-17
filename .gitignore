@@ -123,3 +123,12 @@ CODE_OF_CONDUCT.md
 CONTRIBUTING.md
 STELLAR_TOML_FIX.md
 docs/SECRETS_MANAGEMENT.md
+
+#python
+.venv/
+*.pyc
+*.pyo
+*.pyd
+*.pyw
+*.pyz
+*.pywz

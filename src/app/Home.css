@@ -57,6 +57,8 @@
     .mobile-hero-title,
     .mobile-hero-subtitle {
         display: block;
+        z-index: 10;
+        position: relative;
     }
     
     .desktop-hero-title,
@@ -105,16 +107,22 @@
         padding: 2rem 1rem;
         text-align: center;
         min-height: 70vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 2rem;
     }
     
     .hero-sub-row {
         flex-direction: column;
         gap: 1rem;
-        margin-top: 1.5rem;
+        margin-top: 0;
+        align-items: center;
     }
     
     .mobile-hero-text {
-        margin-bottom: 1rem;
+        margin-bottom: 0.5rem;
     }
     
     .mobile-hero-subtitle {
@@ -122,6 +130,22 @@
         flex-direction: column;
         gap: 0.5rem;
         align-items: center;
+    }
+    
+    .hero-3d {
+        order: 2;
+        margin: 0;
+        width: 100%;
+        max-width: 320px;
+        height: 320px;
+    }
+    
+    .mobile-hero-title {
+        order: 1;
+    }
+    
+    .hero-sub-row {
+        order: 3;
     }
 }
 
@@ -371,12 +395,18 @@
         gap: 2rem;
         padding: 2rem 1rem;
         text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
 
     .hero-3d {
-        order: 0;
-        margin: 1rem 0;
+        order: 2;
+        margin: 0;
         width: 100%;
+        max-width: 320px;
+        height: 320px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -384,9 +414,10 @@
     
     .hero-sub-row {
         flex-direction: column;
-        gap: 1.5rem;
-        margin-top: 1.5rem;
+        gap: 1rem;
+        margin-top: 0;
         align-items: center;
+        order: 3;
     }
     
     .mobile-hero-text {

@@ -252,18 +252,19 @@ export default function Home() {
                                     border: 'none', 
                                     overflow: 'hidden', 
                                     maxWidth: '100%', 
-                                    minWidth: '280px', 
+                                    minWidth: '300px', 
                                     maxHeight: '100%', 
                                     minHeight: '200px', 
                                     width: '100%',
                                 }}
-                                onLoad={e => { const iframe = e.currentTarget; window.addEventListener('message', function ({ data, source }) {
-                                    if (iframe && source === iframe.contentWindow && data.widget === iframe.src) {
-                                        // Allow natural height but with reasonable limits
-                                        const maxHeight = window.innerWidth <= 768 ? '500px' : '700px';
-                                        iframe.style.height = Math.min(data.height, parseInt(maxHeight)) + 'px';
-                                    }
-                                }, false); }}
+                                onLoad={(e) => {
+                                    const c = e.currentTarget;
+                                    window.addEventListener('message', function({data, source}) {
+                                        if (c && source === c.contentWindow && data.widget === c.src) {
+                                            c.style.height = data.height + 'px';
+                                        }
+                                    }, false);
+                                }}
                             />
                         </div>
                         <div className="widget-container">
@@ -274,18 +275,19 @@ export default function Home() {
                                     border: 'none', 
                                     overflow: 'hidden', 
                                     maxWidth: '100%', 
-                                    minWidth: '280px', 
+                                    minWidth: '300px', 
                                     maxHeight: '100%', 
                                     minHeight: '200px', 
                                     width: '100%',
                                 }}
-                                onLoad={e => { const iframe = e.currentTarget; window.addEventListener('message', function ({ data, source }) {
-                                    if (iframe && source === iframe.contentWindow && data.widget === iframe.src) {
-                                        // Allow natural height but with reasonable limits
-                                        const maxHeight = window.innerWidth <= 768 ? '500px' : '700px';
-                                        iframe.style.height = Math.min(data.height, parseInt(maxHeight)) + 'px';
-                                    }
-                                }, false); }}
+                                onLoad={(e) => {
+                                    const c = e.currentTarget;
+                                    window.addEventListener('message', function({data, source}) {
+                                        if (c && source === c.contentWindow && data.widget === c.src) {
+                                            c.style.height = data.height + 'px';
+                                        }
+                                    }, false);
+                                }}
                             />
                         </div>
                     </section>

@@ -90,3 +90,5 @@ temp/
 
 # Not needed in runtime image
 scripts/
+
+.venv/
