@@ -6,7 +6,6 @@ dockerfile = "Dockerfile"
 
 [processes]
 app = "node_modules/.bin/next start -p 3000"
-ws = "node dist/ws/server.js"
 
 [http_service]
 internal_port = 3000
@@ -26,23 +25,6 @@ protocol = "http"
 restart_limit = 3
 timeout = "5s"
 
-[[services]]
-internal_port = 3030
-protocol = "tcp"
-processes = ["ws"]
-
-[services.concurrency]
-type = "connections"
-soft_limit = 50
-hard_limit = 100
-
-[[services.ports]]
-port = 3030
-handlers = ["tls", "http"]
-
-[[services.tcp_checks]]
-interval = "15s"
-timeout = "2s"
 
 [[vm]]
 cpu_kind = "shared"
