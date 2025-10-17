@@ -18,7 +18,7 @@ const SOROBAN_RPC_URLS = [
   'https://horizon.stellar.org'
 ];
 
-const SOROBAN_RPC_URL = SOROBAN_RPC_URLS[0]; // Start with mainnet
+// const SOROBAN_RPC_URL = SOROBAN_RPC_URLS[0]; // Start with mainnet
 
 // Asset addresses for common tokens (currently unused but kept for future reference)
 // const ASSET_ADDRESSES = {
@@ -90,7 +90,7 @@ export class SorobanService {
   /**
    * Try to get pool reserves from Soroban contract (with fallback)
    */
-  static async tryPoolReservesFromSoroban(poolContractId: string, _tokenContractId: string): Promise<PoolReserves | null> {
+  static async tryPoolReservesFromSoroban(poolContractId: string, tokenContractId: string): Promise<PoolReserves | null> {
     try {
       await SorobanService.initialize();
       if (!SorobanService.server) return null;
@@ -99,6 +99,7 @@ export class SorobanService {
       
       // Create contract instance for the specific pool
       const poolContract = new Contract(poolContractId);
+      console.log(`Using token contract: ${tokenContractId}`);
       
       // Only try contract calls if we have a working RPC connection
       if (SorobanService.server) {
