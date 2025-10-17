@@ -13,7 +13,7 @@ const CSP = [
   "font-src 'self' data:",
   "style-src 'self' 'unsafe-inline'",
   "script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https:",
-  "connect-src 'self' https://horizon.stellar.org https://horizon-testnet.stellar.org https://*.stellar.org https://api.stellar.expert https://stellar.expert https://aqua.network https: wss:",
+  "connect-src 'self' https://horizon.stellar.org https://horizon-testnet.stellar.org https://*.stellar.org https://api.stellar.expert https://stellar.expert https://aqua.network https: wss: blob:",
   "worker-src 'self' blob:",
   "frame-src 'self' https://stellar.expert",
   "upgrade-insecure-requests",
