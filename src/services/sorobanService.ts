@@ -97,8 +97,6 @@ export class SorobanService {
 
       console.log(`Querying pool reserves for: ${poolContractId}`);
       
-      // Create contract instance for the specific pool
-      const poolContract = new Contract(poolContractId);
       console.log(`Using token contract: ${tokenContractId}`);
       
       // Only try contract calls if we have a working RPC connection
