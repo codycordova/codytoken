@@ -12,9 +12,8 @@ const CSP = [
   "img-src 'self' data: blob: https:",
   "font-src 'self' data:",
   "style-src 'self' 'unsafe-inline'",
-  // Note: 'unsafe-inline' for scripts is avoided; 'wasm-unsafe-eval' may be required for wasm
-  "script-src 'self' 'wasm-unsafe-eval' https:",
-  "connect-src 'self' https: wss:",
+  "script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https:",
+  "connect-src 'self' https://horizon.stellar.org https://horizon-testnet.stellar.org https://*.stellar.org https://api.stellar.expert https://aqua.network https: wss:",
   "worker-src 'self' blob:",
   "prefetch-src 'self'",
   "upgrade-insecure-requests",
