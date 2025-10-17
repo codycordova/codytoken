@@ -1,50 +1,45 @@
 # Build stage
 FROM node:22-alpine AS builder
 
-RUN apk add --no-cache python3 make g++ linux-headers libc6-compat eudev-dev
 WORKDIR /app
 
-# Install with cache reuse
+# Copy package files
 COPY package.json package-lock.json ./
-ENV NPM_CONFIG_UPDATE_NOTIFIER=false \
-    NPM_CONFIG_FUND=false \
-    NPM_CONFIG_AUDIT=false \
-    NEXT_TELEMETRY_DISABLED=1 \
-    TREZOR_CONNECT_SRC=https://connect.trezor.io/9/
-RUN npm ci --no-fund --no-audit --omit=optional --ignore-scripts
 
-# Build
+# Install dependencies (including dev dependencies for build)
+RUN npm ci --ignore-scripts
+
+# Copy source code
 COPY . .
+
+# Build the application
 RUN npm run build
 
 # Runtime stage
 FROM node:22-alpine AS runner
 
-RUN apk add --no-cache dumb-init libc6-compat
-RUN addgroup -S nodejs -g 1001 && adduser -S nextjs -u 1001 -G nodejs
 WORKDIR /app
 
-ARG APP_PORT=3000
-ARG WS_PORT=3030
-ENV NODE_ENV=production \
-    HOST=0.0.0.0 \
-    PORT=${APP_PORT} \
-    WS_PORT=${WS_PORT} \
-    NPM_CONFIG_UPDATE_NOTIFIER=false \
-    NPM_CONFIG_FUND=false \
-    NPM_CONFIG_AUDIT=false \
-    NEXT_TELEMETRY_DISABLED=1
+# Create non-root user
+RUN addgroup -S nodejs -g 1001 && adduser -S nextjs -u 1001 -G nodejs
 
-COPY --from=builder /app/package.json /app/package-lock.json ./
-RUN npm ci --no-fund --no-audit --omit=dev --omit=optional --ignore-scripts
+# Copy package files
+COPY package.json package-lock.json ./
 
+# Install only production dependencies
+RUN npm ci --only=production --ignore-scripts
+
+# Copy built application
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/dist ./dist
 
+# Set ownership
 RUN chown -R nextjs:nodejs /app
 USER nextjs
 
-EXPOSE ${APP_PORT} ${WS_PORT}
-ENTRYPOINT ["dumb-init", "--"]
-CMD ["next", "start", "-p", "${PORT}"]
+# Expose port
+EXPOSE 3000
+
+# Start the application
+CMD ["npm", "start"]
