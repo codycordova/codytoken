@@ -88,7 +88,7 @@ export default function Home() {
                                         text="Ur baby mama&apos;s favorite DJ has his own currency" 
                                         fontSize={18} 
                                         className="spray-animate"
-                                        color="#ffffff"
+                                        color="#000000"
                                     />
                                     <MobileHeroText 
                                         text="And its on the Stellar Blockchain" 

@@ -84,6 +84,24 @@ body::after {
   75% { transform: translateY(-15px) translateX(5px); }
 }
 
+/* Mobile-specific enhanced star animations */
+@media (max-width: 768px) {
+  @keyframes mobileSparkle {
+    0% { transform: translateY(0px) rotate(0deg) scale(1); }
+    25% { transform: translateY(-8px) rotate(90deg) scale(1.1); }
+    50% { transform: translateY(0px) rotate(180deg) scale(1); }
+    75% { transform: translateY(8px) rotate(270deg) scale(0.9); }
+    100% { transform: translateY(0px) rotate(360deg) scale(1); }
+  }
+  
+  @keyframes mobileFloat {
+    0%, 100% { transform: translateY(0px) translateX(0px) scale(1); }
+    25% { transform: translateY(-15px) translateX(8px) scale(1.05); }
+    50% { transform: translateY(-8px) translateX(-8px) scale(0.95); }
+    75% { transform: translateY(-12px) translateX(4px) scale(1.02); }
+  }
+}
+
 /* Ensure all content appears above background */
 .page-wrapper,
 main,
@@ -180,6 +198,30 @@ nav {
     .page-subtitle {
         font-size: 1rem;
     }
+    
+    /* Ensure mobile devices use dark theme with animations */
+    body {
+        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 25%, #312e81 50%, #6d28d9 75%, #1a1a1a 100%) !important;
+        color: #e0e7ff !important;
+    }
+    
+    /* Ensure mobile devices show spinning stars */
+    body::before,
+    body::after {
+        display: block !important;
+        opacity: 0.7 !important;
+    }
+    
+    /* Enhanced mobile star animations */
+    body::before {
+        background-size: 150px 80px !important;
+        animation: mobileSparkle 15s linear infinite !important;
+    }
+    
+    body::after {
+        background-size: 200px 120px !important;
+        animation: mobileFloat 25s ease-in-out infinite !important;
+    }
 }
 
 @media (max-width: 480px) {
@@ -194,6 +236,30 @@ nav {
     
     .page-subtitle {
         font-size: 0.9rem;
+    }
+    
+    /* Ensure small mobile devices use dark theme with animations */
+    body {
+        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 25%, #312e81 50%, #6d28d9 75%, #1a1a1a 100%) !important;
+        color: #e0e7ff !important;
+    }
+    
+    /* Ensure small mobile devices show spinning stars */
+    body::before,
+    body::after {
+        display: block !important;
+        opacity: 0.7 !important;
+    }
+    
+    /* Enhanced small mobile star animations */
+    body::before {
+        background-size: 120px 60px !important;
+        animation: mobileSparkle 12s linear infinite !important;
+    }
+    
+    body::after {
+        background-size: 180px 100px !important;
+        animation: mobileFloat 20s ease-in-out infinite !important;
     }
 }
 

@@ -15,6 +15,7 @@ export default function MobileHeroText({
 }: MobileHeroTextProps) {
   // Apply gradient for yellow color to match desktop
   const isGradient = color === '#ffea00';
+  const isBlack = color === '#000000';
   
   return (
     <div 
@@ -29,7 +30,11 @@ export default function MobileHeroText({
         backgroundClip: isGradient ? 'text' : undefined,
         textAlign: 'center',
         lineHeight: '1.2',
-        textShadow: isGradient ? '0 4px 8px rgba(0, 0, 0, 0.7)' : '0 4px 8px rgba(0, 0, 0, 0.5)',
+        textShadow: isGradient 
+          ? '0 4px 8px rgba(0, 0, 0, 0.7)' 
+          : isBlack 
+            ? '0 2px 4px rgba(255, 255, 255, 0.9), 0 4px 8px rgba(0, 0, 0, 0.4), 0 0 12px rgba(255, 255, 255, 0.3)' 
+            : '0 4px 8px rgba(0, 0, 0, 0.5)',
         margin: '0 auto',
         maxWidth: '90vw',
         padding: '0 20px',
