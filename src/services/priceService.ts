@@ -227,6 +227,67 @@ export class PriceService {
             spread: 0,
             volume24h: 0,
           },
+          pool: {
+            price: 0,
+            reserves: { cody: 0, xlm: 0 },
+          },
+          aqua: {
+            pools: {
+              codyUsdc: {
+                poolId: '',
+                pair: 'CODY/USDC',
+                tvl: 0,
+                volume24h: 0,
+                baseAPY: 0,
+                rewardsAPY: 0,
+                fee: 0.1,
+                price: 0,
+                reserves: { cody: 0, counter: 0 },
+                timestamp: new Date().toISOString()
+              },
+              codyXlm: {
+                poolId: '',
+                pair: 'CODY/XLM',
+                tvl: 0,
+                volume24h: 0,
+                baseAPY: 0,
+                rewardsAPY: 0,
+                fee: 0.1,
+                price: 0,
+                reserves: { cody: 0, counter: 0 },
+                timestamp: new Date().toISOString()
+              },
+              codyAqua: {
+                poolId: '',
+                pair: 'CODY/AQUA',
+                tvl: 0,
+                volume24h: 0,
+                baseAPY: 0,
+                rewardsAPY: 0,
+                fee: 0.1,
+                price: 0,
+                reserves: { cody: 0, counter: 0 },
+                timestamp: new Date().toISOString()
+              }
+            },
+            aggregatedPrice: { XLM: 0, USD: 0, EUR: 0 },
+          },
+          soroban: {
+            reserves: { xlm: 0, cody: 0, usdc: 0, eurc: 0 },
+            prices: {
+              codyPerXlm: 0,
+              xlmPerCody: 0,
+              codyPerUsdc: 0,
+              usdcPerCody: 0,
+              codyPerEurc: 0,
+              eurcPerCody: 0
+            },
+            contractId: '',
+          },
+          oracle: {
+            price: 0,
+            confidence: 0
+          }
         },
         metadata: {
           confidence: 0.1,
