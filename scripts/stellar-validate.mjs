@@ -102,7 +102,7 @@ NETWORK_PASSPHRASE = "${networkPassphrase}"
 SIGNING_KEY = "${signingPublicKey}"
 
 ACCOUNTS = [
-${accounts.map(a => `  "${a}"`).join(',\n')}
+${accounts.map(a => isGAddress(a) ? `  "${a}"` : '  "[REDACTED]"').join(',\n')}
 ]
 
 WEB_AUTH_ENDPOINT = "${webAuthEndpoint}"
