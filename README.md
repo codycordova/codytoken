@@ -1,21 +1,20 @@
 # Cody Token Web3
 
-A modern web application for the CODY token on the Stellar network, featuring real-time price data from multiple sources including Aqua AMM pools, Soroban contracts, and traditional DEX data.
+A modern web application for the CODY token on the Stellar network, featuring real-time price data directly from Horizon's market data with 100% confidence.
 
 ## Features
 
-- **Real-time CODY Price Data**: Fetches price from multiple sources including:
-  - Aqua AMM pools (CODY/USDC, CODY/XLM, CODY/AQUA)
-  - Soroban smart contracts for reserve data
-  - Traditional Stellar DEX (orderbook, VWAP)
-  - Comprehensive fallback mechanisms for reliability
+- **Live CODY Price Data**: Fetches real-time prices directly from Stellar's Horizon API:
+  - CODY/XLM orderbook data from Stellar DEX
+  - Best bid/ask prices with live spreads
+  - 24-hour trading volume
+  - Automatic USD/EUR conversion using live XLM rates
 
-- **Multiple Price Sources**:
-  - CODY/USDC pool for USD pricing
-  - CODY/XLM pool for XLM pricing  
-  - CODY/AQUA pool for additional liquidity
-  - Soroban contract reserves for accurate pricing
-  - Traditional DEX orderbook data
+- **Simplified & Reliable**:
+  - Direct Horizon orderbook integration (no complex aggregation)
+  - Fallback to recent trades if orderbook is empty
+  - Live XLM/USD and XLM/EUR rates from CoinGecko
+  - 5-second caching for optimal performance
 
 - **Security & Monitoring**:
   - Sentry error monitoring and performance tracking
@@ -25,123 +24,44 @@ A modern web application for the CODY token on the Stellar network, featuring re
 ## API Endpoints
 
 ### `/api/price`
-Returns comprehensive CODY price data from all available sources.
+Returns live CODY price data directly from Horizon's market data.
 
 **Response:**
 ```json
 {
-  "symbol": "CODY",
-  "issuer": "GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK",
   "price": {
+    "USD": 1.248536,
     "XLM": 4.0,
-    "USD": 1.45,
-    "EUR": 1.70
+    "EUR": 1.455417814590192
   },
-  "sources": {
-    "dex": {
-      "bid": 3,
-      "ask": 5,
-      "spread": 2,
-      "volume24h": 24.91
-    },
-    "pool": {
-      "price": 4.83,
-      "reserves": {
-        "cody": 52.39,
-        "xlm": 252.99
-      }
-    },
-    "aqua": {
-      "pools": {
-        "codyUsdc": {...},
-        "codyXlm": {...},
-        "codyAqua": {...}
-      },
-      "aggregatedPrice": {
-        "XLM": 0,
-        "USD": 0,
-        "EUR": 0
-      }
-    },
-    "soroban": {
-      "reserves": {
-        "xlm": 0,
-        "cody": 0,
-        "usdc": 0,
-        "eurc": 0
-      },
-      "prices": {
-        "codyPerXlm": 0,
-        "xlmPerCody": 0,
-        "codyPerUsdc": 0,
-        "usdcPerCody": 0,
-        "codyPerEurc": 0,
-        "eurcPerCody": 0
-      },
-      "contractId": "CAFD2IS6FEBUXWHAOH3G5LM4LMXIHVH6LAYRHUPYUU62NXH3I4TUCI2C"
-    },
-    "oracle": {
-      "price": 0,
-      "confidence": 0
-    }
-  },
-  "metadata": {
-    "confidence": 0.6,
-    "lastUpdate": "2025-08-31T04:21:06.479Z",
-    "cacheAge": 0
-  }
+  "bid": 3,
+  "ask": 5,
+  "spread": 2,
+  "volume24h": 0.2528956,
+  "lastUpdate": "2025-10-19T06:13:48.552Z"
 }
 ```
 
-### `/api/aqua-pools`
-Returns data specifically from Aqua AMM pools.
+**Features:**
+- **Real-time data**: Direct from Stellar Horizon orderbook
+- **Live conversion**: USD/EUR prices calculated using live XLM rates
+- **Market depth**: Best bid/ask prices with spread information
+- **Trading volume**: 24-hour volume from Stellar DEX
+- **Fast caching**: 5-second cache for optimal performance
 
-**Response:**
-```json
-{
-  "pools": {
-    "codyUsdc": {
-      "poolId": "CBN2N5L4UM5PPQE5UQNC3HVGT56TDQMAXMT3LVFMNN6XLFXZMCJY6KOU",
-      "pair": "CODY/USDC",
-      "tvl": 3360,
-      "volume24h": 32.89,
-      "baseAPY": 0.21,
-      "rewardsAPY": 0,
-      "fee": 0.1,
-      "price": 0.001,
-      "reserves": {
-        "cody": 1000000,
-        "counter": 1000
-      },
-      "timestamp": "2025-08-31T04:20:59.356Z"
-    },
-    "codyXlm": {...},
-    "codyAqua": {...}
-  },
-  "aggregatedPrice": {
-    "XLM": 0.001,
-    "USD": 0.001,
-    "EUR": 0.00085
-  },
-  "confidence": 0.9,
-  "lastUpdate": "2025-08-31T04:20:59.356Z"
-}
-```
+## Data Sources
 
-## Aqua AMM Integration
+The application uses a simplified, reliable approach to price data:
 
-The application integrates with Aqua AMM pools to provide real-time pricing data:
+### Primary Data Source
+- **Stellar Horizon API**: Direct orderbook and trades data from Stellar DEX
+- **CODY/XLM pair**: Primary trading pair for price discovery
+- **Live XLM rates**: Real-time USD/EUR conversion using CoinGecko API
 
-### Pool Contract IDs
-- **CODY/USDC**: `CBN2N5L4UM5PPQE5UQNC3HVGT56TDQMAXMT3LVFMNN6XLFXZMCJY6KOU`
-- **CODY/XLM**: `CAOBPWLHSERILJTLOH4APQU3AXUGQBOKLWDEM64A4AZG6XFSZHBEREDW`
-- **CODY/AQUA**: `CDCT6W2XW64ZCIUEMRG46CJVE734SZDL6WDEH2QQOABBNU2XUSCTQEMR`
-
-### Data Sources
-1. **Aquarius AMM API**: Primary source for pool data (`https://amm-api.aqua.network/api/external/v1`)
-2. **Soroban RPC**: Direct contract interaction for reserve data (`https://soroban-rpc.mainnet.stellar.org`)
-3. **Stellar Horizon**: Traditional DEX data and liquidity pools (`https://horizon.stellar.org`)
-4. **Multi-layered fallback**: Ensures data availability even when sources are down
+### Fallback Strategy
+1. **Primary**: CODY/XLM orderbook (best bid/ask mid-price)
+2. **Secondary**: Recent trades if orderbook is empty
+3. **Conversion**: Live XLM/USD and XLM/EUR rates for accurate pricing
 
 ## Environment Variables
 
@@ -154,16 +74,9 @@ STELLAR_NETWORK_PASSPHRASE=Public Global Stellar Network ; September 2015
 CODY_ISSUER=GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK
 CODY_ASSET_CODE=CODY
 
-# Soroban Configuration
-SOROBAN_RPC_URL=https://mainnet.sorobanrpc.com
-
-# Token Contract IDs (for Soroban integration)
-CODY_TOKEN_CONTRACT=CAFD2IS6FEBUXWHAOH3G5LM4LMXIHVH6LAYRHUPYUU62NXH3I4TUCI2C
-USDC_TOKEN_CONTRACT=CCW67TSZV3SSS2HXMBQ5JFGCKJNXKZM7UQUWUZPUTHXSTZLEO7SJMI75
-AQUA_TOKEN_CONTRACT=CAUIKL3IYGMERDRUN6YSCLWVAKIFG5Q4YJHUKM4S4NJZQIA3BAS6OJPK
-
-# Aqua Pool Contract IDs
-AQUA_POOL_CONTRACT=CBN2N5L4UM5PPQE5UQNC3HVGT56TDQMAXMT3LVFMNN6XLFXZMCJY6KOU
+# CORS Configuration
+CORS_ALLOW_ORIGIN=*
+NEXT_PUBLIC_SITE_URL=https://codytoken.com
 ```
 
 ## Development
@@ -184,22 +97,21 @@ npm start
 
 ## Architecture
 
-The price service uses a multi-layered approach with comprehensive fallback mechanisms:
+The price service uses a simplified, reliable approach with direct Horizon integration:
 
-1. **Primary**: Aqua AMM pools (most accurate for current market conditions)
-2. **Secondary**: Soroban smart contract reserves (direct blockchain data)
-3. **Tertiary**: Traditional DEX data (orderbook, VWAP)
-4. **Fallback**: Cached data with reduced confidence
+1. **Primary**: Stellar Horizon orderbook (CODY/XLM pair)
+2. **Secondary**: Recent trades if orderbook is empty
+3. **Conversion**: Live XLM/USD and XLM/EUR rates from CoinGecko
+4. **Caching**: 5-second cache for optimal performance
 
 ### Key Components
 
-- **PriceService**: Orchestrates data from all sources and provides aggregated pricing
-- **AquaService**: Interfaces with Aqua AMM pools and API
-- **SorobanService**: Direct interaction with Soroban smart contracts
-- **StellarService**: Traditional Stellar DEX integration
+- **PriceService**: Fetches live data from Horizon and provides clean pricing
+- **StellarService**: Direct Horizon API integration for orderbook and trades
+- **Cache**: In-memory caching for performance optimization
 - **Security**: Sentry monitoring, vulnerability disclosure, and comprehensive error handling
 
-This ensures reliable price data even when some sources are unavailable, with proper error monitoring and security practices.
+This ensures reliable, real-time price data with 100% confidence using only official Stellar market data.
 
 ## Contributing
 

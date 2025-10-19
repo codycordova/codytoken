@@ -1,64 +1,14 @@
 export interface PriceData {
-  symbol: string;
-  issuer: string;
   price: {
-    XLM: number;
     USD: number;
+    XLM: number;
     EUR: number;
   };
-  sources: {
-    dex: {
-      bid: number;
-      ask: number;
-      spread: number;
-      volume24h: number;
-    };
-    pool: {
-      price: number;
-      reserves: {
-        cody: number;
-        xlm: number;
-      };
-    };
-    aqua: {
-      pools: {
-        codyUsdc: AquaPoolData;
-        codyXlm: AquaPoolData;
-        codyAqua: AquaPoolData;
-      };
-      aggregatedPrice: {
-        XLM: number;
-        USD: number;
-        EUR: number;
-      };
-    };
-    soroban: {
-      reserves: {
-        xlm: number;
-        cody: number;
-        usdc: number;
-        eurc: number;
-      };
-      prices: {
-        codyPerXlm: number;
-        xlmPerCody: number;
-        codyPerUsdc: number;
-        usdcPerCody: number;
-        codyPerEurc: number;
-        eurcPerCody: number;
-      };
-      contractId: string;
-    };
-    oracle: {
-      price: number;
-      confidence: number;
-    };
-  };
-  metadata: {
-    confidence: number;
-    lastUpdate: string;
-    cacheAge: number;
-  };
+  bid: number;
+  ask: number;
+  spread: number;
+  volume24h: number;
+  lastUpdate: string;
 }
 
 export interface AquaPoolData {
