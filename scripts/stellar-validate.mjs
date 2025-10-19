@@ -10,6 +10,21 @@ function isSSecret(value) {
   return typeof value === 'string' && /^S[A-Z2-7]{55}$/.test(value);
 }
 
+/**
+ * Masks or redacts secrets/accounts for logging.
+ * Shows first 4 and last 4 chars for secrets, full for public keys, else '[REDACTED]'.
+ */
+function maskedAccount(value) {
+  if (typeof value !== 'string') return '[REDACTED]';
+  if (isSSecret(value)) {
+    return value.substring(0, 4) + '...' + value.substring(value.length - 4);
+  }
+  if (isGAddress(value)) {
+    return value; // Public, not secret
+  }
+  return '[REDACTED]';
+}
+
 function fail(message) {
   console.error(`✖ ${message}`);
   return false;
@@ -82,7 +97,7 @@ function ok(message) {
   ].filter(Boolean);
 
   for (const acc of accounts) {
-    if (!isGAddress(acc)) err(`Account not a valid G-address: ${acc}`);
+    if (!isGAddress(acc)) err(`Account not a valid G-address: ${maskedAccount(acc)}`);
   }
   if (!accounts.includes(signingPublicKey)) err('ACCOUNTS must include SIGNING_KEY');
   if (!accounts.includes(CODY_ISSUER)) err('ACCOUNTS must include CODY_ISSUER');
