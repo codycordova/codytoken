@@ -1,6 +1,6 @@
 // 📁 src/app/layout.tsx
 import "./globals.css";
-import { WalletProvider } from "@/context/WalletContext";
+import Providers from "@/app/providers";
 import Navbar from "@/components/Navbar";
 
 import type {Metadata} from "next";
@@ -24,10 +24,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <title></title>
             </head>
             <body className="body-background" suppressHydrationWarning>
-                <WalletProvider>
+                <Providers>
                     <Navbar />
                     {children}
-                </WalletProvider>
+                </Providers>
             </body>
         </html>
     );

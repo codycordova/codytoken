@@ -45,6 +45,9 @@ export default function Navbar() {
                     <li className={pathname === "/purchase" ? "active" : ""}>
                         <Link href="/purchase" onClick={() => setMenuOpen(false)}>Buy CODY</Link>
                     </li>
+                    <li className={pathname === "/blog" ? "active" : ""}>
+                        <Link href="/blog" onClick={() => setMenuOpen(false)}>Blog</Link>
+                    </li>
                 </ul>
                 <div className="navbar-wallet">
                     <WalletConnect />

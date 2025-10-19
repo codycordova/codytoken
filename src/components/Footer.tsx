@@ -24,6 +24,7 @@ export default function Footer() {
               <h4 className="footer-heading">Support</h4>
               <ul className="footer-links">
                 <li><Link href="/purchase">Buy CODY</Link></li>
+                <li><Link href="/blog">Blog</Link></li>
                 <li><Link href="/tokenomics">Tokenomics</Link></li>
                 <li><Link href="/whitepaper">Whitepaper</Link></li>
                 <li><Link href="/docs">Developer Docs</Link></li>

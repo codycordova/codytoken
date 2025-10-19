@@ -1,6 +1,5 @@
 "use client";
 // 📁 src/app/page.tsx
-import Providers from "./providers";
 import Footer from "../components/Footer";
 import CodyLogoScene from "../components/CodyLogoScene";
 import "./Home.css";
@@ -54,8 +53,7 @@ export default function Home() {
     }, []);
 
     return (
-        <Providers>
-            <div className="page-wrapper">
+        <div className="page-wrapper">
                 <main className="main-content">
                     {/* Hero Section */}
                     <div id="home" className="launch-sequence">
@@ -380,6 +378,5 @@ export default function Home() {
                 </main>
                 <Footer />
             </div>
-        </Providers>
     );
 }

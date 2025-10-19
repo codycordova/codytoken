@@ -10,11 +10,8 @@ import {
   Operation,
 } from '@stellar/stellar-sdk';
 import { Horizon } from '@stellar/stellar-sdk';
-import {
-  StellarWalletsKit,
-  WalletNetwork,
-  allowAllModules,
-} from '@creit.tech/stellar-wallets-kit';
+import { useStellarWallets } from '@/context/StellarWalletsContext';
+import type { StellarWalletsKit } from '@creit.tech/stellar-wallets-kit';
 
 const HORIZON_URL = 'https://horizon.stellar.org';
 const STROOPS_PER_XLM = 10_000_000;
@@ -103,14 +100,7 @@ export default function AtomicSwapCard({ walletAddress }: Props) {
   const [showSuccessAnimation, setShowSuccessAnimation] = useState<boolean>(false);
 
   const server = useMemo(() => new Horizon.Server(HORIZON_URL), []);
-  const kit = useMemo(
-    () =>
-      new StellarWalletsKit({
-        network: WalletNetwork.PUBLIC,
-        modules: allowAllModules(),
-      }),
-    []
-  );
+  const { kit } = useStellarWallets();
 
 
   // Load wallet balances and detect multi-sig
@@ -315,47 +305,61 @@ export default function AtomicSwapCard({ walletAddress }: Props) {
     return baseReserveStroops / STROOPS_PER_XLM;
   }
 
-  async function ensureWalletModuleSelected() {
-    try {
-
-      await kit.getAddress();
-      return;
-    } catch {
-
-        // Try to detect and set the appropriate wallet
-        if (typeof window !== 'undefined') {
-          // Check for Freighter
-          if ((window as unknown as { freighterApi?: unknown }).freighterApi) {
-            await kit.setWallet('freighter');
-        return;
-      }
-
-          // Check for Lobstr
-          if ((window as unknown as { lobstrApi?: unknown }).lobstrApi) {
-            await kit.setWallet('lobstr');
-            return;
-          }
-          // Check for xBull
-          if ((window as unknown as { xBullApi?: unknown }).xBullApi) {
-            await kit.setWallet('xbull');
-            return;
-          }
-        }
-      throw new Error('No wallet module selected. Please connect your wallet in the header first.');
+  async function ensureWalletModuleSelected(): Promise<StellarWalletsKit> {
+    const k = kit;
+    if (!k) {
+      throw new Error('Wallets are not initialized yet. Please connect your wallet in the header.');
     }
+
+    // Attempt to verify an active wallet selection
+    try {
+      if (typeof (k as any).getAddress === 'function') {
+        await (k as any).getAddress();
+        return k;
+      }
+      if (typeof (k as any).getPublicKey === 'function') {
+        const pk = await (k as any).getPublicKey();
+        if (pk) return k;
+      }
+    } catch {
+      // Continue to wallet detection below if not connected
+    }
+
+    if (typeof window !== 'undefined') {
+      const anyWindow = window as unknown as {
+        freighterApi?: unknown;
+        lobstrApi?: unknown;
+        xBullApi?: unknown;
+      };
+
+      if (anyWindow.freighterApi) {
+        await k.setWallet('freighter');
+        return k;
+      }
+      if (anyWindow.lobstrApi) {
+        await k.setWallet('lobstr');
+        return k;
+      }
+      if (anyWindow.xBullApi) {
+        await k.setWallet('xbull');
+        return k;
+      }
+    }
+
+    throw new Error('No wallet module selected. Please connect your wallet in the header first.');
   }
 
 
   // Simplified signing function with better error handling
   async function signTransaction(xdr: string, address: string): Promise<string> {
-    await ensureWalletModuleSelected();
+    const k = await ensureWalletModuleSelected();
     
     try {
       console.log('Signing transaction with wallet...');
       setStatus('Signing transaction...');
       
       // Try standard signing first
-      const { signedTxXdr } = await kit.signTransaction(xdr, {
+      const { signedTxXdr } = await (k as any).signTransaction(xdr, {
         address,
         networkPassphrase: Networks.PUBLIC,
       });
