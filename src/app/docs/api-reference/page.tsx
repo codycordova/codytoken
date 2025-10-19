@@ -41,62 +41,32 @@ export default function ApiReferencePage() {
           <h2>📊 Price Data</h2>
           <div className="api-endpoint">
             <h3>GET /api/price</h3>
-            <p>Returns comprehensive CODY price data from all available sources including Stellar DEX and Aqua AMM pools.</p>
+            <p>Returns live CODY price data directly from Stellar Horizon orderbook with real-time USD/EUR conversion.</p>
             
             <h4>Response Example:</h4>
             <div className="code-block">
               <pre><code>{`{
-  "symbol": "CODY",
-  "issuer": "GAW55YAX46HLIDRONLOLUWP672HTFXW5WWTEI2T7OXVEFEDE5UKQDJAK",
   "price": {
+    "USD": 1.248536,
     "XLM": 4.0,
-    "USD": 1.45,
-    "EUR": 1.70
+    "EUR": 1.455417814590192
   },
-  "sources": {
-    "dex": {
-      "bid": 3,
-      "ask": 5,
-      "spread": 2,
-      "volume24h": 24.91
-    },
-    "pool": {
-      "price": 4.83,
-      "reserves": {
-        "cody": 52.39,
-        "xlm": 252.99
-      }
-    },
-    "aqua": {
-      "pools": {
-        "codyUsdc": {...},
-        "codyXlm": {...},
-        "codyAqua": {...}
-      },
-      "aggregatedPrice": {
-        "XLM": 0,
-        "USD": 0,
-        "EUR": 0
-      }
-    }
-  },
-  "metadata": {
-    "confidence": 0.6,
-    "lastUpdate": "2025-08-31T04:21:06.479Z",
-    "cacheAge": 0
-  }
+  "bid": 3,
+  "ask": 5,
+  "spread": 2,
+  "volume24h": 0.2528956,
+  "lastUpdate": "2025-10-19T06:13:48.552Z"
 }`}</code></pre>
             </div>
             
             <h4>Response Fields:</h4>
             <ul>
-              <li><strong>symbol</strong> - Token symbol (CODY)</li>
-              <li><strong>issuer</strong> - Stellar issuer address</li>
-              <li><strong>price</strong> - Current prices in XLM, USD, EUR</li>
-              <li><strong>sources.dex</strong> - Traditional DEX orderbook data</li>
-              <li><strong>sources.pool</strong> - Pool-based pricing data</li>
-              <li><strong>sources.aqua</strong> - Aqua AMM pool data</li>
-              <li><strong>metadata.confidence</strong> - Data confidence score (0-1)</li>
+              <li><strong>price</strong> - Current prices in USD, XLM, EUR</li>
+              <li><strong>bid</strong> - Best bid price from orderbook</li>
+              <li><strong>ask</strong> - Best ask price from orderbook</li>
+              <li><strong>spread</strong> - Bid-ask spread</li>
+              <li><strong>volume24h</strong> - 24-hour trading volume</li>
+              <li><strong>lastUpdate</strong> - Timestamp of last price update</li>
             </ul>
           </div>
         </div>
