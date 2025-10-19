@@ -5,7 +5,6 @@ import React, {
     createContext,
     useContext,
     useState,
-    useRef,
     useEffect,
     type ReactNode,
 } from "react";
@@ -28,44 +27,23 @@ const StellarWalletsContext = createContext<StellarWalletsContextValue>({
 
 export function StellarWalletsProvider({ children }: { children: ReactNode }) {
     const [kit, setKit] = useState<StellarWalletsKit | null>(null);
-    const containerRef = useRef<HTMLDivElement>(null);
-    const buttonAddedRef = useRef(false);
 
     useEffect(() => {
-        if (kit || buttonAddedRef.current) return;
+        if (kit) return;
 
         const newKit = new StellarWalletsKit({
             network: WalletNetwork.PUBLIC,
             selectedWalletId: FREIGHTER_ID,
             modules: [new FreighterModule(), new xBullModule(), new LobstrModule()],
         });
-
-        newKit.createButton({
-            container: containerRef.current!,
-            buttonText: "Connect Stellar Wallet",
-            onConnect: () => {
-                // Wallet connected
-            },
-            onDisconnect: () => {
-                // Wallet disconnected
-            },
-        });
-
-        buttonAddedRef.current = true;
         setKit(newKit);
-
-        // Capture the containerRef value for cleanup
-        const container = containerRef.current;
         return () => {
-            if (container) container.innerHTML = "";
-            buttonAddedRef.current = false;
+            // no-op cleanup
         };
     }, [kit]);
 
     return (
         <StellarWalletsContext.Provider value={{ kit }}>
-            {/* Wallet connect button will be rendered here */}
-            <div ref={containerRef} />
             {children}
         </StellarWalletsContext.Provider>
     );
