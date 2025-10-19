@@ -81,8 +81,8 @@ function ok(message) {
     CODY_ISSUER
   ].filter(Boolean);
 
-  for (const acc of accounts) {
-    if (!isGAddress(acc)) err(`Account not a valid G-address: ${acc}`);
+  for (let i = 0; i < accounts.length; i++) {
+    if (!isGAddress(accounts[i])) err(`Account #${i + 1} is not a valid G-address`);
   }
   if (!accounts.includes(signingPublicKey)) err('ACCOUNTS must include SIGNING_KEY');
   if (!accounts.includes(CODY_ISSUER)) err('ACCOUNTS must include CODY_ISSUER');
