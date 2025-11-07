@@ -8,8 +8,8 @@
     "node": ">=18.18.0"
   },
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "next dev --port 3000",
+    "build": "next build --debug",
     "start": "next start -p 3000",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
@@ -20,13 +20,11 @@
     "security:fix": "npm audit fix --force",
     "security:update": "npm update && npm audit fix",
     "security:check": "npm audit && npm outdated",
-    "ci:install:locked": "npm ci --ignore-scripts && npm audit --audit-level=moderate"
+    "ci:install:locked": "npm ci --ignore-scripts && npm audit --audit-level=moderate",
+    "preview": "next start --preview"
   },
   "dependencies": {
-    "@creit.tech/stellar-wallets-kit": "^0.8.0",
-    "@react-three/drei": "^10.7.6",
-    "@react-three/fiber": "^9.1.2",
-    "@react-three/postprocessing": "^3.0.4",
+    "@creit-tech/stellar-wallets-kit": "npm:@jsr/creit-tech__stellar-wallets-kit@^2.0.0-beta.3",
     "@sentry/nextjs": "^9.39.0",
     "@stellar/stellar-sdk": "^13.3.0",
     "decimal.js": "^10.6.0",
@@ -37,7 +35,6 @@
     "node-fetch": "^2.7.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "three": "^0.179.1",
     "ws": "^8.18.0"
   },
   "devDependencies": {

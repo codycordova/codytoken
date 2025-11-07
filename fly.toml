@@ -17,13 +17,13 @@ processes = ["app"]
 concurrency = { type = "requests", soft_limit = 25, hard_limit = 50 }
 
 [[http_service.checks]]
-grace_period = "10s"
-interval = "30s"
+grace_period = "30s"
+interval = "15s"
 method = "GET"
 path = "/api/healthz"
 protocol = "http"
 restart_limit = 3
-timeout = "5s"
+timeout = "10s"
 
 
 [[vm]]

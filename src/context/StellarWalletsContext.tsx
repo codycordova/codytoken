@@ -4,46 +4,88 @@
 import React, {
     createContext,
     useContext,
-    useState,
     useEffect,
+    useState,
     type ReactNode,
 } from "react";
-import {
-    StellarWalletsKit,
-    WalletNetwork,
-    FreighterModule,
-    xBullModule,
-    FREIGHTER_ID,
-    LobstrModule,
-} from "@creit.tech/stellar-wallets-kit";
+import { StellarWalletsKit } from "@creit-tech/stellar-wallets-kit/sdk";
+import { SwkAppDarkTheme } from "@creit-tech/stellar-wallets-kit/types";
+import { KitEventType } from "@creit-tech/stellar-wallets-kit/types";
+import { defaultModules } from "@creit-tech/stellar-wallets-kit/modules/utils";
+import { Networks } from "@stellar/stellar-sdk";
 
 interface StellarWalletsContextValue {
-    kit: StellarWalletsKit | null;
+    kitInitialized: boolean;
+    address: string | null;
 }
 
 const StellarWalletsContext = createContext<StellarWalletsContextValue>({
-    kit: null,
+    kitInitialized: false,
+    address: null,
 });
 
 export function StellarWalletsProvider({ children }: { children: ReactNode }) {
-    const [kit, setKit] = useState<StellarWalletsKit | null>(null);
+    const [kitInitialized, setKitInitialized] = useState(false);
+    const [address, setAddress] = useState<string | null>(null);
 
     useEffect(() => {
-        if (kit) return;
+        // Only initialize in browser environment
+        if (typeof window === "undefined") return;
 
-        const newKit = new StellarWalletsKit({
-            network: WalletNetwork.PUBLIC,
-            selectedWalletId: FREIGHTER_ID,
-            modules: [new FreighterModule(), new xBullModule(), new LobstrModule()],
-        });
-        setKit(newKit);
+        try {
+            const STELLAR_NETWORK = process.env.NEXT_PUBLIC_STELLAR_NETWORK || 'public';
+            
+            // Initialize the kit with default modules
+            StellarWalletsKit.init({
+                theme: SwkAppDarkTheme,
+                modules: defaultModules(),
+                network: STELLAR_NETWORK === 'public' ? Networks.PUBLIC : Networks.TESTNET,
+            });
+
+            setKitInitialized(true);
+        } catch (error) {
+            console.error('Failed to initialize StellarWalletsKit:', error);
+            // Still mark as initialized to prevent UI blocking
+            setKitInitialized(true);
+        }
+
+        // Listen for state updates
+        const unsubscribeState = StellarWalletsKit.on(
+            KitEventType.STATE_UPDATED,
+            (event) => {
+                if (event.payload?.address) {
+                    setAddress(event.payload.address);
+                }
+            }
+        );
+
+        // Listen for disconnect events
+        const unsubscribeDisconnect = StellarWalletsKit.on(
+            KitEventType.DISCONNECT,
+            () => {
+                setAddress(null);
+            }
+        );
+
+        // Try to get current address if already connected
+        StellarWalletsKit.getAddress()
+            .then((result) => {
+                if (result?.address) {
+                    setAddress(result.address);
+                }
+            })
+            .catch(() => {
+                // Not connected, ignore error
+            });
+
         return () => {
-            // no-op cleanup
+            unsubscribeState();
+            unsubscribeDisconnect();
         };
-    }, [kit]);
+    }, []);
 
     return (
-        <StellarWalletsContext.Provider value={{ kit }}>
+        <StellarWalletsContext.Provider value={{ kitInitialized, address }}>
             {children}
         </StellarWalletsContext.Provider>
     );

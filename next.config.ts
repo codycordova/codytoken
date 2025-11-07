@@ -10,12 +10,16 @@ const CSP = [
   "frame-ancestors 'none'",
   "form-action 'self'",
   "img-src 'self' data: blob: https:",
+  // Allow local fonts and data URIs, exclude external font services for privacy
   "font-src 'self' data:",
   "style-src 'self' 'unsafe-inline'",
-  "script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https:",
-  "connect-src 'self' https://horizon.stellar.org https://horizon-testnet.stellar.org https://*.stellar.org https://api.stellar.expert https://stellar.expert https://aqua.network https: wss: blob:",
+  // Allow scripts from self, inline for Next.js, wasm for 3D rendering, Cloudflare for analytics (optional)
+  "script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://static.cloudflareinsights.com https://cdn.jsdelivr.net",
+  "connect-src 'self' https://horizon.stellar.org https://horizon-testnet.stellar.org https://*.stellar.org https://api.stellar.expert https://stellar.expert https://aqua.network https://static.cloudflareinsights.com https://cdn.jsdelivr.net https://codytoken.com https: wss: blob:",
   "worker-src 'self' blob:",
   "frame-src 'self' https://stellar.expert",
+  // Allow WebGL and media sources for 3D rendering
+  "media-src 'self' blob:",
   "upgrade-insecure-requests",
 ].join("; ");
 
@@ -32,7 +36,7 @@ const nextConfig: NextConfig = {
   // Enable compression and caching for better performance
   compress: true,
   poweredByHeader: false,
-  webpack: (config) => {
+  webpack: (config, { dev, isServer }) => {
     config.resolve = config.resolve || {};
     config.resolve.fallback = {
       ...(config.resolve.fallback || {}),
@@ -44,11 +48,19 @@ const nextConfig: NextConfig = {
     if (config.module && typeof config.module === 'object') {
       (config.module as any).exprContextCritical = false;
     }
+    
+    // Optimize webpack cache to prevent "big strings" serialization warning
+    // Use memory cache to avoid filesystem serialization of large strings
+    if (config.cache) {
+      config.cache = {
+        type: 'memory',
+      };
+    }
+    
     // Silence known safe warnings from optional native deps used by stellar-sdk
-    // and large string cache serialization noise
     config.ignoreWarnings = [
       /require-addon|sodium-native/,
-      /PackFileCacheStrategy.*Serializing big strings/
+      // PackFileCacheStrategy warning will be resolved by cache optimization above
     ];
     return config;
   },
@@ -69,12 +81,14 @@ const nextConfig: NextConfig = {
           ...(isProd ? [{ key: "Content-Security-Policy", value: CSP }] : []),
         ],
       },
-      // Optimize 3D model loading with aggressive caching
+      // Optimize 3D model loading with aggressive caching and CORS
       {
         source: "/models/(.*)",
         headers: [
           { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
-          { key: "Content-Encoding", value: "gzip" },
+          { key: "Access-Control-Allow-Origin", value: "*" },
+          { key: "Access-Control-Allow-Methods", value: "GET, OPTIONS" },
+          { key: "Cross-Origin-Resource-Policy", value: "cross-origin" },
         ],
       },
       // Optimize static assets

@@ -1,8 +1,10 @@
+"use client";
 import Link from 'next/link';
 import '@/styles/Docs.css';
 import AddressDisplay from '../../../components/AddressDisplay';
 
 export default function TokenomicsPage() {
+
   return (
     <div className="docs-container">
       <div className="docs-sidebar">
@@ -46,7 +48,7 @@ export default function TokenomicsPage() {
             </div>
             <div className="info-card">
               <h3>Active Trustlines</h3>
-              <p className="large-number">58</p>
+              <p className="large-number">60+</p>
               <p>Stellar accounts holding CODY</p>
             </div>
             <div className="info-card">

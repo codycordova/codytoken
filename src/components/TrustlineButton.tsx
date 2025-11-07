@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import * as StellarSdk from "@stellar/stellar-sdk";
+import { StellarWalletsKit } from "@creit-tech/stellar-wallets-kit/sdk";
+import { Networks } from "@stellar/stellar-sdk";
 import { useStellarWallets } from "@/context/StellarWalletsContext";
 
 const CODY_ASSET_CODE = "CODY";
@@ -51,7 +53,7 @@ export default function TrustlineButton({
                                             walletAddress,
                                             onTrustlineActive,
                                         }: TrustlineButtonProps) {
-    const { kit } = useStellarWallets();
+    const { kitInitialized } = useStellarWallets();
     const [hasTrustline, setHasTrustline] = useState<boolean | null>(null);
     const [loading, setLoading] = useState(false);
     const serverRef = useRef<StellarSdk.Horizon.Server | null>(null);
@@ -90,7 +92,7 @@ export default function TrustlineButton({
 
     // Enhanced trustline logic with better balance validation
     async function addTrustline() {
-        if (!walletAddress || !kit || !serverRef.current) return;
+        if (!walletAddress || !kitInitialized || !serverRef.current) return;
         setLoading(true);
         try {
             const account = await serverRef.current.loadAccount(walletAddress);
@@ -139,8 +141,10 @@ ${walletAddress}`;
                 .setTimeout(60)
                 .build();
 
-            const { signedTxXdr } = await kit.signTransaction(tx.toXDR(), {
+            // Use the new static API for signing
+            const { signedTxXdr } = await StellarWalletsKit.signTransaction(tx.toXDR(), {
                 networkPassphrase: StellarSdk.Networks.PUBLIC,
+                address: walletAddress,
             });
 
             await serverRef.current.submitTransaction(

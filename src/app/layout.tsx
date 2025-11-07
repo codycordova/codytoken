@@ -2,6 +2,7 @@
 import "./globals.css";
 import Providers from "@/app/providers";
 import Navbar from "@/components/Navbar";
+import ErrorBoundary from "@/components/ErrorBoundary";
 
 import type {Metadata} from "next";
 import React from "react";
@@ -25,8 +26,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </head>
             <body className="body-background" suppressHydrationWarning>
                 <Providers>
-                    <Navbar />
-                    {children}
+                    <ErrorBoundary>
+                        <Navbar />
+                        {children}
+                    </ErrorBoundary>
                 </Providers>
             </body>
         </html>

@@ -1,7 +1,7 @@
 import WebSocket, { Server as WebSocketServer } from 'ws';
 import { Horizon, Asset } from '@stellar/stellar-sdk';
-import { PriceService } from '../services/priceService';
-import { TradeData } from '../types/price';
+import { PriceService } from '@/services/priceService';
+import { TradeData } from '@/types/price';
 
 interface Client {
   ws: WebSocket;

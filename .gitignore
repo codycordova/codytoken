@@ -131,4 +131,4 @@ docs/SECRETS_MANAGEMENT.md
 *.pyd
 *.pyw
 *.pyz
-*.pywz
+*.pywz!/tsconfig.tsbuildinfo

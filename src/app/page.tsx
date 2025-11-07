@@ -3,7 +3,7 @@
 import Footer from "../components/Footer";
 import CodyLogoScene from "../components/CodyLogoScene";
 import "./Home.css";
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import CodyToken3D from '@/components/CodyToken3D';
 import GraffitiHeroText from '../components/GraffitiHeroText';
 import MobileHeroText from '../components/MobileHeroText';
@@ -41,6 +41,7 @@ export default function Home() {
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
+
 
     useEffect(() => {
         // Remove spray-animate class after animation for accessibility
@@ -214,10 +215,10 @@ export default function Home() {
                                 <div className="stat-number">2,000</div>
                                 <div className="stat-label">Circulating Supply</div>
                             </div>
-                            <div className="stat-card">
-                                <div className="stat-number">58</div>
-                                <div className="stat-label">Trustlines</div>
-                            </div>
+                                <div className="stat-card">
+                                    <div className="stat-number">60+</div>
+                                    <div className="stat-label">Trustlines</div>
+                                </div>
                             <div className="stat-card">
                                 <div className="stat-number">42K+</div>
                                 <div className="stat-label">Total Trades</div>

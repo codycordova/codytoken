@@ -10,8 +10,8 @@ import {
   Operation,
 } from '@stellar/stellar-sdk';
 import { Horizon } from '@stellar/stellar-sdk';
+import { StellarWalletsKit } from '@creit-tech/stellar-wallets-kit/sdk';
 import { useStellarWallets } from '@/context/StellarWalletsContext';
-import type { StellarWalletsKit } from '@creit.tech/stellar-wallets-kit';
 
 const HORIZON_URL = 'https://horizon.stellar.org';
 const STROOPS_PER_XLM = 10_000_000;
@@ -100,7 +100,7 @@ export default function AtomicSwapCard({ walletAddress }: Props) {
   const [showSuccessAnimation, setShowSuccessAnimation] = useState<boolean>(false);
 
   const server = useMemo(() => new Horizon.Server(HORIZON_URL), []);
-  const { kit } = useStellarWallets();
+  const { kitInitialized, address: kitAddress } = useStellarWallets();
 
 
   // Load wallet balances and detect multi-sig
@@ -117,14 +117,14 @@ export default function AtomicSwapCard({ walletAddress }: Props) {
       setIsLoadingBalance(true);
       try {
         const account = await server.loadAccount(walletAddress);
-        
+
         // Load XLM balance
         const nativeBalance = account.balances.find((b: any) => b.asset_type === 'native');
         const xlmBalance = nativeBalance ? parseFloat(nativeBalance.balance) : 0;
         setWalletBalance(xlmBalance);
-        
+
         // Load CODY balance
-        const codyBalanceItem = account.balances.find((b: any) => 
+        const codyBalanceItem = account.balances.find((b: any) =>
           b.asset_code === 'CODY' && b.asset_issuer === CODY.getIssuer()
         );
         const codyBal = codyBalanceItem ? parseFloat(codyBalanceItem.balance) : 0;
@@ -134,13 +134,13 @@ export default function AtomicSwapCard({ walletAddress }: Props) {
         const signers = account.signers || [];
         const totalWeight = signers.reduce((sum: number, signer: any) => sum + signer.weight, 0);
         const threshold = account.thresholds?.med_threshold || 1;
-        
+
         // Check if this is a multi-sig account (multiple signers or high threshold)
         const isMultiSigAccount = signers.length > 1 || totalWeight > threshold;
-        
+
         setIsMultiSig(isMultiSigAccount);
         setMultiSigSigners(signers);
-        
+
         if (isMultiSigAccount) {
           console.log('Multi-sig account detected:', {
             signerCount: signers.length,
@@ -149,7 +149,7 @@ export default function AtomicSwapCard({ walletAddress }: Props) {
             signers: signers.map((s: any) => ({ key: s.key, weight: s.weight }))
           });
         }
-        
+
       } catch (error) {
         console.error('Error loading account info:', error);
         setWalletBalance(0);
@@ -161,7 +161,7 @@ export default function AtomicSwapCard({ walletAddress }: Props) {
       }
     };
 
-    loadAccountInfo();
+    void loadAccountInfo();
   }, [walletAddress, server]);
 
   // Load market rate from CODY price API
@@ -182,7 +182,7 @@ export default function AtomicSwapCard({ walletAddress }: Props) {
     };
 
     // Load immediately
-    loadMarketRate();
+    void loadMarketRate();
 
     // Set up polling every 30 seconds for real-time updates
     const intervalId = setInterval(loadMarketRate, 30000);
@@ -305,91 +305,155 @@ export default function AtomicSwapCard({ walletAddress }: Props) {
     return baseReserveStroops / STROOPS_PER_XLM;
   }
 
-  async function ensureWalletModuleSelected(): Promise<StellarWalletsKit> {
-    const k = kit;
-    if (!k) {
+  async function ensureWalletModuleSelected(): Promise<void> {
+    if (!kitInitialized) {
       throw new Error('Wallets are not initialized yet. Please connect your wallet in the header.');
     }
 
-    // Attempt to verify an active wallet selection
+    // Verify wallet is connected
     try {
-      if (typeof (k as any).getAddress === 'function') {
-        await (k as any).getAddress();
-        return k;
+      const result = await StellarWalletsKit.getAddress();
+      if (!result?.address) {
+        throw new Error('No wallet connected. Please connect your wallet in the header first.');
       }
-      if (typeof (k as any).getPublicKey === 'function') {
-        const pk = await (k as any).getPublicKey();
-        if (pk) return k;
-      }
-    } catch {
-      // Continue to wallet detection below if not connected
+    } catch (error) {
+      throw new Error('No wallet module selected. Please connect your wallet in the header first.');
     }
-
-    if (typeof window !== 'undefined') {
-      const anyWindow = window as unknown as {
-        freighterApi?: unknown;
-        lobstrApi?: unknown;
-        xBullApi?: unknown;
-      };
-
-      if (anyWindow.freighterApi) {
-        await k.setWallet('freighter');
-        return k;
-      }
-      if (anyWindow.lobstrApi) {
-        await k.setWallet('lobstr');
-        return k;
-      }
-      if (anyWindow.xBullApi) {
-        await k.setWallet('xbull');
-        return k;
-      }
-    }
-
-    throw new Error('No wallet module selected. Please connect your wallet in the header first.');
   }
 
 
-  // Simplified signing function with better error handling
+  // Simple signing function - just send to wallet and wait
   async function signTransaction(xdr: string, address: string): Promise<string> {
-    const k = await ensureWalletModuleSelected();
+    console.log('Requesting wallet signature...', { 
+      address, 
+      xdrLength: xdr.length,
+      xdrPreview: xdr.substring(0, 50) + '...'
+    });
+    setStatus('Waiting for wallet approval...');
+    
+    // Verify wallet is connected before attempting to sign
+    try {
+      const currentAddress = await StellarWalletsKit.getAddress();
+      console.log('Current wallet address:', currentAddress?.address);
+      
+      if (!currentAddress?.address) {
+        throw new Error('No wallet connected. Please connect your wallet first.');
+      }
+      
+      if (currentAddress.address !== address) {
+        console.warn('Address mismatch:', { expected: address, actual: currentAddress.address });
+        throw new Error('Wallet address mismatch. Please reconnect your wallet.');
+      }
+    } catch (addrError: any) {
+      console.error('Wallet address check failed:', addrError);
+      if (addrError?.code === -1 || addrError?.message?.includes('No wallet')) {
+        throw new Error('No wallet connected. Please connect your wallet first.');
+      }
+      throw addrError;
+    }
     
     try {
-      console.log('Signing transaction with wallet...');
-      setStatus('Signing transaction...');
-      
-      // Try standard signing first
-      const { signedTxXdr } = await (k as any).signTransaction(xdr, {
-        address,
-        networkPassphrase: Networks.PUBLIC,
+      // Simple: just call signTransaction and wait for user to approve/reject
+      // Note: Some wallets (like Lobstr) don't accept address/networkPassphrase parameters
+      console.log('Calling StellarWalletsKit.signTransaction...', {
+        xdrLength: xdr.length,
+        timestamp: new Date().toISOString()
       });
       
-      console.log('Transaction signed successfully');
-      return signedTxXdr;
+      // Call signTransaction - let the wallet kit handle wallet-specific requirements
+      // Some wallets need address/networkPassphrase, others (like Lobstr) don't
+      const signPromise = StellarWalletsKit.signTransaction(xdr, {
+        networkPassphrase: Networks.PUBLIC,
+        address,
+      });
+      
+      // Set a longer timeout for wallets that require phone approval (like Lobstr)
+      // 60 seconds should be enough for phone approval flow
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => {
+          const timeoutError = new Error('Signing timeout - wallet did not respond within 60 seconds');
+          (timeoutError as any).isTimeout = true;
+          reject(timeoutError);
+        }, 60000);
+      });
+      
+      const result = await Promise.race([signPromise, timeoutPromise]) as { signedTxXdr: string; signerAddress?: string };
+      
+      console.log('Transaction signed successfully', { 
+        signedXdrLength: result.signedTxXdr?.length,
+        signerAddress: result.signerAddress 
+      });
+      
+      if (!result.signedTxXdr) {
+        throw new Error('Wallet returned empty signed transaction');
+      }
+      
+      return result.signedTxXdr;
       
     } catch (signError: any) {
       console.error('Wallet signing error:', signError);
+      console.error('Error details:', {
+        type: typeof signError,
+        keys: signError ? Object.keys(signError) : [],
+        message: signError?.message,
+        code: signError?.code,
+        stack: signError?.stack,
+        stringified: JSON.stringify(signError),
+        isTimeout: signError?.isTimeout
+      });
       
-      // Provide more descriptive error messages
-      let errorMessage = 'Transaction signing failed';
-      
-      if (signError.message) {
-        if (signError.message.includes('User declined')) {
-          errorMessage = 'Transaction was cancelled by user';
-        } else if (signError.message.includes('User rejected')) {
-          errorMessage = 'Transaction was rejected by user';
-        } else if (signError.message.includes('timeout')) {
-          errorMessage = 'Signing timeout - please try again';
-        } else if (signError.message.includes('network')) {
-          errorMessage = 'Network error during signing - check your connection';
-        } else {
-          errorMessage = `Signing error: ${signError.message}`;
-        }
-      } else if (signError.code) {
-        errorMessage = `Signing error (${signError.code}): Please check your wallet connection`;
+      // Check for timeout first (especially important for phone approval wallets like Lobstr)
+      if (signError?.isTimeout || signError?.message?.toLowerCase().includes('timeout')) {
+        setStatus('Signing timeout - please approve on your phone and try again');
+        setBusy(false);
+        throw new Error('Signing timeout. If using Lobstr, please approve the transaction on your phone within 60 seconds.');
       }
       
-      throw new Error(errorMessage);
+      // Check if user cancelled vs actual error
+      // Note: code -1 with "Sign failed" is NOT cancellation - it's a real error
+      // Empty error objects from Lobstr might indicate phone approval failure/timeout
+      const isEmptyError = signError && typeof signError === 'object' && Object.keys(signError).length === 0;
+      const isSignFailed = signError?.message === 'Sign failed' || signError?.message?.toLowerCase().includes('sign failed');
+      
+      // For empty errors, check if we can detect wallet type to provide better message
+      // Empty errors from Lobstr often mean phone approval wasn't completed
+      const isCancelled = 
+        (isEmptyError && !isSignFailed && !signError?.isTimeout) ||
+        (signError?.code === -1 && !isSignFailed && signError?.message !== 'Sign failed') ||
+        signError?.code === 'USER_CANCELLED' ||
+        signError?.message?.toLowerCase().includes('cancelled') ||
+        signError?.message?.toLowerCase().includes('rejected') ||
+        signError?.message?.toLowerCase().includes('declined') ||
+        signError?.message?.toLowerCase().includes('denied') ||
+        signError?.message?.toLowerCase().includes('aborted');
+      
+      if (isCancelled) {
+        console.log('User cancelled transaction');
+        setStatus('Transaction cancelled');
+        setBusy(false);
+        const cancelError = new Error('USER_CANCELLED');
+        (cancelError as any).isCancellation = true;
+        throw cancelError;
+      }
+      
+      // For actual errors, provide helpful message
+      let errorMsg = 'Signing failed';
+      if (signError?.message) {
+        if (isSignFailed) {
+          errorMsg = 'Signing failed. Please ensure your wallet extension is unlocked, the transaction is valid, and try again.';
+        } else if (signError.message.includes('timeout')) {
+          errorMsg = 'Signing timeout. If using Lobstr, please approve the transaction on your phone within 60 seconds.';
+        } else {
+          errorMsg = signError.message;
+        }
+      } else if (isEmptyError) {
+        // Empty error from Lobstr often means phone approval wasn't completed
+        errorMsg = 'Signing failed. If using Lobstr, please approve the transaction on your phone. Ensure your wallet extension is unlocked and try again.';
+      } else {
+        errorMsg = 'Signing failed. Please ensure your wallet is unlocked and try again.';
+      }
+      
+      throw new Error(errorMsg);
     }
   }
 
@@ -510,6 +574,14 @@ export default function AtomicSwapCard({ walletAddress }: Props) {
       }
 
       const baseFee = await server.fetchBaseFee();
+      
+      // Ensure the account source matches the wallet address
+      if (account.accountId() !== walletAddress) {
+        setStatus('Account mismatch. Please reconnect your wallet.');
+        setBusy(false);
+        return;
+      }
+      
       let tb = new TransactionBuilder(account as any, {
         fee: String(baseFee),
         networkPassphrase: Networks.PUBLIC,
@@ -531,9 +603,34 @@ export default function AtomicSwapCard({ walletAddress }: Props) {
       );
 
       const tx = tb.setTimeout(180).build();
+      
+      // Validate transaction before signing
+      const txXdr = tx.toXDR();
+      console.log('Transaction built:', {
+        source: tx.source,
+        operations: tx.operations.length,
+        fee: tx.fee,
+        xdrLength: txXdr.length,
+        networkPassphrase: tx.networkPassphrase
+      });
+      
+      // Verify transaction source matches wallet
+      if (tx.source !== walletAddress) {
+        setStatus(`Transaction source mismatch: expected ${walletAddress}, got ${tx.source}`);
+        setBusy(false);
+        return;
+      }
+      
+      // Verify network matches
+      const expectedNetwork = Networks.PUBLIC;
+      if (tx.networkPassphrase !== expectedNetwork) {
+        setStatus(`Network mismatch: transaction is on ${tx.networkPassphrase}, but wallet expects ${expectedNetwork}`);
+        setBusy(false);
+        return;
+      }
 
       setStatus('Signing transaction...');
-      const signedXdr = await signTransaction(tx.toXDR(), walletAddress);
+      const signedXdr = await signTransaction(txXdr, walletAddress);
       const signedTx = TransactionBuilder.fromXDR(signedXdr, Networks.PUBLIC);
 
       setStatus('Submitting to network...');
@@ -570,14 +667,23 @@ export default function AtomicSwapCard({ walletAddress }: Props) {
         }
         
         setStatus(`❌ ${errorMessage}`);
+        setBusy(false);
         return;
       }
-    } catch (err: unknown) {
-      console.error(err);
+    } catch (err: any) {
+      // Check if this is a user cancellation - don't show error
+      if (err?.isCancellation || err?.message === 'USER_CANCELLED') {
+        // User cancelled - status already set in signTransaction
+        setBusy(false);
+        return;
+      }
+      
+      console.error('Swap error:', err);
       const stellarErr = err as StellarError;
       const opCodes = stellarErr?.response?.data?.extras?.result_codes?.operations;
       const msg = opCodes || stellarErr?.message || 'An error occurred. Please try again.';
       setStatus(`❌ ${msg}`);
+      setBusy(false);
     } finally {
       setBusy(false);
     }
@@ -634,7 +740,7 @@ export default function AtomicSwapCard({ walletAddress }: Props) {
     
     // Refresh balances with animation
     setTimeout(() => {
-      refreshBalancesWithAnimation();
+      void refreshBalancesWithAnimation();
     }, 1000);
   };
 

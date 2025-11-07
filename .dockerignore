@@ -92,3 +92,4 @@ temp/
 scripts/
 
 .venv/
+/tsconfig.tsbuildinfo

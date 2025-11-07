@@ -83,6 +83,13 @@ export function middleware(req: NextRequest) {
 	const { pathname } = req.nextUrl;
 	const isApi = pathname.startsWith("/api/");
 	const isToml = pathname === "/.well-known/stellar.toml";
+	const isHealthCheck = pathname === "/api/healthz";
+	
+	// Skip middleware for health checks to ensure fast response
+	if (isHealthCheck) {
+		return NextResponse.next();
+	}
+	
 	if (!isApi && !isToml) return;
 
 	const isPreflight = req.method === "OPTIONS";
