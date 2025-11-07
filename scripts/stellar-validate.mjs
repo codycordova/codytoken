@@ -10,6 +10,21 @@ function isSSecret(value) {
   return typeof value === 'string' && /^S[A-Z2-7]{55}$/.test(value);
 }
 
+/**
+ * Masks or redacts secrets/accounts for logging.
+ * Shows first 4 and last 4 chars for secrets, full for public keys, else '[REDACTED]'.
+ */
+function maskedAccount(value) {
+  if (typeof value !== 'string') return '[REDACTED]';
+  if (isSSecret(value)) {
+    return value.substring(0, 4) + '...' + value.substring(value.length - 4);
+  }
+  if (isGAddress(value)) {
+    return value; // Public, not secret
+  }
+  return '[REDACTED]';
+}
+
 function fail(message) {
   console.error(`✖ ${message}`);
   return false;
@@ -81,8 +96,8 @@ function ok(message) {
     CODY_ISSUER
   ].filter(Boolean);
 
-  for (const acc of accounts) {
-    if (!isGAddress(acc)) err(`Account not a valid G-address: ${acc}`);
+  for (let i = 0; i < accounts.length; i++) {
+    if (!isGAddress(accounts[i])) err(`Account #${i + 1} is not a valid G-address`);
   }
   if (!accounts.includes(signingPublicKey)) err('ACCOUNTS must include SIGNING_KEY');
   if (!accounts.includes(CODY_ISSUER)) err('ACCOUNTS must include CODY_ISSUER');
@@ -102,7 +117,7 @@ NETWORK_PASSPHRASE = "${networkPassphrase}"
 SIGNING_KEY = "${signingPublicKey}"
 
 ACCOUNTS = [
-${accounts.map(a => `  "${a}"`).join(',\n')}
+${accounts.map(a => isGAddress(a) ? `  "${a}"` : '  "[REDACTED]"').join(',\n')}
 ]
 
 WEB_AUTH_ENDPOINT = "${webAuthEndpoint}"
