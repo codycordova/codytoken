@@ -22,6 +22,24 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
                 <meta name="theme-color" content="#0a0a0a" />
                 <meta name="color-scheme" content="dark" />
+                {/* Disable Cloudflare Rocket Loader for Next.js scripts */}
+                <script
+                    dangerouslySetInnerHTML={{
+                        __html: `
+                            // Disable Cloudflare Rocket Loader for Next.js chunks
+                            if (window.$RocketLoader) {
+                                window.$RocketLoader = 0;
+                            }
+                            // Mark all Next.js scripts to skip Rocket Loader
+                            document.addEventListener('DOMContentLoaded', function() {
+                                const scripts = document.querySelectorAll('script[src*="/_next/static"]');
+                                scripts.forEach(script => {
+                                    script.setAttribute('data-cfasync', 'false');
+                                });
+                            });
+                        `,
+                    }}
+                />
                 <title></title>
             </head>
             <body className="body-background" suppressHydrationWarning>

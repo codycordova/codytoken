@@ -91,10 +91,26 @@ const nextConfig: NextConfig = {
           { key: "Cross-Origin-Resource-Policy", value: "cross-origin" },
         ],
       },
-      // Optimize static assets
+      // Optimize static assets with proper MIME types
       {
         source: "/_next/static/(.*)",
         headers: [
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+        ],
+      },
+      // Ensure JavaScript files have correct MIME type (critical for Cloudflare)
+      {
+        source: "/_next/static/chunks/(.*\\.js)",
+        headers: [
+          { key: "Content-Type", value: "application/javascript; charset=utf-8" },
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+        ],
+      },
+      // Ensure CSS files have correct MIME type
+      {
+        source: "/_next/static/(.*\\.css)",
+        headers: [
+          { key: "Content-Type", value: "text/css; charset=utf-8" },
           { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
         ],
       },
